@@ -1,0 +1,56 @@
+Index: backend/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>HELP.md\ntarget/\n!.mvn/wrapper/maven-wrapper.jar\n!**/src/main/**/target/\n!**/src/test/**/target/\n\n### STS ###\n.apt_generated\n.classpath\n.factorypath\n.project\n.settings\n.springBeans\n.sts4-cache\n\n### IntelliJ IDEA ###\n.idea\n*.iws\n*.iml\n*.ipr\n\n### NetBeans ###\n/nbproject/private/\n/nbbuild/\n/dist/\n/nbdist/\n/.nb-gradle/\nbuild/\n!**/src/main/**/build/\n!**/src/test/**/build/\n\n### VS Code ###\n.vscode/\n\n### env ###\n./env\n
+===================================================================
+diff --git a/backend/.gitignore b/backend/.gitignore
+--- a/backend/.gitignore	(revision 4c4eda67696d3e6da75c17fc9bead4c783819b6b)
++++ b/backend/.gitignore	(date 1742562260613)
+@@ -33,4 +33,5 @@
+ .vscode/
+ 
+ ### env ###
+-./env
++.env
++.env.local
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\n  <component name=\"ProjectRootManager\" version=\"2\" default=\"true\">\n    <output url=\"file://$PROJECT_DIR$/out\" />\n  </component>\n</project>
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 4c4eda67696d3e6da75c17fc9bead4c783819b6b)
++++ b/.idea/misc.xml	(date 1742562419835)
+@@ -1,7 +1,14 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+-  <component name="ProjectRootManager" version="2" default="true">
++  <component name="MavenProjectsManager">
++    <option name="originalFiles">
++      <list>
++        <option value="$PROJECT_DIR$/pom.xml" />
++      </list>
++    </option>
++  </component>
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"Encoding\">\n    <file url=\"file://$PROJECT_DIR$/backend/src/main/java\" charset=\"UTF-8\" />\n  </component>\n</project>
+===================================================================
+diff --git a/.idea/encodings.xml b/.idea/encodings.xml
+--- a/.idea/encodings.xml	(revision 4c4eda67696d3e6da75c17fc9bead4c783819b6b)
++++ b/.idea/encodings.xml	(date 1742562419847)
+@@ -2,5 +2,6 @@
+ <project version="4">
+   <component name="Encoding">
+     <file url="file://$PROJECT_DIR$/backend/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+   </component>
+ </project>
+\ No newline at end of file

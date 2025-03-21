@@ -1,0 +1,29 @@
+Index: backend/.env
+===================================================================
+diff --git a/backend/.env b/backend/.env
+deleted file mode 100644
+--- a/backend/.env	(revision 4c4eda67696d3e6da75c17fc9bead4c783819b6b)
++++ /dev/null	(revision 4c4eda67696d3e6da75c17fc9bead4c783819b6b)
+@@ -1,5 +0,0 @@
+-DB_URL=jdbc:postgresql://localhost:5432/mspr
+-DB_USERNAME=postgres
+-DB_PASSWORD=root
+-
+-ok
+\ No newline at end of file
+Index: .idea/modules.xml
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+deleted file mode 100644
+--- a/.idea/modules.xml	(revision 4c4eda67696d3e6da75c17fc9bead4c783819b6b)
++++ /dev/null	(revision 4c4eda67696d3e6da75c17fc9bead4c783819b6b)
+@@ -1,8 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="ProjectModuleManager">
+-    <modules>
+-      <module fileurl="file://$PROJECT_DIR$/.idea/mspr-1.iml" filepath="$PROJECT_DIR$/.idea/mspr-1.iml" />
+-    </modules>
+-  </component>
+-</project>
+\ No newline at end of file
