@@ -1,4 +1,14 @@
 services:
+  frontend:
+    container_name: mspr1-frontend
+    build:
+      context: ./frontend
+      dockerfile: frontend.dockerfile
+    ports:
+      - "4200:4200"
+    restart: always
+    depends_on:
+      - backend
   backend:
     container_name: mspr1-backend
     build:
