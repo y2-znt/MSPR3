@@ -1,4 +1,21 @@
 services:
+  backend:
+    container_name: mspr1-backend
+    build:
+      context: ./backend
+      dockerfile: backend.dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./backend/src:/app/src
+      - /app/node_modules
+    restart: always
+    depends_on:
+      - db
   db:
     container_name: mspr1-db
     image: postgres:latest
