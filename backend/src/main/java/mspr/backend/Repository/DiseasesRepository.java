@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import mspr.backend.BO.Diseases;
 
 @Repository
-public interface DiseasesRepository extends JpaRepository<Diseases, Long> {
+public interface DiseasesRepository extends JpaRepository<Diseases, Integer> {
+    Diseases findByName(String name);
 }
 
