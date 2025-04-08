@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "Diseases")
+@Table(name = "diseases")
 public class Diseases {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,10 @@ public class Diseases {
     @OneToMany(mappedBy = "diseases", cascade = CascadeType.ALL )
     private Set<DiseasesCases> diseasesCases = new HashSet<>();
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
 
     public Diseases() {}

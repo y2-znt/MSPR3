@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="DiseasesCases")
+@Table(name="diseases_cases")
 
 public class DiseasesCases {
     @Id
@@ -20,9 +20,16 @@ public class DiseasesCases {
     @JoinColumn(name = "locations_id")
     private Locations location;
 
+    @Column(name = "date")
     private LocalDate date;
+
+    @Column(name = "confirmed_cases")
     private Integer confirmedCases;
+
+    @Column(name = "deaths")
     private Integer deaths;
+
+    @Column(name = "recovered")
     private Integer recovered;
 
     public DiseasesCases(){}
