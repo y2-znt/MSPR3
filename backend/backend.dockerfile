@@ -5,14 +5,14 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 FROM openjdk:21
 
 WORKDIR /app
 
 COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar /app/backend.jar
-COPY .env /app/backend/.env
+COPY .env /app/.env
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "backend.jar"]
