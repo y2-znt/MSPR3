@@ -1,0 +1,122 @@
+<div class="dashboard">
+    <div class="dashboard_header">
+        <div class="title_dashboard">Tableau de Bord var maladie </div>
+        <div class="dashboard_content">
+            <div class="dashboard_content_rigth">
+                <mat-form-field>
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div>
+                <form class="example-form">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Number</mat-label>
+                        <input type="text"
+                                placeholder="Pick one"
+                                aria-label="Number"
+                                matInput
+                                [formControl]="myControl"
+                                [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            @for (option of options; track option) {
+                            <mat-option [value]="option">{{option}}</mat-option>
+                            }
+                        </mat-autocomplete>
+                        </mat-form-field>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="KPI">
+        <div class="KPI_content_item">
+            <mat-card class="example-card" [ngClass]="{'card1': true}">
+                <mat-card-header>
+                    <div class="KPI-card-header">
+                        <mat-card-title>Cas actifs</mat-card-title>
+                        <mat-card-subtitle>icone</mat-card-subtitle>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>var XXXXXXXXXX
+                    <div class="kpi-subtitles">Cas confirmés de COVID-19 dans le monde</div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="KPI_content_item">
+            <mat-card class="example-card" [ngClass]="{'card2': true}">
+                <mat-card-header>
+                    <div class="KPI-card-header">
+                        <mat-card-title>Décès totaux</mat-card-title>
+                        <mat-card-subtitle>icone</mat-card-subtitle>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>var XXXXXXXXXX
+                    <div class="kpi-subtitles">Taux de mortalité: 1,03%</div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="KPI_content_item">
+            <mat-card class="KPI-card" [ngClass]="{'card3': true}">
+                <mat-card-header>
+                    <div class="KPI-card-header">
+                        <mat-card-title>Guérisons</mat-card-title>
+                        <mat-card-subtitle>icone</mat-card-subtitle>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>var XXXXXXXXXX
+                    <div class="kpi-subtitles">Taux de guérison: 96,00%</div>
+                </mat-card-content>
+                
+            </mat-card>
+        </div>
+        <div class="KPI_content_item">
+            <mat-card class="example-card" [ngClass]="{'card4': true}">
+                <mat-card-header>
+                    <div class="KPI-card-header">
+                        <mat-card-title>Tests Effectués</mat-card-title>
+                        <mat-card-subtitle>icone</mat-card-subtitle>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>var XXXXXXXXXX
+                    <div class="kpi-subtitles">Tests COVID-19 totaux dans le monde</div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <div class="chart">
+        <div class="lineChart card">
+            <canvas baseChart 
+                [data]="lineChartData"
+                [options]="lineChartOptions"
+                chartType="line">
+            </canvas>
+            </div>
+        
+            <div class="row">
+            <div class="Doughnut card">
+                <canvas baseChart
+        [labels]="doughnutChartLabels"
+        [datasets]="doughnutChartDatasets"
+        [options]="doughnutChartOptions"
+        [legend]="true"
+        [type]="'doughnut'">
+</canvas>
+            </div>
+        
+            <div class="Polar card">
+                <canvas baseChart
+        [datasets]="polarAreaChartDatasets"
+        [labels]="polarAreaChartLabels"
+        [legend]="polarAreaLegend"
+        [options]="polarAreaOptions"
+        [type]="'polarArea'">
+</canvas>
+            </div>
+        </div>
+    </div>
+</div>
