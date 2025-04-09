@@ -15,13 +15,13 @@ public class Location {
     private Integer id;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
-    private Set<DiseaseCases> diseasesCases = new HashSet<>();
+    private Set<DiseaseCase> diseasesCases = new HashSet<>();
 
     private String name;
 
     public Location() {}
 
-    public Location(Set<DiseaseCases> diseasesCases, String name, Region region) {
+    public Location(Set<DiseaseCase> diseasesCases, String name, Region region) {
         this.diseasesCases = diseasesCases;
         this.name = name;
         this.region = region;
@@ -43,11 +43,11 @@ public class Location {
         this.name = name;
     }
 
-    public Set<DiseaseCases> getDiseasesCases() {
+    public Set<DiseaseCase> getDiseasesCases() {
         return diseasesCases;
     }
 
-    public void setDiseasesCases(Set<DiseaseCases> diseasesCases) {
+    public void setDiseasesCases(Set<DiseaseCase> diseasesCases) {
         this.diseasesCases = diseasesCases;
     }
 

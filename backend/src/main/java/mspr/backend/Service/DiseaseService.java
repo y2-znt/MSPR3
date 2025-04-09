@@ -13,17 +13,17 @@ import java.util.Optional;
 public class DiseaseService {
 
     @Autowired
-    private DiseaseRepository diseasesRepository;
+    private DiseaseRepository diseaseRepository;
 
     public List<Disease> getAllDiseases() {
-        return diseasesRepository.findAll();
+        return diseaseRepository.findAll();
     }
 
     public Optional<Disease> getDiseaseById(Integer id) {
-        return diseasesRepository.findById(id);
+        return diseaseRepository.findById(id);
     }
 
     public Disease getByNameDiseasese(String name) {
-        return diseasesRepository.findByName(name);
+        return diseaseRepository.findByName(name);
     }
 }
