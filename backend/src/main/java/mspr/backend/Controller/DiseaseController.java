@@ -14,16 +14,16 @@ import java.util.Optional;
 public class DiseaseController {
 
     @Autowired
-    private DiseaseService diseasesService;
+    private DiseaseService diseaseService;
     
     @GetMapping
     public List<Disease> getAllDiseases() {
-        return diseasesService.getAllDiseases(); 
+        return diseaseService.getAllDiseases(); 
     }
 
     
     @GetMapping("/{id}")
     public Optional<Disease> getDiseaseById(@PathVariable Integer id) {
-        return diseasesService.getDiseaseById(id); 
+        return diseaseService.getDiseaseById(id); 
     }
 }

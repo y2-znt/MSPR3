@@ -14,8 +14,8 @@ public class Disease {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(mappedBy = "diseases", cascade = CascadeType.ALL )
-    private Set<DiseaseCases> diseasesCases = new HashSet<>();
+    @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL )
+    private Set<DiseaseCase> diseasesCases = new HashSet<>();
 
     @Column(name = "name")
     private String name;
@@ -25,17 +25,17 @@ public class Disease {
 
     public Disease() {}
 
-    public Disease(String description, String name, Set<DiseaseCases> diseasesCases) {
+    public Disease(String description, String name, Set<DiseaseCase> diseasesCases) {
         this.description = description;
         this.name = name;
         this.diseasesCases = diseasesCases;
     }
 
-    public Set<DiseaseCases> getDiseasesCases() {
+    public Set<DiseaseCase> getDiseasesCases() {
         return diseasesCases;
     }
 
-    public void setDiseasesCases(Set<DiseaseCases> diseasesCases) {
+    public void setDiseasesCases(Set<DiseaseCase> diseasesCases) {
         this.diseasesCases = diseasesCases;
     }
 
