@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="country")
+@Table(name="Country")
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,7 +86,7 @@ public class Country {
     }
 
     public enum WHORegionEnum {
-        AFR, AMR, EMR, EUR, SEAR, WPR
+        Americas, Africa, Western_Pacific, Eastern_Mediterranean, Europe, South_East_Asia
     }
 
     public Country() {}

@@ -8,14 +8,14 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "diseases")
-public class Diseases {
+@Table(name = "Disease")
+public class Disease {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @OneToMany(mappedBy = "diseases", cascade = CascadeType.ALL )
-    private Set<DiseasesCases> diseasesCases = new HashSet<>();
+    private Set<DiseaseCases> diseasesCases = new HashSet<>();
 
     @Column(name = "name")
     private String name;
@@ -23,19 +23,19 @@ public class Diseases {
     @Column(name = "description")
     private String description;
 
-    public Diseases() {}
+    public Disease() {}
 
-    public Diseases(String description, String name, Set<DiseasesCases> diseasesCases) {
+    public Disease(String description, String name, Set<DiseaseCases> diseasesCases) {
         this.description = description;
         this.name = name;
         this.diseasesCases = diseasesCases;
     }
 
-    public Set<DiseasesCases> getDiseasesCases() {
+    public Set<DiseaseCases> getDiseasesCases() {
         return diseasesCases;
     }
 
-    public void setDiseasesCases(Set<DiseasesCases> diseasesCases) {
+    public void setDiseasesCases(Set<DiseaseCases> diseasesCases) {
         this.diseasesCases = diseasesCases;
     }
 

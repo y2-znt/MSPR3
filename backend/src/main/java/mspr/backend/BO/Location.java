@@ -8,20 +8,20 @@ import java.util.Set;
 
 
 @Entity
-@Table(name="locations")
-public class Locations {
+@Table(name="Location")
+public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
-    private Set<DiseasesCases> diseasesCases = new HashSet<>();
+    private Set<DiseaseCases> diseasesCases = new HashSet<>();
 
     private String name;
 
-    public Locations() {}
+    public Location() {}
 
-    public Locations(Set<DiseasesCases> diseasesCases, String name, Region region) {
+    public Location(Set<DiseaseCases> diseasesCases, String name, Region region) {
         this.diseasesCases = diseasesCases;
         this.name = name;
         this.region = region;
@@ -43,11 +43,11 @@ public class Locations {
         this.name = name;
     }
 
-    public Set<DiseasesCases> getDiseasesCases() {
+    public Set<DiseaseCases> getDiseasesCases() {
         return diseasesCases;
     }
 
-    public void setDiseasesCases(Set<DiseasesCases> diseasesCases) {
+    public void setDiseasesCases(Set<DiseaseCases> diseasesCases) {
         this.diseasesCases = diseasesCases;
     }
 
