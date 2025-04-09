@@ -1,0 +1,21 @@
+stages:
+  - build
+
+variables:
+  DB_URL: "jdbc:postgresql://db:5432/mspr1db"
+  DB_USERNAME: "mspr1"
+  DB_PASSWORD: "mspr1"
+
+build-backend:
+  stage: build
+  image: maven:3.9.9-amazoncorretto-21-debian
+  script:
+    - cd backend
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - backend/target/*.jar
+    expire_in: 1 week
+  only:
+    - main
+    - merge_requests
