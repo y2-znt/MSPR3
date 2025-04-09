@@ -19,3 +19,18 @@ build-backend:
   only:
     - main
     - merge_requests
+
+build-frontend:
+  stage: build
+  image: node:20-alpine
+  script:
+    - cd frontend
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/dist/
+    expire_in: 1 week
+  only:
+    - main
+    - merge_requests
