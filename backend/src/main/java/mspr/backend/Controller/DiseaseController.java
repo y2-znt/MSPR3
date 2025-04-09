@@ -1,7 +1,7 @@
 package mspr.backend.Controller;
 
-import mspr.backend.BO.Diseases;
-import mspr.backend.Service.DiseasesService;
+import mspr.backend.BO.Disease;
+import mspr.backend.Service.DiseaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,19 +11,19 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/diseases")  
 
-public class DiseasesController {
+public class DiseaseController {
 
     @Autowired
-    private DiseasesService diseasesService;
+    private DiseaseService diseasesService;
     
     @GetMapping
-    public List<Diseases> getAllDiseases() {
+    public List<Disease> getAllDiseases() {
         return diseasesService.getAllDiseases(); 
     }
 
     
     @GetMapping("/{id}")
-    public Optional<Diseases> getDiseaseById(@PathVariable Integer id) {
+    public Optional<Disease> getDiseaseById(@PathVariable Integer id) {
         return diseasesService.getDiseaseById(id); 
     }
 }

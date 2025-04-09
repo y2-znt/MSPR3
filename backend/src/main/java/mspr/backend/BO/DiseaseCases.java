@@ -5,20 +5,20 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="diseases_cases")
+@Table(name="DiseaseCases")
 
-public class DiseasesCases {
+public class DiseaseCases {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "diseases_id")
-    private Diseases diseases;
+    private Disease diseases;
 
     @ManyToOne
     @JoinColumn(name = "locations_id")
-    private Locations location;
+    private Location location;
 
     @Column(name = "date")
     private LocalDate date;
@@ -32,9 +32,9 @@ public class DiseasesCases {
     @Column(name = "recovered")
     private Integer recovered;
 
-    public DiseasesCases(){}
+    public DiseaseCases(){}
 
-    public DiseasesCases(Integer recovered, Integer deaths, Integer confirmedCases, LocalDate date, Locations location, Diseases diseases) {
+    public DiseaseCases(Integer recovered, Integer deaths, Integer confirmedCases, LocalDate date, Location location, Disease diseases) {
         this.recovered = recovered;
         this.deaths = deaths;
         this.confirmedCases = confirmedCases;
@@ -43,19 +43,19 @@ public class DiseasesCases {
         this.diseases = diseases;
     }
 
-    public Diseases getDiseases() {
+    public Disease getDiseases() {
         return diseases;
     }
 
-    public void setDiseases(Diseases diseases) {
+    public void setDiseases(Disease diseases) {
         this.diseases = diseases;
     }
 
-    public Locations getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(Locations location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
