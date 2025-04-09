@@ -3,18 +3,17 @@ package mspr.backend.BO;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-
 @Entity
-@Table(name="DiseaseCase")
-
+@Table(name = "DiseaseCase")
 public class DiseaseCase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "disease_id")
-    private Disease diseases;
+    private Disease disease; 
 
     @ManyToOne
     @JoinColumn(name = "location_id")
@@ -26,29 +25,29 @@ public class DiseaseCase {
     @Column(name = "confirmed_case")
     private Integer confirmedCases;
 
-    @Column(name = "death")
+    @Column(name = "deaths")
     private Integer deaths;
 
     @Column(name = "recovered")
     private Integer recovered;
 
-    public DiseaseCase(){}
+    public DiseaseCase() {}
 
-    public DiseaseCase(Integer recovered, Integer deaths, Integer confirmedCases, LocalDate date, Location location, Disease diseases) {
+    public DiseaseCase(Integer recovered, Integer deaths, Integer confirmedCases, LocalDate date, Location location, Disease disease) {
         this.recovered = recovered;
         this.deaths = deaths;
         this.confirmedCases = confirmedCases;
         this.date = date;
         this.location = location;
-        this.diseases = diseases;
+        this.disease = disease;
     }
 
-    public Disease getDiseases() {
-        return diseases;
+    public Disease getDisease() {
+        return disease;
     }
 
-    public void setDiseases(Disease diseases) {
-        this.diseases = diseases;
+    public void setDisease(Disease disease) {
+        this.disease = disease;
     }
 
     public Location getLocation() {
@@ -93,9 +92,9 @@ public class DiseaseCase {
 
     @Override
     public String toString() {
-        return "DiseasesCases{" +
+        return "DiseaseCase{" +
                 "id=" + id +
-                ", diseases=" + diseases +
+                ", disease=" + disease +   // 'disease' au lieu de 'diseases'
                 ", location=" + location +
                 ", date=" + date +
                 ", confirmedCases=" + confirmedCases +
