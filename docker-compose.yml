@@ -6,6 +6,9 @@ services:
       dockerfile: frontend.dockerfile
     ports:
       - "4200:4200"
+    volumes:
+      - ./frontend/src:/app/src
+      - /app/node_modules
     restart: always
     depends_on:
       - backend
