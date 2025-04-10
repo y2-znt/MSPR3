@@ -1,16 +1,23 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 
-import { ChartConfiguration } from 'chart.js';
-import { ChartOptions, ChartType, ChartData,  } from 'chart.js';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
@@ -27,90 +34,132 @@ import { BaseChartDirective } from 'ng2-charts';
     MatAutocompleteModule,
     MatCardModule,
     MatIconModule,
+    MatButtonToggleModule,
+    MatSelectModule,
+    MatTabsModule,
     BaseChartDirective,
-    
   ],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './dashboard.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent {
-  myControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three'];
+export class DashboardComponent implements OnInit {
+  // Form Controls
+  dateRange = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
 
-  lineChartData: ChartData<'line'> = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+  countriesControl = new FormControl<string[]>([]);
+  countries: string[] = [
+    'France',
+    'Allemagne',
+    'Italie',
+    'Espagne',
+    'Royaume-Uni',
+    'États-Unis',
+    'Chine',
+    'Japon',
+  ];
+
+  // KPI Data
+  totalCases: number = 675432198;
+  totalDeaths: number = 6932408;
+  mortalityRate: number = 1.03;
+  totalRecoveries: number = 648392781;
+  recoveryRate: number = 96.0;
+  totalTests: number = 7023456789;
+
+  // Area Chart Configuration
+  areaChartData: ChartConfiguration<'line'>['data'] = {
+    labels: Array.from({ length: 12 }, (_, i) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() - (11 - i));
+      return date.toLocaleDateString('fr-FR', {
+        month: 'short',
+        year: 'numeric',
+      });
+    }),
     datasets: [
       {
-        label: 'Sales',
-        data: [100, 150, 125, 200],
-        borderColor: 'rgba(75,192,192,1)',
-        fill: false
-      }
-    ]
-  };
-  
-  lineChartOptions: ChartOptions = {
-    responsive: true
-  };
-
-  // doughnutChartData: ChartData<'doughnut'> = {
-  //   labels: ['Red', 'Blue', 'Yellow'],
-  //   datasets: [
-  //     {
-  //       data: [300, 500, 100],
-  //       backgroundColor: ['#ff6384', '#36a2eb', '#ffce56']
-  //     }
-  //   ]
-  // };
-  
-  // doughnutChartOptions: ChartOptions = {
-  //   responsive: true,
-  //   plugins: {
-  //     legend: {
-  //       position: 'top',
-  //     },
-  //   },
-  // };
-  // Doughnut
-  public doughnutChartLabels: string[] = [ 'Download Sales', 'In-Store Sales', 'Mail-Order Sales' ];
-  public doughnutChartDatasets: ChartConfiguration<'doughnut'>['data']['datasets'] = [
-      { data: [ 350, 450, 100 ], label: 'Series A' },
-      { data: [ 50, 150, 120 ], label: 'Series B' },
-      { data: [ 250, 130, 70 ], label: 'Series C' }
-    ];
-
-  public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
-    responsive: false
+        label: 'Cas Totaux',
+        data: [
+          30000000, 35000000, 40000000, 45000000, 50000000, 55000000, 60000000,
+          65000000, 70000000, 75000000, 80000000, 90000000,
+        ],
+        borderColor: '#2196f3',
+        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+        fill: true,
+        tension: 0.4,
+      },
+      {
+        label: 'Guérisons',
+        data: [
+          25000000, 30000000, 35000000, 40000000, 45000000, 50000000, 55000000,
+          60000000, 65000000, 70000000, 75000000, 85000000,
+        ],
+        borderColor: '#4caf50',
+        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+        fill: true,
+        tension: 0.4,
+      },
+      {
+        label: 'Décès',
+        data: [
+          1000000, 1500000, 2000000, 2500000, 3000000, 3500000, 4000000,
+          4500000, 5000000, 5500000, 6000000, 6500000,
+        ],
+        borderColor: '#f44336',
+        backgroundColor: 'rgba(244, 67, 54, 0.1)',
+        fill: true,
+        tension: 0.4,
+      },
+    ],
   };
 
-  // polarChartData: ChartData<'polarArea'> = {
-  //   labels: ['A', 'B', 'C', 'D'],
-  //   datasets: [
-  //     {
-  //       data: [11, 16, 7, 3],
-  //       backgroundColor: ['#FF6384', '#4BC0C0', '#FFCE56', '#E7E9ED']
-  //     }
-  //   ]
-  // };
-  
-  // polarChartOptions: ChartOptions = {
-  //   responsive: true,
-  //   plugins: {
-  //     legend: {
-  //       position: 'top',
-  //     },
-  //   },
-  // };
-    // PolarArea
-    public polarAreaChartLabels: string[] = [ 'Download Sales', 'In-Store Sales', 'Mail Sales', 'Telesales', 'Corporate Sales' ];
-    public polarAreaChartDatasets: ChartConfiguration<'polarArea'>['data']['datasets'] = [
-      { data: [ 300, 500, 100, 40, 120 ] }
-    ];
-    public polarAreaLegend = true;
-  
-    public polarAreaOptions: ChartConfiguration<'polarArea'>['options'] = {
-      responsive: false,
-    };
+  areaChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        align: 'end',
+      },
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          callback: function (tickValue: string | number) {
+            const value = Number(tickValue);
+            if (!isNaN(value) && value >= 1000000) {
+              return (value / 1000000).toFixed(0) + 'M';
+            }
+            return tickValue;
+          },
+        },
+      },
+    },
+    interaction: {
+      mode: 'nearest',
+      axis: 'x',
+      intersect: false,
+    },
+  };
 
+  constructor() {}
+
+  ngOnInit(): void {}
 }
