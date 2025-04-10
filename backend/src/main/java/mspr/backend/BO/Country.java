@@ -13,17 +13,21 @@ public class Country {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "name")
     private String name;
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
     private Set<Region> regions = new HashSet<>();
 
+    @Column(name = "continent")
     @Enumerated(EnumType.STRING)
     private ContinentEnum continent;
 
+    @Column(name = "who_region")
     @Enumerated(EnumType.STRING)
     private WHORegionEnum whoRegion;
 
+    @Column(name = "population")
     private Integer population;
 
     public String getName() {
@@ -74,6 +78,7 @@ public class Country {
         this.totalTests = totalTests;
     }
 
+    @Column(name = "total_tests")
     private Integer totalTests;
 
     public enum ContinentEnum {
@@ -81,7 +86,7 @@ public class Country {
     }
 
     public enum WHORegionEnum {
-        AFR, AMR, EMR, EUR, SEAR, WPR
+        Americas, Africa, Western_Pacific, Eastern_Mediterranean, Europe, South_East_Asia
     }
 
     public Country() {}

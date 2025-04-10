@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import mspr.backend.BO.Country;
 
 @Repository
-public interface CountryRepository extends JpaRepository<Country, Long> {
+public interface CountryRepository extends JpaRepository<Country, Integer> {
+    Country findByName(String name);
 }
 

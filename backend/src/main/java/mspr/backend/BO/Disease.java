@@ -6,34 +6,37 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
-@Table(name = "Diseases")
-public class Diseases {
+@Table(name = "Disease")
+public class Disease {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(mappedBy = "diseases", cascade = CascadeType.ALL )
-    private Set<DiseasesCases> diseasesCases = new HashSet<>();
+    @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL)
+    private Set<DiseaseCase> diseaseCases = new HashSet<>();
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
 
-    public Diseases() {}
+    public Disease() {}
 
-    public Diseases(String description, String name, Set<DiseasesCases> diseasesCases) {
+    public Disease(String description, String name, Set<DiseaseCase> diseaseCases) {
         this.description = description;
         this.name = name;
-        this.diseasesCases = diseasesCases;
+        this.diseaseCases = diseaseCases;
     }
 
-    public Set<DiseasesCases> getDiseasesCases() {
-        return diseasesCases;
+    public Set<DiseaseCase> getDiseaseCases() {
+        return diseaseCases;
     }
 
-    public void setDiseasesCases(Set<DiseasesCases> diseasesCases) {
-        this.diseasesCases = diseasesCases;
+    public void setDiseaseCases(Set<DiseaseCase> diseaseCases) {
+        this.diseaseCases = diseaseCases;
     }
 
     public String getName() {
@@ -54,11 +57,12 @@ public class Diseases {
 
     @Override
     public String toString() {
-        return "Diseases{" +
+        return "Disease{" +
                 "id=" + id +
-                ", diseasesCases=" + diseasesCases +
+                ", diseaseCases=" + diseaseCases +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }
 }
+

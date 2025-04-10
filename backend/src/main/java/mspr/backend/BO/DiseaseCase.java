@@ -3,52 +3,58 @@ package mspr.backend.BO;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-
 @Entity
-@Table(name="DiseasesCases")
+@Table(name = "DiseaseCase")
+public class DiseaseCase {
 
-public class DiseasesCases {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "diseases_id")
-    private Diseases diseases;
+    @JoinColumn(name = "disease_id")
+    private Disease disease; 
 
     @ManyToOne
-    @JoinColumn(name = "locations_id")
-    private Locations location;
+    @JoinColumn(name = "location_id")
+    private Location location;
 
+    @Column(name = "date")
     private LocalDate date;
+
+    @Column(name = "confirmed_case")
     private Integer confirmedCases;
+
+    @Column(name = "deaths")
     private Integer deaths;
+
+    @Column(name = "recovered")
     private Integer recovered;
 
-    public DiseasesCases(){}
+    public DiseaseCase() {}
 
-    public DiseasesCases(Integer recovered, Integer deaths, Integer confirmedCases, LocalDate date, Locations location, Diseases diseases) {
+    public DiseaseCase(Integer recovered, Integer deaths, Integer confirmedCases, LocalDate date, Location location, Disease disease) {
         this.recovered = recovered;
         this.deaths = deaths;
         this.confirmedCases = confirmedCases;
         this.date = date;
         this.location = location;
-        this.diseases = diseases;
+        this.disease = disease;
     }
 
-    public Diseases getDiseases() {
-        return diseases;
+    public Disease getDisease() {
+        return disease;
     }
 
-    public void setDiseases(Diseases diseases) {
-        this.diseases = diseases;
+    public void setDisease(Disease disease) {
+        this.disease = disease;
     }
 
-    public Locations getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(Locations location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -86,9 +92,9 @@ public class DiseasesCases {
 
     @Override
     public String toString() {
-        return "DiseasesCases{" +
+        return "DiseaseCase{" +
                 "id=" + id +
-                ", diseases=" + diseases +
+                ", disease=" + disease +   // 'disease' au lieu de 'diseases'
                 ", location=" + location +
                 ", date=" + date +
                 ", confirmedCases=" + confirmedCases +

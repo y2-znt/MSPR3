@@ -14,7 +14,7 @@ public class Region {
     private Integer id;
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
-    private Set<Locations> locations = new HashSet<>();
+    private Set<Location> locations = new HashSet<>();
 
     private String name;
 
@@ -24,17 +24,17 @@ public class Region {
 
     public Region() {}
 
-    public Region(Set<Locations> locations, String name, Country country) {
+    public Region(Set<Location> locations, String name, Country country) {
         this.locations = locations;
         this.name = name;
         this.country = country;
     }
 
-    public Set<Locations> getLocations() {
+    public Set<Location> getLocations() {
         return locations;
     }
 
-    public void setLocations(Set<Locations> locations) {
+    public void setLocations(Set<Location> locations) {
         this.locations = locations;
     }
 
