@@ -1,0 +1,192 @@
+// Variables
+$primary-color: #2196f3;
+$success-color: #4caf50;
+$warning-color: #ff9800;
+$danger-color: #f44336;
+$background-color: #f8f9fa;
+$card-background: #ffffff;
+$text-primary: rgba(0, 0, 0, 0.87);
+$text-secondary: rgba(0, 0, 0, 0.6);
+$border-radius: 8px;
+$spacing: 24px;
+
+// Mixins
+@mixin card-shadow {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Container
+.dashboard-container {
+  padding: $spacing;
+  background-color: $background-color;
+  min-height: 100vh;
+}
+
+// Header
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing;
+  flex-wrap: wrap;
+  gap: $spacing;
+
+  h1 {
+    margin: 0;
+    color: $text-primary;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: $spacing;
+
+    mat-form-field {
+      width: 240px;
+    }
+  }
+}
+
+.dashboard-subtitle {
+  color: $text-secondary;
+  margin: 0 0 $spacing 0;
+  font-size: 14px;
+}
+
+// KPI Cards
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing;
+  margin-bottom: $spacing;
+}
+
+.kpi-card {
+  @include card-shadow;
+  border-radius: $border-radius;
+  background: $card-background;
+
+  mat-card-content {
+    padding: $spacing;
+  }
+
+  .kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 500;
+      color: $text-secondary;
+    }
+
+    mat-icon {
+      color: $primary-color;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .kpi-value {
+    font-size: 28px;
+    font-weight: 500;
+    color: $text-primary;
+    margin-bottom: 8px;
+  }
+
+  .kpi-subtitle {
+    font-size: 12px;
+    color: $text-secondary;
+  }
+
+  &:nth-child(1) mat-icon {
+    color: $primary-color;
+  }
+  &:nth-child(2) mat-icon {
+    color: $danger-color;
+  }
+  &:nth-child(3) mat-icon {
+    color: $success-color;
+  }
+  &:nth-child(4) mat-icon {
+    color: $warning-color;
+  }
+}
+
+// Tabs
+.dashboard-tabs {
+  background: $card-background;
+  border-radius: $border-radius;
+  @include card-shadow;
+
+  ::ng-deep {
+    .mat-mdc-tab-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      padding: 0 $spacing;
+    }
+
+    .mat-mdc-tab-body-content {
+      padding: $spacing;
+    }
+  }
+}
+
+// Chart
+.chart-container {
+  height: 400px;
+  margin-top: $spacing;
+}
+
+.chart-card {
+  @include card-shadow;
+  height: 100%;
+
+  mat-card-header {
+    padding: $spacing $spacing 0;
+
+    mat-card-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    mat-card-subtitle {
+      font-size: 14px;
+      margin: 4px 0 0;
+    }
+  }
+
+  mat-card-content {
+    padding: $spacing;
+    height: calc(100% - 80px);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+
+    mat-form-field {
+      width: 100% !important;
+    }
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    height: 300px;
+  }
+}
