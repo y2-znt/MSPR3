@@ -1,24 +1,43 @@
 package mspr.backend.Runner;
 
 import mspr.backend.BO.Disease;
-import mspr.backend.Service.DiseaseService;
+import mspr.backend.Repository.*;
 import mspr.backend.Service.CsvImporter.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataImportRunner implements CommandLineRunner {
+public class DataImportCovid19Runner implements CommandLineRunner {
 
     @Autowired private CovidCompleteService covidCompleteService;
     @Autowired private FullGroupedService fullGroupedService;
     @Autowired private UsaCountyService usaCountyService;
     @Autowired private WorldometerService worldometerService;
-    @Autowired private DiseaseService diseaseService;
+
+    @Autowired private CountryRepository countryRepository;
+    @Autowired private RegionRepository regionRepository;
+    @Autowired private LocationRepository locationRepository;
+    @Autowired private DiseaseCaseRepository diseaseCaseRepository;
+    @Autowired private DiseaseRepository diseaseRepository;
+
 
     @Override
     public void run(String... args) throws Exception {
-        Disease covid = diseaseService.getDiseaseByName("COVID-19");
+
+
+        System.out.println("Suppressions des données existantes...");
+        deleteAllData();
+        System.out.println("Suppression des données terminée.");
+
+        Disease covid = diseaseRepository.findByName("COVID-19");
+        if(covid == null) {
+            System.out.println("La maladie COVID-19 n'existe pas dans la base de données. Création de COVID-19...");
+            Disease disease = new Disease();
+            disease.setName("COVID-19");
+            disease.setDescription("COVID-19");
+            diseaseRepository.save(disease);
+        }
 
         System.out.println("** Début de l'import des données COVID **");
 
@@ -33,9 +52,9 @@ public class DataImportRunner implements CommandLineRunner {
 //        System.out.println("Import global détaillé terminé.");
 
         // 3. Import des données globales agrégées par pays
-//        System.out.println("Import des données globales agrégées (full_grouped)...");
-//        fullGroupedService.importData();
-//        System.out.println("Import global agrégé terminé.");
+        System.out.println("Import des données full_grouped...");
+        fullGroupedService.importData();
+        System.out.println("Import full_grouped terminé.");
 
         // 4. Import des données par comtés US
 //        System.out.println("Import des données USA par comtés...");
@@ -44,4 +63,13 @@ public class DataImportRunner implements CommandLineRunner {
 
         System.out.println("** Importation des données COVID terminée avec succès **");
     }
+
+    public void deleteAllData() {
+        locationRepository.deleteAll();
+        regionRepository.deleteAll();
+        countryRepository.deleteAll();
+        diseaseCaseRepository.deleteAll();
+        diseaseRepository.deleteAll();
+    }
+
 }

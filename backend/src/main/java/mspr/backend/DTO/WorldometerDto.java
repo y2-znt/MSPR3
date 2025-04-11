@@ -1,5 +1,7 @@
 package mspr.backend.DTO;
 
+import mspr.backend.BO.Country;
+
 public class WorldometerDto {
     private String country;     // Pays
     private String continent;   // Continent
@@ -8,15 +10,13 @@ public class WorldometerDto {
     private int totalDeaths;    // Total des décès
     private int totalRecovered; // Total des guérisons
     private int activeCases;    // Cas actifs
-
-    // (On ignore NewCases, NewDeaths, NewRecovered, Serious/Critical, Tests etc.)
-    // + constructeur, getters, setters
+    private String whoRegion;
 
 
     public WorldometerDto() {
     }
 
-    public WorldometerDto(String country, String continent, int population, int totalCases, int totalDeaths, int totalRecovered, int activeCases) {
+    public WorldometerDto(String country, String continent, int population, int totalCases, int totalDeaths, int totalRecovered, int activeCases, String whoRegion) {
         this.country = country;
         this.continent = continent;
         this.population = population;
@@ -24,6 +24,15 @@ public class WorldometerDto {
         this.totalDeaths = totalDeaths;
         this.totalRecovered = totalRecovered;
         this.activeCases = activeCases;
+        this.whoRegion = whoRegion;
+    }
+
+    public String getWhoRegion() {
+        return whoRegion;
+    }
+
+    public void setWhoRegion(String whoRegion) {
+        this.whoRegion = whoRegion;
     }
 
     public String getCountry() {

@@ -2,6 +2,7 @@ package mspr.backend.Service.CsvImporter;
 
 import mspr.backend.BO.DiseaseCase;
 import mspr.backend.DTO.FullGroupedDto;
+import mspr.backend.DTO.WorldometerDto;
 import mspr.backend.Mapper.FullGroupedMapper;
 import mspr.backend.Repository.DiseaseCaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,14 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class FullGroupedService {
@@ -20,28 +28,51 @@ public class FullGroupedService {
     private FullGroupedMapper mapper;
     @Autowired private DiseaseCaseRepository diseaseCaseRepository;
 
+    public static final String FILE_NAME = "full_grouped.csv";
+
     public void importData() throws Exception {
-        ClassPathResource resource = new ClassPathResource("data/full_grouped.csv");
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
-            br.readLine(); // ignorer l'en-tête
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-                String[] fields = line.split(",");
-                // Champ 0: Date, 1: Country/Region, 2: Confirmed, 3: Deaths, 4: Recovered, 5: Active,
-                // 6: New cases, 7: New deaths, 8: New recovered, 9: WHO Region.
-                LocalDate date = LocalDate.parse(fields[0]);
-                String country = fields[1].trim();
-                int confirmed = Integer.parseInt(fields[2]);
-                int deaths = Integer.parseInt(fields[3]);
-                int recovered = Integer.parseInt(fields[4]);
-                int active = Integer.parseInt(fields[5]);
-                // On ignore fields[6], [7], [8] (nouvelles cases) et [9] (WHO region).
-                FullGroupedDto dto = new FullGroupedDto(date, country, confirmed, deaths, recovered, active);
-                DiseaseCase diseaseCase = mapper.dtoToEntity(dto);
-                diseaseCaseRepository.save(diseaseCase);
-            }
+
+        String pathFile = "src/main/resources/data/" + FILE_NAME;
+        Path path = Paths.get(pathFile);
+
+        if(Files.isRegularFile(path) && Files.exists(path)) {
+            System.out.println("Le fichier existe et est un fichier régulier.");
+        } else {
+            System.out.println("Le fichier n'existe pas ou n'est pas un fichier régulier.");
         }
+
+        List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+        HashMap<Integer, FullGroupedDto> dtoMap = new HashMap<>();
+        for (int l = 1; l < lines.size(); l++) {
+            String line = lines.get(l);
+            String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+            LocalDate date = LocalDate.parse(fields[0], java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String countryRegionName = fields[1];
+            int confirmed = fields[2].isEmpty() ? 0 : Integer.parseInt(fields[2]);
+            int deaths = fields[3].isEmpty() ? 0 : Integer.parseInt(fields[3]);
+            int recovered = fields[4].isEmpty() ? 0 : Integer.parseInt(fields[4]);
+            int active = fields[5].isEmpty() ? 0 : Integer.parseInt(fields[5]);
+//            int newCases = fields[6].isEmpty() ? 0 : Integer.parseInt(fields[6]);
+//            int newDeaths = fields[7].isEmpty() ? 0 : Integer.parseInt(fields[7]);
+//            int newRecovered = fields[8].isEmpty() ? 0 : Integer.parseInt(fields[8]);
+//            String whoRegion = fields[9];
+
+
+            FullGroupedDto dto = new FullGroupedDto(
+                    date,
+                    countryRegionName,
+                    confirmed,
+                    deaths,
+                    recovered,
+                    active
+            );
+            int hashKey = (date + countryRegionName + confirmed + deaths + recovered + active).hashCode();
+            dtoMap.put(hashKey, dto);
+        }
+
+
+        mapper.dtoToEntity(dtoMap);
+
     }
 }
 

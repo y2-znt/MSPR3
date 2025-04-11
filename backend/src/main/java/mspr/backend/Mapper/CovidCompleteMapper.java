@@ -23,43 +23,43 @@ public class CovidCompleteMapper {
     public DiseaseCase dtoToEntity(CovidCompleteDto dto) {
         // 1. Récupérer ou créer le pays
         String countryName = dto.getCountryRegion();
-        Optional<Country> country = countryService.getCountryByName(countryName);
+        Country country = countryService.getCountryByName(countryName);
 
-
-        // 2. Récupérer ou créer la région (province/état) s’il y en a une
-        Optional<Region> region = null;
-        String provinceName = dto.getProvinceState();
-        if (provinceName != null && !provinceName.isEmpty()) {
-            // On cherche la région par nom et pays
-            region = regionService.getRegionByName(provinceName);
-        }
-
-        // 3. Récupérer ou créer la location
-        Location location;
-        String locationName = (provinceName == null || provinceName.isEmpty()) ? countryName : provinceName;
-        // On utilise le nom de la province si elle existe, sinon le nom du pays comme nom de lieu.
-        if (region != null) {
-            // Si une région est définie, on cherche la location par nom + région
-            location = locationService.getLocationByName(locationName);
-
-        } else {
-            // Pas de région (par exemple Afghanistan n'a pas de province dans les données)
-            location = locationService.getLocationByName(locationName);
-        }
-
-        // 4. Récupérer ou créer la maladie (COVID-19). On s'attend à ce qu'elle existe déjà idéalement.
-        Disease disease = diseaseService.getDiseaseByName("COVID-19");
-
-        // 5. Créer le DiseaseCase et remplir les données
+//
+//        // 2. Récupérer ou créer la région (province/état) s’il y en a une
+//        Region region = null;
+//        String provinceName = dto.getProvinceState();
+//        if (provinceName != null && !provinceName.isEmpty()) {
+//            // On cherche la région par nom et pays
+//            region = regionService.getRegionByName(provinceName);
+//        }
+//
+//        // 3. Récupérer ou créer la location
+//        Location location;
+//        String locationName = (provinceName == null || provinceName.isEmpty()) ? countryName : provinceName;
+//        // On utilise le nom de la province si elle existe, sinon le nom du pays comme nom de lieu.
+//        if (region != null) {
+//            // Si une région est définie, on cherche la location par nom + région
+//            location = locationService.getLocationByName(locationName);
+//
+//        } else {
+//            // Pas de région (par exemple Afghanistan n'a pas de province dans les données)
+//            location = locationService.getLocationByName(locationName);
+//        }
+//
+//        // 4. Récupérer ou créer la maladie (COVID-19). On s'attend à ce qu'elle existe déjà idéalement.
+//        Disease disease = diseaseService.getDiseaseByName("COVID-19");
+//
+//        // 5. Créer le DiseaseCase et remplir les données
         DiseaseCase diseaseCase = new DiseaseCase();
-        diseaseCase.setDate(dto.getDate());
-        diseaseCase.setConfirmedCases(dto.getConfirmed());
-        diseaseCase.setDeaths(dto.getDeaths());
-        diseaseCase.setRecovered(dto.getRecovered());
-        //diseaseCase.setActive(dto.getActive());
-        diseaseCase.setLocation(location);
-        diseaseCase.setDisease(disease);
-
+//        diseaseCase.setDate(dto.getDate());
+//        diseaseCase.setConfirmedCases(dto.getConfirmed());
+//        diseaseCase.setDeaths(dto.getDeaths());
+//        diseaseCase.setRecovered(dto.getRecovered());
+//        //diseaseCase.setActive(dto.getActive());
+//        diseaseCase.setLocation(location);
+//        diseaseCase.setDisease(disease);
+//
         return diseaseCase;
     }
 }

@@ -28,8 +28,10 @@ public class RegionController {
         return regionService.getRegionById(id);
     }
     @GetMapping("/name/{name}")
-    public Optional<Region> getRegionByName(@PathVariable String name) {
+    public Region getRegionByName(@PathVariable String name) {
         return regionService.getRegionByName(name);
     }
+
+
 
 }

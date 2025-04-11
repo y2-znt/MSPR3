@@ -18,10 +18,10 @@ public class UsaCountyMapper {
 
     public DiseaseCase dtoToEntity(UsaCountyDto dto) {
         // Pays (devrait toujours être "US")
-        Optional<Country> country = countryService.getCountryByName(dto.getCountryRegion());
+        Country country = countryService.getCountryByName(dto.getCountryRegion());
 
         // Région (l'État aux USA)
-        Optional<Region> state = regionService.getRegionByName(dto.getProvinceState());
+        Region state = regionService.getRegionByName(dto.getProvinceState());
 
         // Location (le comté, rattaché à l'État)
         Location location = locationService.getLocationByName(dto.getCounty());
