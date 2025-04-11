@@ -9,21 +9,6 @@ variables:
   DB_NAME: "mspr1db"
   DB_PORT: "5432"
 
-build-frontend:
-  stage: build
-  image: node:20-alpine
-  script:
-    - cd frontend
-    - npm ci
-    - npm run build
-  artifacts:
-    paths:
-      - frontend/dist/
-    expire_in: 1 week
-  only:
-    - main
-    - merge_requests
-
 build-backend:
   stage: build
   image: maven:3.9.9-amazoncorretto-21-debian
@@ -33,6 +18,21 @@ build-backend:
   artifacts:
     paths:
       - backend/target/*.jar
+    expire_in: 1 week
+  only:
+    - main
+    - merge_requests
+
+build-frontend:
+  stage: build
+  image: node:20-alpine
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/dist/
     expire_in: 1 week
   only:
     - main
