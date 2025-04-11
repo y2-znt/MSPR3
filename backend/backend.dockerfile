@@ -1,18 +1,14 @@
-FROM maven:3.9.9-amazoncorretto-21-debian AS build
+FROM maven:3.9.9-amazoncorretto-21-debian
 
 WORKDIR /app
 
+# Copy only the POM file first to cache dependencies
 COPY pom.xml .
+RUN mvn dependency:go-offline
+
 COPY src ./src
-
-RUN mvn clean package -DskipTests
-
-FROM openjdk:21
-
-WORKDIR /app
-
-COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar /app/backend.jar
-COPY .env /app/.env
+COPY .env .
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "backend.jar"]
+
+CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.profiles=dev"]
