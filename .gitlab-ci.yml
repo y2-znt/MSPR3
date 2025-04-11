@@ -6,6 +6,23 @@ variables:
   DB_URL: "jdbc:postgresql://db:5432/mspr1db"
   DB_USERNAME: "mspr1"
   DB_PASSWORD: "mspr1"
+  DB_NAME: "mspr1db"
+  DB_PORT: "5432"
+
+build-frontend:
+  stage: build
+  image: node:20-alpine
+  script:
+    - cd frontend
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/dist/
+    expire_in: 1 week
+  only:
+    - main
+    - merge_requests
 
 build-backend:
   stage: build
@@ -25,34 +42,16 @@ test-backend:
   stage: test
   image: maven:3.9.9-amazoncorretto-21-debian
   services:
-    - postgres:latest
+    - name: postgres:latest
+      alias: db
   variables:
-    POSTGRES_DB: mspr1db
-    POSTGRES_USER: mspr1
-    POSTGRES_PASSWORD: mspr1
-    DB_URL: "jdbc:postgresql://postgres:5432/mspr1db"
-    DB_USERNAME: "mspr1"
-    DB_PASSWORD: "mspr1"
+    POSTGRES_DB: ${DB_NAME}
+    POSTGRES_USER: ${DB_USERNAME}
+    POSTGRES_PASSWORD: ${DB_PASSWORD}
   script:
     - cd backend
-    - mkdir -p src/test/resources
-    - cp .env src/test/resources/.env
+    - echo "Testing with database URL ${DB_URL}"
     - mvn test
-  only:
-    - main
-    - merge_requests
-
-build-frontend:
-  stage: build
-  image: node:20-alpine
-  script:
-    - cd frontend
-    - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - frontend/dist/
-    expire_in: 1 week
   only:
     - main
     - merge_requests
