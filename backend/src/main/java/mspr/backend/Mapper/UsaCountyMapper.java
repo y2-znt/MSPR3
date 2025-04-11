@@ -2,49 +2,32 @@ package mspr.backend.Mapper;
 
 import mspr.backend.DTO.UsaCountyDto;
 import mspr.backend.BO.*;
-import mspr.backend.Repository.*;
+import mspr.backend.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 
 @Component
 public class UsaCountyMapper {
-    @Autowired private CountryRepository countryRepository;
-    @Autowired
-    private RegionRepository regionRepository;
-    @Autowired private LocationRepository locationRepository;
-    @Autowired private DiseaseRepository diseaseRepository;
+    @Autowired private CountryService countryService;
+    @Autowired private RegionService regionService;
+    @Autowired private LocationService locationService;
+    @Autowired private DiseaseService diseaseService;
 
     public DiseaseCase dtoToEntity(UsaCountyDto dto) {
         // Pays (devrait toujours être "US")
-        Country country = countryRepository.findByName(dto.getCountryRegion())
-                .orElseGet(() -> {
-                    Country c = new Country();
-                    c.setName(dto.getCountryRegion());
-                    return countryRepository.save(c);
-                });
+        Optional<Country> country = countryService.getCountryByName(dto.getCountryRegion());
 
         // Région (l'État aux USA)
-        Region state = regionRepository.findByNameAndCountryId(dto.getProvinceState(), country.getId())
-                .orElseGet(() -> {
-                    Region r = new Region();
-                    r.setName(dto.getProvinceState());
-                    r.setCountry(country);
-                    return regionRepository.save(r);
-                });
+        Optional<Region> state = regionService.getRegionByName(dto.getProvinceState());
 
         // Location (le comté, rattaché à l'État)
-        Location location = locationRepository.findByNameAndRegionId(dto.getCounty(), state.getId())
-                .orElseGet(() -> {
-                    Location loc = new Location();
-                    loc.setName(dto.getCounty());
-                    loc.setRegion(state);
-                    return locationRepository.save(loc);
-                });
+        Location location = locationService.getLocationByName(dto.getCounty());
 
         // Maladie (COVID-19)
-        Disease disease = diseaseRepository.findByName("COVID-19")
-                .orElseGet(() -> diseaseRepository.save(new Disease("COVID-19")));
+        Disease disease = diseaseService.getDiseaseByName("COVID-19");
 
         // Création du cas
         DiseaseCase diseaseCase = new DiseaseCase();

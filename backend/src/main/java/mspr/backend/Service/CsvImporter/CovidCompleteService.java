@@ -20,14 +20,14 @@ public class CovidCompleteService {
     @Autowired
     private DiseaseCaseRepository diseaseCaseRepository;
 
-    public void importData() throws Exception {
-        // Ouvrir le fichier CSV depuis les ressources
-        ClassPathResource resource = new ClassPathResource("data/covid_19_clean_complete.csv");
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
-            String header = br.readLine(); // lire et ignorer l'en-tête
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue; // ignorer les lignes vides éventuelles
+                public void importData() throws Exception {
+                    // Ouvrir le fichier CSV depuis les ressources
+                    ClassPathResource resource = new ClassPathResource("data/covid_19_clean_complete.csv");
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
+                        String header = br.readLine(); // lire et ignorer l'en-tête
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            if (line.trim().isEmpty()) continue; // ignorer les lignes vides éventuelles
 
                 // Le fichier est séparé par des virgules, on split directement
                 String[] fields = line.split(",");
@@ -35,7 +35,8 @@ public class CovidCompleteService {
 
                 // Extraire et convertir les valeurs
                 String province = fields[0].trim();              // province ou état (vide si pas de province)
-                String country = fields[1].trim();               // pays
+                String country = fields[1].trim();
+//                country = clean_country(country); // pays
                 double lat = Double.parseDouble(fields[2]);      // latitude
                 double lon = Double.parseDouble(fields[3]);      // longitude
                 LocalDate date = LocalDate.parse(fields[4]);     // date au format YYYY-MM-DD (déjà dans ce format dans le CSV)
@@ -55,4 +56,8 @@ public class CovidCompleteService {
             }
         }
     }
+
+//    public function clean_country(String countryName){
+//
+//    }
 }

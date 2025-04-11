@@ -3,24 +3,26 @@ package mspr.backend.Mapper;
 import mspr.backend.BO.*;
 import mspr.backend.DTO.FullGroupedDto;
 import mspr.backend.DTO.UsaCountyDto;
-import mspr.backend.Repository.*;
+import mspr.backend.Service.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class FullGroupedMapper {
 
     @Autowired
-    private CountryRepository countryRepository;
+    private CountryService countryService;
 
     @Autowired
-    private LocationRepository locationRepository;
+    private LocationService locationService;
 
     @Autowired
-    private DiseaseRepository diseaseRepository;
+    private DiseaseService diseaseService;
     @Autowired
-    private RegionRepository regionRepository;
+    private RegionService regionService;
 
     /**
      * Convertit un DTO FullGroupedDto en une entité DiseaseCase.
@@ -29,37 +31,19 @@ public class FullGroupedMapper {
      */
     public DiseaseCase dtoToEntity(FullGroupedDto dto) {
         // 1. Récupérer ou créer le pays à partir du nom fourni dans le DTO.
-        Country country = countryRepository.findByName(dto.getCountryRegion())
-                .orElseGet(() -> {
-                    Country newCountry = new Country();
-                    newCountry.setName(dto.getCountryRegion());
-                    return countryRepository.save(newCountry);
-                });
+        Optional<Country> country = countryService.getCountryByName(dto.getCountryRegion());
 
 
         // TODO set region before location
-//        Region region = regionRepository
+//        Region region = regionService
 
         // 2. Pour le fichier FullGrouped, nous n'avons pas de province, donc
         // on utilise le nom du pays comme nom de Location.
         String locationName = dto.getCountryRegion();
-        Location location = locationRepository.findByNameAndCountryId(locationName, country.getId())
-                .orElseGet(() -> {
-                    Location newLocation = new Location();
-                    newLocation.setName(locationName);
-                    // Les coordonnées (lat, lon) ne sont pas disponibles dans ce CSV.
-
-//                    newLocation.setRegion(region);
-                    return locationRepository.save(newLocation);
-                });
+        Location location = locationService.getLocationByName(locationName);
 
         // 3. Récupérer ou créer la maladie "COVID-19"
-        Disease disease = diseaseRepository.findByName("COVID-19")
-                .orElseGet(() -> {
-                    Disease newDisease = new Disease();
-                    newDisease.setName("COVID-19");
-                    return diseaseRepository.save(newDisease);
-                });
+        Disease disease = diseaseService.getDiseaseByName("COVID-19");
 
         // 4. Créer et remplir le DiseaseCase avec les informations du DTO.
         DiseaseCase diseaseCase = new DiseaseCase();
