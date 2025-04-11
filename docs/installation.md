@@ -38,6 +38,30 @@ docker exec -it mspr1-db psql -U <username> -d <dbname>
 
 Remplacez `<username>` et `<dbname>` par les valeurs configurées dans votre fichier `.env`.
 
+Une fois connecté, vous pouvez :
+
+- Voir toutes les tables :
+
+```sql
+\dt
+```
+
+- Voir la structure d'une table spécifique (remplacez `nom_table` par le nom de la table) :
+
+```sql
+\d nom_table
+```
+
+## Exécution des tests
+
+Pour lancer les tests depuis le conteneur backend :
+
+```bash
+docker exec -it mspr1-backend mvn test
+```
+
+Cette commande exécutera tous les tests JUnit 5 définis dans le projet.
+
 ## Arrêt des conteneurs
 
 Pour arrêter les conteneurs :

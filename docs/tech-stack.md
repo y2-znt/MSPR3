@@ -3,6 +3,8 @@
 ## Frontend
 
 - **Framework** : Angular
+- **Language** : TypeScript
+- **Styling** : SCSS
 - **UI Framework** : Angular Material UI
 - **Librairies de visualisation** :
   - Chart.js pour les graphiques
@@ -14,8 +16,7 @@
 - **Language** : Java 17
 - **ORM** : Spring Data JPA
 - **Documentation API** : Swagger/OpenAPI
-- **Tests** :
-  - JUnit 5
+- **Tests** : JUnit 5
 
 ## Base de données
 
