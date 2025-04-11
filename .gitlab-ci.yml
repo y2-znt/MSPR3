@@ -24,8 +24,18 @@ build-backend:
 test-backend:
   stage: test
   image: maven:3.9.9-amazoncorretto-21-debian
+  services:
+    - postgres:latest
+  variables:
+    POSTGRES_DB: mspr1db
+    POSTGRES_USER: mspr1
+    POSTGRES_PASSWORD: mspr1
+    DB_URL: "jdbc:postgresql://postgres:5432/mspr1db"
+    DB_USERNAME: "mspr1"
+    DB_PASSWORD: "mspr1"
   script:
     - cd backend
+    - mkdir -p src/test/resources
     - cp .env src/test/resources/.env
     - mvn test
   only:
