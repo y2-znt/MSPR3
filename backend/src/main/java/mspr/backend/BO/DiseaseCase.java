@@ -20,6 +20,7 @@ public class DiseaseCase {
 
     @ManyToOne
     @JoinColumn(name = "location_id")
+    @JsonBackReference
     private Location location;
 
     @Column(name = "date")
