@@ -1,8 +1,10 @@
 package mspr.backend.Service.CsvImporter;
 
+import jakarta.transaction.Transactional;
 import mspr.backend.BO.DiseaseCase;
 import mspr.backend.DTO.FullGroupedDto;
 import mspr.backend.DTO.WorldometerDto;
+import mspr.backend.Helpers.CleanerHelper;
 import mspr.backend.Mapper.FullGroupedMapper;
 import mspr.backend.Repository.DiseaseCaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
+@Transactional
 public class FullGroupedService {
 
-    @Autowired
-    private FullGroupedMapper mapper;
+    @Autowired private FullGroupedMapper mapper;
     @Autowired private DiseaseCaseRepository diseaseCaseRepository;
+    @Autowired private CleanerHelper cleanerHelper;
 
     public static final String FILE_NAME = "full_grouped.csv";
 
@@ -47,7 +50,7 @@ public class FullGroupedService {
             String line = lines.get(l);
             String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
             LocalDate date = LocalDate.parse(fields[0], java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String countryRegionName = fields[1];
+            String countryRegionName = cleanerHelper.cleanRegionName(cleanerHelper.cleanCountryName(fields[1]));
             int confirmed = fields[2].isEmpty() ? 0 : Integer.parseInt(fields[2]);
             int deaths = fields[3].isEmpty() ? 0 : Integer.parseInt(fields[3]);
             int recovered = fields[4].isEmpty() ? 0 : Integer.parseInt(fields[4]);
@@ -55,7 +58,7 @@ public class FullGroupedService {
 //            int newCases = fields[6].isEmpty() ? 0 : Integer.parseInt(fields[6]);
 //            int newDeaths = fields[7].isEmpty() ? 0 : Integer.parseInt(fields[7]);
 //            int newRecovered = fields[8].isEmpty() ? 0 : Integer.parseInt(fields[8]);
-//            String whoRegion = fields[9];
+            String whoRegion = fields[9];
 
 
             FullGroupedDto dto = new FullGroupedDto(
@@ -64,7 +67,8 @@ public class FullGroupedService {
                     confirmed,
                     deaths,
                     recovered,
-                    active
+                    active,
+                    whoRegion
             );
             int hashKey = (date + countryRegionName + confirmed + deaths + recovered + active).hashCode();
             dtoMap.put(hashKey, dto);

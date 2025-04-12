@@ -1,4 +1,4 @@
-package mspr.backend.Cleaner;
+package mspr.backend.Helpers;
 
 import mspr.backend.BO.Country;
 import org.springframework.stereotype.Service;
@@ -51,7 +51,11 @@ public class CleanerHelper {
             return countryNameMap.get(countryName);
         }
 
-        return countryName.replaceAll("^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "").trim();
+        return countryName.trim();
+    }
+
+    public String cleanRegionName(String regionName){
+        return regionName.trim();
     }
 
 

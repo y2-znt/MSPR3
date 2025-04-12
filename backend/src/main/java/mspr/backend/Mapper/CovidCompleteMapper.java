@@ -2,64 +2,59 @@ package mspr.backend.Mapper;
 
 import mspr.backend.DTO.CovidCompleteDto;
 import mspr.backend.BO.*;
-import mspr.backend.Service.*;
+import mspr.backend.Repository.*;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @Component
 public class CovidCompleteMapper {
 
-    @Autowired private CountryService countryService;
-    @Autowired private RegionService regionService;
-    @Autowired private LocationService locationService;
-    @Autowired private DiseaseService diseaseService;
+    @Autowired private CountryRepository countryRepository;
+    @Autowired private RegionRepository regionRepository;
+    @Autowired private LocationRepository locationRepository;
+    @Autowired private DiseaseRepository diseaseRepository;
+    @Autowired private DiseaseCaseRepository diseaseCaseRepository;
+
 
     /**
      * Convertit un DTO CovidCompleteDto en un objet DiseaseCase (prêt à être persisté).
      * Cette méthode gère la création/recherche de Country, Region, Location, et lie la Disease (COVID-19).
      */
-    public DiseaseCase dtoToEntity(CovidCompleteDto dto) {
-        // 1. Récupérer ou créer le pays
-        String countryName = dto.getCountryRegion();
-        Country country = countryService.getCountryByName(countryName);
+    public void dtoToEntity(HashMap<Integer, CovidCompleteDto> dtoMap) {
 
-//
-//        // 2. Récupérer ou créer la région (province/état) s’il y en a une
-//        Region region = null;
-//        String provinceName = dto.getProvinceState();
-//        if (provinceName != null && !provinceName.isEmpty()) {
-//            // On cherche la région par nom et pays
-//            region = regionService.getRegionByName(provinceName);
-//        }
-//
-//        // 3. Récupérer ou créer la location
-//        Location location;
-//        String locationName = (provinceName == null || provinceName.isEmpty()) ? countryName : provinceName;
-//        // On utilise le nom de la province si elle existe, sinon le nom du pays comme nom de lieu.
-//        if (region != null) {
-//            // Si une région est définie, on cherche la location par nom + région
-//            location = locationService.getLocationByName(locationName);
-//
-//        } else {
-//            // Pas de région (par exemple Afghanistan n'a pas de province dans les données)
-//            location = locationService.getLocationByName(locationName);
-//        }
-//
-//        // 4. Récupérer ou créer la maladie (COVID-19). On s'attend à ce qu'elle existe déjà idéalement.
-//        Disease disease = diseaseService.getDiseaseByName("COVID-19");
-//
-//        // 5. Créer le DiseaseCase et remplir les données
-        DiseaseCase diseaseCase = new DiseaseCase();
-//        diseaseCase.setDate(dto.getDate());
-//        diseaseCase.setConfirmedCases(dto.getConfirmed());
-//        diseaseCase.setDeaths(dto.getDeaths());
-//        diseaseCase.setRecovered(dto.getRecovered());
-//        //diseaseCase.setActive(dto.getActive());
-//        diseaseCase.setLocation(location);
-//        diseaseCase.setDisease(disease);
-//
-        return diseaseCase;
+        ArrayList<DiseaseCase> diseaseCases = new ArrayList<>();
+        Disease covid19 = diseaseRepository.findByName("COVID-19");
+
+        for (CovidCompleteDto dto : dtoMap.values()) {
+            DiseaseCase diseaseCase = new DiseaseCase();
+            diseaseCase.setDate(dto.getDate());
+            diseaseCase.setConfirmedCases(dto.getConfirmed());
+            diseaseCase.setDeaths(dto.getDeaths());
+            diseaseCase.setRecovered(dto.getRecovered());
+            diseaseCase.setDisease(covid19);
+            Region region = regionRepository.findByName(dto.getCountryRegion());
+            // if region, set the location with the standard of that region.
+            if (region != null) {
+                diseaseCase.setLocation(locationRepository.findByName(region.getName()+", location standard"));
+            }
+            // if no region , get the country name
+            else {
+                Country country = countryRepository.findByName(dto.getCountryRegion());
+                // if country exists, set the location with the standard of the standard region of that country.
+                if (country!=null) {
+                    diseaseCase.setLocation(locationRepository.findByName(country.getName()+", region standard, location standard"));
+                } else{
+                    System.out.println("ATTENTION (full_grouped): le pays ou region "+dto.getCountryRegion()+" n'existe pas dans la base de données.");
+                }
+            }
+            diseaseCases.add(diseaseCase);
+        }
+
+
+
+        diseaseCaseRepository.saveAll(diseaseCases);
+
     }
 }

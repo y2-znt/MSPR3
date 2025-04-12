@@ -1,6 +1,7 @@
 package mspr.backend.Runner;
 
 import mspr.backend.BO.Disease;
+import mspr.backend.Helpers.CacheHelper;
 import mspr.backend.Repository.*;
 import mspr.backend.Service.CsvImporter.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +22,24 @@ public class DataImportCovid19Runner implements CommandLineRunner {
     @Autowired private DiseaseCaseRepository diseaseCaseRepository;
     @Autowired private DiseaseRepository diseaseRepository;
 
+    @Autowired private CacheHelper cacheHelper;
 
     @Override
     public void run(String... args) throws Exception {
 
 
         System.out.println("Suppressions des données existantes...");
-        deleteAllData();
+        deleteAllDataInBatch();
         System.out.println("Suppression des données terminée.");
 
-        Disease covid = diseaseRepository.findByName("COVID-19");
+        Disease covid = cacheHelper.getDiseaseByName("COVID-19");
         if(covid == null) {
             System.out.println("La maladie COVID-19 n'existe pas dans la base de données. Création de COVID-19...");
-            Disease disease = new Disease();
-            disease.setName("COVID-19");
-            disease.setDescription("COVID-19");
-            diseaseRepository.save(disease);
+            covid = new Disease();
+            covid.setName("COVID-19");
+            covid.setDescription("COVID-19");
+            diseaseRepository.save(covid);
+            cacheHelper.addDiseaseToCache("COVID-19", covid);
         }
 
         System.out.println("** Début de l'import des données COVID **");
@@ -61,15 +64,20 @@ public class DataImportCovid19Runner implements CommandLineRunner {
 //        usaCountyService.importData();
 //        System.out.println("Import USA par comtés terminé.");
 
+        System.out.println("Libération de cache...");
+        cacheHelper.clearCache();
+        System.out.println("Cache libéré.");
+
         System.out.println("** Importation des données COVID terminée avec succès **");
+
     }
 
-    public void deleteAllData() {
-        locationRepository.deleteAll();
-        regionRepository.deleteAll();
-        countryRepository.deleteAll();
-        diseaseCaseRepository.deleteAll();
-        diseaseRepository.deleteAll();
+    public void deleteAllDataInBatch() {
+        diseaseCaseRepository.deleteAllInBatch();
+        diseaseRepository.deleteAllInBatch();
+        locationRepository.deleteAllInBatch();
+        regionRepository.deleteAllInBatch();
+        countryRepository.deleteAllInBatch();
     }
 
 }

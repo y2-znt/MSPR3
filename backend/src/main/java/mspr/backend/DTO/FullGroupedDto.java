@@ -9,20 +9,29 @@ public class FullGroupedDto {
     private int deaths;            // Nombre de décès (cumulé)
     private int recovered;         // Nombre guéris (cumulé)
     private int active;            // Nombre actifs (cumulé)
-
+    private String whoRegion;
     // (On ignore les colonnes "New cases", "New deaths", "New recovered" dans ce DTO)
 
 
     public FullGroupedDto() {
     }
 
-    public FullGroupedDto(LocalDate date, String countryRegion, int confirmed, int deaths, int recovered, int active) {
+    public FullGroupedDto(LocalDate date, String countryRegion, int confirmed, int deaths, int recovered, int active, String whoRegion) {
         this.date = date;
         this.countryRegion = countryRegion;
         this.confirmed = confirmed;
         this.deaths = deaths;
         this.recovered = recovered;
         this.active = active;
+        this.whoRegion = whoRegion;
+    }
+
+    public String getWhoRegion() {
+        return whoRegion;
+    }
+
+    public void setWhoRegion(String whoRegion) {
+        this.whoRegion = whoRegion;
     }
 
     public LocalDate getDate() {

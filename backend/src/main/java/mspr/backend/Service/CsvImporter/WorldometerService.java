@@ -1,5 +1,6 @@
 package mspr.backend.Service.CsvImporter;
 
+import jakarta.transaction.Transactional;
 import mspr.backend.BO.Country;
 import mspr.backend.DTO.WorldometerDto;
 import mspr.backend.Mapper.WorldometerMapper;
@@ -21,6 +22,7 @@ import java.util.List;
 
 
 @Service
+@Transactional
 public class WorldometerService {
 
     @Autowired
