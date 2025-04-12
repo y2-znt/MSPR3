@@ -25,9 +25,27 @@ public class DiseaseCaseController {
         return diseaseCaseService.getAllDiseaseCases(page, size);
     }
 
-
     @GetMapping("/{id}")
     public Optional<DiseaseCase> getDiseaseCaseById(@PathVariable Integer id) {
         return diseaseCaseService.getDiseaseCaseById(id);
     }
+
+    @PostMapping
+    public DiseaseCase createDiseaseCase(@RequestBody DiseaseCase diseaseCase) {
+        return diseaseCaseService.createDiseaseCase(diseaseCase);
+    }
+
+    @PutMapping("/{id}")
+    public DiseaseCase updateDiseaseCase(@PathVariable Integer id, @RequestBody DiseaseCase diseaseCase) {
+        return diseaseCaseService.updateDiseaseCase(id, diseaseCase);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteDiseaseCase(@PathVariable Integer id) {
+        diseaseCaseService.deleteDiseaseCase(id);
+    }
+
+
+
+
 }
