@@ -28,4 +28,25 @@ public class LocationService {
         return locationRepository.findByName(name);
     }
 
+    public Location createLocation(Location location) {
+        return locationRepository.save(location);
+    }
+
+    public Location updateLocation(Integer id, Location location) {
+        if (locationRepository.existsById(id)) {
+            location.setId(id);
+            return locationRepository.save(location);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteLocation(Integer id) {
+        locationRepository.deleteById(id);
+    }
+
+
+    
+
+
 }
