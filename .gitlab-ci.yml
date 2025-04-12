@@ -11,7 +11,7 @@ variables:
 
 build-backend:
   stage: build
-  image: maven:3.9.9-amazoncorretto-21-debian
+  image: maven:3.9.9-amazoncorretto-21-alpine
   script:
     - cd backend
     - mvn clean package -DskipTests
@@ -40,7 +40,7 @@ build-frontend:
 
 test-backend:
   stage: test
-  image: maven:3.9.9-amazoncorretto-21-debian
+  image: maven:3.9.9-amazoncorretto-21-alpine
   services:
     - name: postgres:latest
       alias: db
