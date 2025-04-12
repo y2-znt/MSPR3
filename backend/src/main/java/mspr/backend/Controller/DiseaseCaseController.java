@@ -31,7 +31,7 @@ public class DiseaseCaseController {
     }
 
     @GetMapping("/name/{name}")
-    public DiseaseCase getDiseaseCaseByName(@PathVariable String name) {
+    public Optional<DiseaseCase> getDiseaseCaseByName(@PathVariable String name) {
         return diseaseCaseService.getDiseaseCaseByName(name);
     }
 
