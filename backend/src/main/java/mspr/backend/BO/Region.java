@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="Region")
 public class Region {
@@ -14,12 +17,14 @@ public class Region {
     private Integer id;
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Location> locations = new HashSet<>();
 
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "country_id")
+    @JsonBackReference
     private Country country;
 
     public Region() {}

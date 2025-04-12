@@ -23,10 +23,12 @@ public class CountryService {
         return countryRepository.findById(id);
     }
 
-    public Optional<Country> getCountryByName(String name) {
-        return countryRepository.findAll().stream()
-                .filter(country -> country.getName().equalsIgnoreCase(name))
-                .findFirst();
+    public Country getCountryByName(String name) {
+        return countryRepository.findByName(name);
+    }
+
+    public Country saveCountry(Country country) {
+        return countryRepository.save(country);
     }
 
 }

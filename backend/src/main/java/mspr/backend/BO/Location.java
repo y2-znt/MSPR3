@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name="Location")
@@ -15,7 +18,13 @@ public class Location {
     private Integer id;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<DiseaseCase> diseasesCases = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "region_id")
+    @JsonBackReference
+    private Region region;
 
     private String name;
 
@@ -51,9 +60,6 @@ public class Location {
         this.diseasesCases = diseasesCases;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "region_id")
-    private Region region;
 
     @Override
     public String toString() {

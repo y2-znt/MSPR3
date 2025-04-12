@@ -22,10 +22,8 @@ public class RegionService {
         return regionRepository.findById(id);
     }
     
-    public Optional<Region> getRegionByName(String name) {
-        return regionRepository.findAll().stream()
-                .filter(region -> region.getName().equalsIgnoreCase(name))
-                .findFirst();
+    public Region getRegionByName(String name) {
+        return regionRepository.findByName(name);
     }
 
 

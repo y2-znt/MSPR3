@@ -3,6 +3,8 @@ package mspr.backend.BO;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "DiseaseCase")
 public class DiseaseCase {
@@ -13,10 +15,12 @@ public class DiseaseCase {
 
     @ManyToOne
     @JoinColumn(name = "disease_id")
+    @JsonBackReference
     private Disease disease; 
 
     @ManyToOne
     @JoinColumn(name = "location_id")
+    @JsonBackReference
     private Location location;
 
     @Column(name = "date")
