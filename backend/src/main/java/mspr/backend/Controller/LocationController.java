@@ -42,7 +42,6 @@ public class LocationController {
     public Location createLocation(Location location) {
         return locationService.createLocation(location);
     }
-
     @PutMapping("/{id}")
     public Location updateLocation(@PathVariable Integer id, Location location) {
         return locationService.updateLocation(id, location);
