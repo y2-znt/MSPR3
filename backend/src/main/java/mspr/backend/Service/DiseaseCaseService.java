@@ -32,8 +32,10 @@ public class DiseaseCaseService {
         return diseaseCaseRepository.findById(id);
     }
 
-    public DiseaseCase getDiseaseCaseByName(String name) {
-        return diseaseCaseRepository.findByName(name);
+    public Optional<DiseaseCase> getDiseaseCaseByName(String name) {
+        return diseaseCaseRepository.findAll().stream()
+                .filter(diseaseCase -> diseaseCase.getName().equalsIgnoreCase(name))
+                .findFirst();
     }
 
     public DiseaseCase createDiseaseCase(DiseaseCase diseaseCase) {
