@@ -81,6 +81,9 @@ public class CacheHelper {
         diseaseCache.put(name, disease);
     }
 
+    // TODO : ajouter une fonction pour get or create une region + créer une location ,
+    // TODO : et même chose pour country
+
     public void clearCache() {
         diseaseCache.clear();
         countryCache.clear();

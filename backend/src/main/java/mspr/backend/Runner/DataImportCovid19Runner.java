@@ -26,8 +26,6 @@ public class DataImportCovid19Runner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-
         System.out.println("Suppressions des données existantes...");
         deleteAllDataInBatch();
         System.out.println("Suppression des données terminée.");
@@ -50,9 +48,9 @@ public class DataImportCovid19Runner implements CommandLineRunner {
         System.out.println("Import Worldometer terminé.");
 
         // 2. Import des données globales détaillées par province/état
-//        System.out.println("Import des données globales détaillées (covid_19_clean_complete)...");
-//        covidCompleteService.importData();
-//        System.out.println("Import global détaillé terminé.");
+        System.out.println("Import des données globales détaillées (covid_19_clean_complete)...");
+        covidCompleteService.importData();
+        System.out.println("Import global détaillé terminé.");
 
         // 3. Import des données globales agrégées par pays
         System.out.println("Import des données full_grouped...");

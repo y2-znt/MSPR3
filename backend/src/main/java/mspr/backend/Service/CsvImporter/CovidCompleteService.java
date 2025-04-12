@@ -57,7 +57,7 @@ public class CovidCompleteService {
             int deaths = fields[6].isEmpty() ? 0 : Integer.parseInt(fields[6]);
             int recovered = fields[7].isEmpty() ? 0 : Integer.parseInt(fields[7]);
             int active = fields[8].isEmpty() ? 0 : Integer.parseInt(fields[8]);
-//            String whoRegion = fields[9]; // Not used
+            String whoRegion = fields[9]; // Not used
             CovidCompleteDto dto = new CovidCompleteDto(
                     provinceStateName,
                     cleanerHelper.cleanRegionName(countryRegionName),
@@ -67,7 +67,8 @@ public class CovidCompleteService {
                     confirmed,
                     deaths,
                     recovered,
-                    active
+                    active,
+                    whoRegion
             );
             int hashKey = (provinceStateName + countryRegionName + lat + lon + date + confirmed + deaths + recovered + active).hashCode();
             dtoMap.put(hashKey, dto);

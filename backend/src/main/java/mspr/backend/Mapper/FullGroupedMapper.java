@@ -14,14 +14,10 @@ import java.util.HashMap;
 
 @Component
 public class FullGroupedMapper {
-
-
     @Autowired
     private DiseaseCaseRepository diseaseCaseRepository;
-
     @Autowired
     private CacheHelper cacheHelper;
-
     @Autowired
     private CleanerHelper cleanerHelper;
     @Autowired
@@ -56,7 +52,7 @@ public class FullGroupedMapper {
                 }
                 // if no region , that means we must create a new country or region... No way to tell which one
                 else {
-                        System.out.println("Creating new country for "+fullgroupedDto.getCountryRegion());
+                    System.out.println("Creating new country for "+fullgroupedDto.getCountryRegion());
                     country = new Country();
                     country.setName(fullgroupedDto.getCountryRegion());
                     // TODO : set continent properly
