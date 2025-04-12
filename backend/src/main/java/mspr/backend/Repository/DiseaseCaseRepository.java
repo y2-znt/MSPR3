@@ -7,4 +7,5 @@ import mspr.backend.BO.DiseaseCase;
 
 @Repository
 public interface DiseaseCaseRepository extends JpaRepository<DiseaseCase, Integer> {
+    DiseaseCase findByName(String name);
 }
