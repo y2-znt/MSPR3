@@ -23,13 +23,26 @@ public class DiseaseService {
         return diseaseRepository.findById(id);
     }
 
-    public Disease getByNameDiseasese(String name) {
-        return diseaseRepository.findByName(name);
-    }
-
     public Disease getDiseaseByName(String name) {
         return diseaseRepository.findByName(name);
     }
 
 
+    public Disease createDisease(Disease disease) {
+        return diseaseRepository.save(disease);
+    }
+
+    public Disease updateDisease(Integer id, Disease disease) {
+        if (diseaseRepository.existsById(id)) {
+            disease.setId(id);
+            return diseaseRepository.save(disease);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteDisease(Integer id) {
+        diseaseRepository.deleteById(id);
+    }
+    
 }
