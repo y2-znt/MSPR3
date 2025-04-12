@@ -30,6 +30,11 @@ public class DiseaseCaseController {
         return diseaseCaseService.getDiseaseCaseById(id);
     }
 
+    @GetMapping("/name/{name}")
+    public DiseaseCase getDiseaseCaseByName(@PathVariable String name) {
+        return diseaseCaseService.getDiseaseCaseByName(name);
+    }
+
     @PostMapping
     public DiseaseCase createDiseaseCase(@RequestBody DiseaseCase diseaseCase) {
         return diseaseCaseService.createDiseaseCase(diseaseCase);
