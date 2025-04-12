@@ -3,10 +3,10 @@ stages:
   - test
 
 variables:
-  DB_URL: "jdbc:postgresql://db:5432/mspr1db"
-  DB_USERNAME: "mspr1"
-  DB_PASSWORD: "mspr1"
-  DB_NAME: "mspr1db"
+  DB_URL: "jdbc:postgresql://db:5432/db_name"
+  DB_USERNAME: "db_username"
+  DB_PASSWORD: "db_password"
+  DB_NAME: "db_name"
   DB_PORT: "5432"
 
 build-backend:
@@ -45,12 +45,11 @@ test-backend:
     - name: postgres:latest
       alias: db
   variables:
-    POSTGRES_DB: ${DB_NAME}
-    POSTGRES_USER: ${DB_USERNAME}
-    POSTGRES_PASSWORD: ${DB_PASSWORD}
+    POSTGRES_DB: "$DB_NAME"
+    POSTGRES_USER: "$DB_USERNAME"
+    POSTGRES_PASSWORD: "$DB_PASSWORD"
   script:
     - cd backend
-    - echo "Testing with database URL ${DB_URL}"
     - mvn test
   only:
     - main
