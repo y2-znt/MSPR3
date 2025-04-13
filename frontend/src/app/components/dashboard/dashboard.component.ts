@@ -16,9 +16,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { HttpServiceService } from '../../service/http-service.service';
 
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { Country } from '../../models/country.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,17 +52,8 @@ export class DashboardComponent implements OnInit {
     end: new FormControl<Date | null>(null),
   });
 
-  countriesControl = new FormControl<string[]>([]);
-  countries: string[] = [
-    'France',
-    'Allemagne',
-    'Italie',
-    'Espagne',
-    'Royaume-Uni',
-    'États-Unis',
-    'Chine',
-    'Japon',
-  ];
+  countriesControl = new FormControl<Country[]>([]);
+  countries: Country[] = [];
 
   // KPI Data
   totalCases: number = 675432198;
@@ -159,7 +152,21 @@ export class DashboardComponent implements OnInit {
     },
   };
 
-  constructor() {}
+  constructor(private httpService: HttpServiceService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadCountries();
+  }
+
+  private loadCountries(): void {
+    this.httpService.getAllCountries().subscribe(
+      (response: any) => {
+        this.countries = response.content;
+        console.log('Countries loaded:', this.countries);
+      },
+      (error) => {
+        console.error('Error loading countries:', error);
+      }
+    );
+  }
 }
