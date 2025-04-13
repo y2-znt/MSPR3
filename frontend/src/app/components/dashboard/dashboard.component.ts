@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { HttpServiceService } from '../../service/http-service.service';
+import { CountryService } from '../../services/country.service';
 
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
@@ -152,16 +152,16 @@ export class DashboardComponent implements OnInit {
     },
   };
 
-  constructor(private httpService: HttpServiceService) {}
+  constructor(private countryService: CountryService) {}
 
   ngOnInit(): void {
     this.loadCountries();
   }
 
   private loadCountries(): void {
-    this.httpService.getAllCountries().subscribe(
-      (response: any) => {
-        this.countries = response.content;
+    this.countryService.getAllCountries().subscribe(
+      (countries: Country[]) => {
+        this.countries = countries;
         console.log('Countries loaded:', this.countries);
       },
       (error) => {
