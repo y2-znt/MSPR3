@@ -1,7 +1,8 @@
 package mspr.backend.Service;
 
-import java.util.List;
 
+
+import org.springframework.data.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,9 @@ public class LocationService {
     @Autowired
     private LocationRepository locationRepository;
 
-    public List<Location> getAllLocations() {
-        return locationRepository.findAll();
+    public Page<Location> getAllLocations(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return locationRepository.findAll(pageable);
     }
 
     public Location getLocationById(Integer id) {
