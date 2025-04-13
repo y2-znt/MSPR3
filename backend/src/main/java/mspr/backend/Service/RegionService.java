@@ -3,7 +3,9 @@ package mspr.backend.Service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
 
 import mspr.backend.BO.Region;
 import mspr.backend.Repository.RegionRepository;
@@ -14,8 +16,9 @@ public class RegionService {
     @Autowired
     private RegionRepository regionRepository;
 
-    public RegionRepository getRegionRepository() {
-        return regionRepository;
+    public Page<Region> getAllRegions(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return regionRepository.findAll(pageable);
     }
 
     public Optional<Region> getRegionById(Integer id) {

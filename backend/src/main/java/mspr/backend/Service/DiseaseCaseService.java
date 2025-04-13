@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 import mspr.backend.BO.DiseaseCase;
@@ -17,6 +21,11 @@ public class DiseaseCaseService {
 
     public List<DiseaseCase> getAllDiseaseCases() {
         return diseaseCaseRepository.findAll();
+    }
+
+    public Page<DiseaseCase> getAllDiseaseCases(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return diseaseCaseRepository.findAll(pageable);
     }
 
     public Optional<DiseaseCase> getDiseaseCaseById(Integer id) {
