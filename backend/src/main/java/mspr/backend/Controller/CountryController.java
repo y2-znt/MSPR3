@@ -1,6 +1,5 @@
 package mspr.backend.Controller;
 
-
 import mspr.backend.BO.Country;
 import mspr.backend.Service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/countries")
-
 public class CountryController {
 
     @Autowired
@@ -21,27 +19,31 @@ public class CountryController {
     public Page<Country> getAllCountries(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size) {
-    return countryService.getAllCountries(page, size);
+        return countryService.getAllCountries(page, size);
     }
 
     @GetMapping("/{id}")
-    public Optional<Country> getCountryById(@PathVariable Integer id) {
-        return countryService.getCountryById(id);
+    public Country getCountryById(@PathVariable Integer id) {
+        return countryService.getCountryById(id).orElse(null);
     }
 
+    //
+    // TODO: fix this
+    //
 
-    @GetMapping("/name/{name}")
-    public Optional<Country> getCountryByName(@PathVariable String name) {
-        if (name == null || name.isEmpty()) {
-            return Optional.empty();
-        }
-        // Validate the name format if necessary (e.g., regex for valid country names)
-        if (!name.matches("^[a-zA-Z\\s]+$")) {
-            return Optional.empty();
-        }
+    
+    // @GetMapping("/name/{name}")
+    // public Country getCountryByName(@PathVariable String name) {
+    //     if (name == null || name.isEmpty()) {
+    //         return null;
+    //     }
+    //     // Validate the name format if necessary (e.g., regex for valid country names)
+    //     if (!name.matches("^[a-zA-Z\\s]+$")) {
+    //         return null;
+    //     }
 
-        return countryService.getCountryByName(name);
-    }
+    //     return countryService.getCountryByName(name);
+    // }
 
     @PostMapping
     public Country createCountry(@RequestBody Country country) {
@@ -57,7 +59,4 @@ public class CountryController {
     public void deleteCountry(@PathVariable Integer id) {
         countryService.deleteCountry(id);
     }
-    
-
-
 }
