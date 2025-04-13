@@ -1,7 +1,5 @@
 package mspr.backend.Controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,7 +7,6 @@ import mspr.backend.BO.DiseaseCase;
 import mspr.backend.Service.DiseaseCaseService;
 
 import org.springframework.data.domain.Page;
-
 
 @RestController
 @RequestMapping("/api/disease-cases")
@@ -26,12 +23,12 @@ public class DiseaseCaseController {
     }
 
     @GetMapping("/{id}")
-    public Optional<DiseaseCase> getDiseaseCaseById(@PathVariable Integer id) {
+    public DiseaseCase getDiseaseCaseById(@PathVariable Integer id) {
         return diseaseCaseService.getDiseaseCaseById(id);
     }
 
     @GetMapping("/name/{name}")
-    public Optional<DiseaseCase> getDiseaseCaseByName(@PathVariable String name) {
+    public DiseaseCase getDiseaseCaseByName(@PathVariable String name) {
         return diseaseCaseService.getDiseaseCaseByName(name);
     }
 
@@ -49,8 +46,4 @@ public class DiseaseCaseController {
     public void deleteDiseaseCase(@PathVariable Integer id) {
         diseaseCaseService.deleteDiseaseCase(id);
     }
-
-
-
-
 }
