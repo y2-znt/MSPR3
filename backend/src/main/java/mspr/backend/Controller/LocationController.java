@@ -1,12 +1,8 @@
 package mspr.backend.Controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import mspr.backend.BO.Location;
 import mspr.backend.Service.LocationService;
@@ -19,8 +15,10 @@ public class LocationController {
     private LocationService locationService;
 
     @GetMapping
-    public List<Location> getAllLocations() {
-        return locationService.getAllLocations();
+    public Page<Location> getAllLocations(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+        return locationService.getAllLocations(page, size);
     }
 
     @GetMapping("/{id}")

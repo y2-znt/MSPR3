@@ -4,9 +4,9 @@ package mspr.backend.Controller;
 import mspr.backend.BO.Country;
 import mspr.backend.Service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -18,8 +18,10 @@ public class CountryController {
     private CountryService countryService;
 
     @GetMapping
-    public List<Country> getAllCountries() {
-        return countryService.getAllCountries();
+    public Page<Country> getAllCountries(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+    return countryService.getAllCountries(page, size);
     }
 
     @GetMapping("/{id}")

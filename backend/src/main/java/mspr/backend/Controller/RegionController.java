@@ -1,13 +1,10 @@
 package mspr.backend.Controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import mspr.backend.BO.Region;
 import mspr.backend.Service.RegionService;
@@ -20,9 +17,12 @@ public class RegionController {
     private RegionService regionService;
 
     @GetMapping
-    public List<Region> getAllRegions() {
-        return regionService.getRegionRepository().findAll();
+    public Page<Region> getAllRegions(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+        return regionService.getAllRegions(page, size);
     }
+
     @GetMapping("/{id}")
     public Optional<Region> getRegionById(@PathVariable Integer id) {
         return regionService.getRegionById(id);
