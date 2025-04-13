@@ -24,12 +24,12 @@ public class DiseaseCaseController {
 
     @GetMapping("/{id}")
     public DiseaseCase getDiseaseCaseById(@PathVariable Integer id) {
-        return diseaseCaseService.getDiseaseCaseById(id);
+        return diseaseCaseService.getDiseaseCaseById(id).orElse(null);
     }
 
     @GetMapping("/name/{name}")
     public DiseaseCase getDiseaseCaseByName(@PathVariable String name) {
-        return diseaseCaseService.getDiseaseCaseByName(name);
+        return diseaseCaseService.getDiseaseCaseByName(name).orElse(null);
     }
 
     @PostMapping

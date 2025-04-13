@@ -30,7 +30,7 @@ public class RegionController {
 
     @GetMapping("/{id}")
     public Region getRegionById(@PathVariable Integer id) {
-        return regionService.getRegionById(id);
+        return regionService.getRegionById(id).orElse(null);
     }
 
     @GetMapping("/name/{name}")
