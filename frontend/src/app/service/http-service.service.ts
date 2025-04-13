@@ -2,6 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
+import { Country } from '../models/country.model';
+import { Disease } from '../models/disease.model';
+import { DiseaseCase } from '../models/diseaseCase.model';
+import { Location } from '../models/location.model';
+import { Region } from '../models/region.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,48 +17,49 @@ export class HttpServiceService {
 
   constructor() {}
 
-  //Countries
-  getAllCountries(): Observable<any[]> {
+  // Countries
+  getAllCountries(): Observable<Country[]> {
     console.log('HttpServiceService called', this.url);
-    return this.http.get<any[]>(this.url + 'countries');
+    return this.http.get<Country[]>(this.url + 'countries');
   }
 
-  getCoutryById(id: number): Observable<any> {
-    return this.http.get<any>(this.url + 'countries/' + id);
+  getCountryById(id: number): Observable<Country> {
+    return this.http.get<Country>(this.url + 'countries/' + id);
   }
 
-  //Disease
-  getAllDiseases(): Observable<any[]> {
-    return this.http.get<any[]>(this.url + 'diseases');
+  //Diseases
+  getAllDiseases(): Observable<Disease[]> {
+    return this.http.get<Disease[]>(this.url + 'diseases');
   }
 
-  getDiseaseById(id: number): Observable<any> {
-    return this.http.get<any>(this.url + 'diseases/' + id);
+  getDiseaseById(id: number): Observable<Disease> {
+    return this.http.get<Disease>(this.url + 'diseases/' + id);
   }
 
-  //disease cases
-  getAllDiseaseCases(): Observable<any[]> {
-    return this.http.get<any[]>(this.url + 'disease-cases');
+  //Disease Cases
+  getAllDiseaseCases(): Observable<DiseaseCase[]> {
+    return this.http.get<DiseaseCase[]>(this.url + 'disease-cases');
   }
 
-  getDiseaseCaseById(id: number): Observable<any> {
-    return this.http.get<any>(this.url + 'disease-cases/' + id);
+  getDiseaseCaseById(id: number): Observable<DiseaseCase> {
+    return this.http.get<DiseaseCase>(this.url + 'disease-cases/' + id);
   }
 
-  //location
-  getAllLocations(): Observable<any[]> {
-    return this.http.get<any[]>(this.url + 'locations');
+  //Locations
+  getAllLocations(): Observable<Location[]> {
+    return this.http.get<Location[]>(this.url + 'locations');
   }
 
-  getLocationById(id: number): Observable<any> {
-    return this.http.get<any>(this.url + 'locations/' + id);
+  getLocationById(id: number): Observable<Location> {
+    return this.http.get<Location>(this.url + 'locations/' + id);
   }
 
-  //region
-  getAllRegions(): Observable<any[]> {
-    return this.http.get<any[]>(this.url + 'regions');
+  //Regions
+  getAllRegions(): Observable<Region[]> {
+    return this.http.get<Region[]>(this.url + 'regions');
   }
-  getRegionById(id: number): Observable<any> {
-    return this.http.get<any>(this.url + 'regions/' + id);
+
+  getRegionById(id: number): Observable<Region> {
+    return this.http.get<Region>(this.url + 'regions/' + id);
   }
 }
