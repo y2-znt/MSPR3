@@ -25,7 +25,8 @@ public class CountryController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Country> getCountryById(@PathVariable Integer id) {
-        return countryService.getCountryById(id);
+    public Country getCountryById(@PathVariable Integer id) {
+        return countryService.getCountryById(id)
+                .orElseThrow(() -> new RuntimeException("Country not found with id: " + id));
     }
 }
