@@ -1,12 +1,12 @@
 package mspr.backend.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 import mspr.backend.BO.Country;
 import mspr.backend.Repository.CountryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,8 +15,9 @@ public class CountryService {
     @Autowired
     private CountryRepository countryRepository;
 
-    public List<Country> getAllCountries() {
-        return countryRepository.findAll();
+    public Page<Country> getAllCountries(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return countryRepository.findAll(pageable);
     }
 
     public Optional<Country> getCountryById(Integer id) {
