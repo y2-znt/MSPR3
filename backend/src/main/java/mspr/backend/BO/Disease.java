@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "Disease")
 public class Disease {
@@ -15,6 +17,7 @@ public class Disease {
     private Integer id;
 
     @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<DiseaseCase> diseaseCases = new HashSet<>();
 
     @Column(name = "name")

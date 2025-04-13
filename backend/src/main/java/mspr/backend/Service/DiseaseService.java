@@ -26,4 +26,10 @@ public class DiseaseService {
     public Disease getByNameDiseasese(String name) {
         return diseaseRepository.findByName(name);
     }
+
+    public Disease getDiseaseByName(String name) {
+        return diseaseRepository.findByName(name);
+    }
+
+
 }
