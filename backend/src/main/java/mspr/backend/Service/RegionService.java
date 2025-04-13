@@ -46,22 +46,5 @@ public class RegionService {
         regionRepository.deleteById(id);
     }
 
-    public void createRegion(Region region) {
-        regionRepository.save(region);
-    }
-
-    public Region updateRegion(Integer id, Region region) {
-        if (regionRepository.existsById(id)) {
-            region.setId(id);
-            return regionRepository.save(region);
-        } else {
-            return null;
-        }
-    }
-
-    public void deleteRegion(Integer id) {
-        regionRepository.deleteById(id);
-    }
-
 
 }
