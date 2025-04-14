@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -20,8 +25,8 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Country } from '../../models/country.model';
 import { Page } from '../../models/pagination.model';
+import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
 import { CountryService } from '../../services/country.service';
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -40,12 +45,13 @@ import { CountryService } from '../../services/country.service';
     MatSelectModule,
     MatTabsModule,
     BaseChartDirective,
+    OrderByAlphaPipe,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   // Form Controls
   dateRange = new FormGroup({
     start: new FormControl<Date | null>(null),
