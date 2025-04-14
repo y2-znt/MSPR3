@@ -1,93 +1,91 @@
 package mspr.backend.Helpers;
 
 import mspr.backend.BO.*;
-import mspr.backend.Repository.*;
+import mspr.backend.Repository.DiseaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Map;
 
-@Service
+@Component
 public class CacheHelper {
 
-    @Autowired private CountryRepository countryRepository;
-    @Autowired private RegionRepository regionRepository;
-    @Autowired private LocationRepository locationRepository;
-    @Autowired private DiseaseRepository diseaseRepository;
-//    @Autowired private DiseaseCaseRepository diseaseCaseRepository;
+    @Autowired
+    private DiseaseRepository diseaseRepository;
 
-    HashMap<String, Disease> diseaseCache = new HashMap<>();
-    HashMap<String, Country> countryCache = new HashMap<>();
-    HashMap<String, Region> regionCache = new HashMap<>();
-    HashMap<String, Location> locationCache = new HashMap<>();
+    private Map<String, Country> countries = new HashMap<>();
+    private Map<String, Region> regions = new HashMap<>();
+    private Map<String, Location> locations = new HashMap<>();
+    private Map<String, Disease> diseases = new HashMap<>();
+
+    public Country getOrCreateCountry(String countryName) {
+        if (countryName == null || countryName.isEmpty()) {
+            return null;
+        }
+        // Clé simple pour le pays (nom du pays)
+        String countryKey = countryName;
+        Country country = countries.get(countryKey);
+        if (country == null) {
+            country = new Country();
+            country.setName(countryName);
+            countries.put(countryKey, country);
+        }
+        return country;
+    }
+
+    public Region getOrCreateRegion(Country country, String regionName) {
+        if (country == null || regionName == null || regionName.isEmpty()) {
+            return null;
+        }
+        // Clé composite pour la région: "CountryName|RegionName"
+        String regionKey = country.getName() + "|" + regionName;
+        Region region = regions.get(regionKey);
+        if (region == null) {
+            region = new Region();
+            region.setName(regionName);
+            region.setCountry(country);
+            regions.put(regionKey, region);
+        }
+        return region;
+    }
+
+    public Location getOrCreateLocation(Region region, String locationName) {
+        if (region == null || locationName == null || locationName.isEmpty()) {
+            return null;
+        }
+        // Clé composite pour la location: "CountryName|RegionName|LocationName"
+        String locationKey = region.getCountry().getName() + "|" + region.getName() + "|" + locationName;
+        Location location = locations.get(locationKey);
+        if (location == null) {
+            location = new Location();
+            location.setName(locationName);
+            location.setRegion(region);
+            locations.put(locationKey, location);
+        }
+        return location;
+    }
 
 
-    public Disease getDiseaseByName(String name) {
-        if (diseaseCache.containsKey(name)) {
-            return diseaseCache.get(name);
-        } else {
-            Disease disease = diseaseRepository.findByName(name);
-            if (disease != null) {
-                diseaseCache.put(name, disease);
-            }
-            return disease;
+    public Disease getOrCreateDisease(String diseaseName) {
+        if (diseaseName == null || diseaseName.isEmpty()) {
+            return null;
+        }
+        // Clé simple pour la maladie (nom de la maladie)
+        String diseaseKey = diseaseName;
+        Disease disease = diseases.get(diseaseKey);
+        if (disease == null) {
+            disease = new Disease();
+            disease.setName(diseaseName);
+            diseases.put(diseaseKey, disease);
+        }
+        return disease;
+    }
+    public void addDiseaseToCache(String diseaseName, Disease disease) {
+        if (diseaseName != null && !diseaseName.isEmpty() && disease != null) {
+            diseases.put(diseaseName, disease);
         }
     }
 
 
-    public Country getCountryByName(String name) {
-        if (countryCache.containsKey(name)) {
-            return countryCache.get(name);
-        } else {
-            Country country = countryRepository.findByName(name);
-            if (country != null) {
-                countryCache.put(name, country);
-            }
-            return country;
-        }
-    }
-    public Region getRegionByName(String name) {
-        if (regionCache.containsKey(name)) {
-            return regionCache.get(name);
-        } else {
-            Region region = regionRepository.findByName(name);
-            regionCache.put(name, region);
-            return region;
-        }
-    }
-    public Location getLocationByName(String name) {
-        if (locationCache.containsKey(name)) {
-            return locationCache.get(name);
-        } else {
-            System.out.println("CacheHelper: locationRepository.findByName: "+name);
-            Location location = locationRepository.findByName(name);
-            if (location != null) {
-                locationCache.put(name, location);
-            }
-            return location;
-        }
-    }
-
-    public void addLocationToCache(String name, Location location) {
-        locationCache.put(name, location);
-    }
-    public void addRegionToCache(String name, Region region) {
-        regionCache.put(name, region);
-    }
-    public void addCountryToCache(String name, Country country) {
-        countryCache.put(name, country);
-    }
-    public void addDiseaseToCache(String name, Disease disease) {
-        diseaseCache.put(name, disease);
-    }
-
-    // TODO : ajouter une fonction pour get or create une region + créer une location ,
-    // TODO : et même chose pour country
-
-    public void clearCache() {
-        diseaseCache.clear();
-        countryCache.clear();
-        regionCache.clear();
-        locationCache.clear();
-    }
 }

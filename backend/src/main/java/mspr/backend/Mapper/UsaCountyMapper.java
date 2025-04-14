@@ -2,44 +2,41 @@ package mspr.backend.Mapper;
 
 import mspr.backend.DTO.UsaCountyDto;
 import mspr.backend.BO.*;
-import mspr.backend.Service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import mspr.backend.Helpers.CacheHelper;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 
 @Component
 public class UsaCountyMapper {
-    @Autowired private CountryService countryService;
-    @Autowired private RegionService regionService;
-    @Autowired private LocationService locationService;
-    @Autowired private DiseaseService diseaseService;
 
-    public DiseaseCase dtoToEntity(UsaCountyDto dto) {
-        // Pays (devrait toujours être "US")
-        Country country = countryService.getCountryByName(dto.getCountryRegion());
+    public DiseaseCase fromDto(UsaCountyDto dto, CacheHelper cache) {
+        if (dto == null) {
+            return null;
+        }
+        // Nettoyage des noms de pays/région/lieu (trim et alias)
+        String countryName = dto.getCountryRegion() != null ? dto.getCountryRegion().trim() : "";
 
-        // Région (l'État aux USA)
-        Region state = regionService.getRegionByName(dto.getProvinceState());
+        String regionName = dto.getProvinceState() != null ? dto.getProvinceState().trim() : "";
+        String locationName = dto.getCounty() != null ? dto.getCounty().trim() : "";
+        // Si le champ location (comté) est vide, on utilise le nom de région comme location
+        if (locationName.isEmpty()) {
+            locationName = regionName;
+        }
 
-        // Location (le comté, rattaché à l'État)
-        Location location = locationService.getLocationByName(dto.getCounty());
+        // Récupération ou création des entités de référence à partir du cache
+        Country country = cache.getOrCreateCountry(countryName);
+        Region region = cache.getOrCreateRegion(country, regionName);
+        Location location = cache.getOrCreateLocation(region, locationName);
 
-        // Maladie (COVID-19)
-        Disease disease = diseaseService.getDiseaseByName("COVID-19");
-
-        // Création du cas
+        // Mapping du DTO vers l'entité DiseaseCase
         DiseaseCase diseaseCase = new DiseaseCase();
-        diseaseCase.setDate(dto.getDate());
+        diseaseCase.setLocation(location);
+        diseaseCase.setDate(dto.getDate());         // suppose qu'on a déjà un objet LocalDate/Date dans le DTO
         diseaseCase.setConfirmedCases(dto.getConfirmed());
         diseaseCase.setDeaths(dto.getDeaths());
-        diseaseCase.setRecovered(dto.getRecovered()); // sera 0 dans ce contexte
-//        diseaseCase.setActive(dto.getActive());       // sera 0 dans ce contexte
-        diseaseCase.setLocation(location);
-        diseaseCase.setDisease(disease);
-
         return diseaseCase;
     }
 }
+
+
 

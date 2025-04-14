@@ -5,20 +5,25 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.BatchSize;
+
 @Entity
 @Table(name = "DiseaseCase")
+@BatchSize(size = 50)
 public class DiseaseCase {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "disease_case_seq")
+    @SequenceGenerator(name = "disease_case_seq", sequenceName = "disease_case_seq", allocationSize = 50)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "disease_id")
     @JsonBackReference
     private Disease disease; 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     @JsonBackReference
     private Location location;

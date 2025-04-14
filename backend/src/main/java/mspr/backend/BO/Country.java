@@ -7,13 +7,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
-@Table(name="Country")
+@Table(
+        name="Country",
+        indexes = { @Index(name = "idx_country_name", columnList = "name") }
+)
+@BatchSize(size = 50)
 public class Country {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "country_seq")
+    @SequenceGenerator(name = "country_seq", sequenceName = "country_seq", allocationSize = 50)
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -32,6 +39,10 @@ public class Country {
 
     @Column(name = "population")
     private Integer population;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;

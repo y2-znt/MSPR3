@@ -8,20 +8,27 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.BatchSize;
 
 
 @Entity
-@Table(name="Location")
+@Table(
+        name="Location",
+        indexes = { @Index(name = "idx_location_name", columnList = "name") }
+)
+@BatchSize(size = 50)
 public class Location {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_seq")
+    @SequenceGenerator(name = "location_seq", sequenceName = "location_seq", allocationSize = 50)
+    private Long id;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<DiseaseCase> diseasesCases = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "region_id")
     @JsonBackReference
     private Region region;
@@ -34,6 +41,10 @@ public class Location {
         this.diseasesCases = diseasesCases;
         this.name = name;
         this.region = region;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Region getRegion() {

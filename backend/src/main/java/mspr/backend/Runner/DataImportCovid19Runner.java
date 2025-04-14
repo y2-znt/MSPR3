@@ -30,15 +30,13 @@ public class DataImportCovid19Runner implements CommandLineRunner {
         deleteAllDataInBatch();
         System.out.println("Suppression des données terminée.");
 
-        Disease covid = cacheHelper.getDiseaseByName("COVID-19");
-        if(covid == null) {
-            System.out.println("La maladie COVID-19 n'existe pas dans la base de données. Création de COVID-19...");
+        Disease covid = diseaseRepository.findByName("COVID-19");
+        if (covid == null) {
             covid = new Disease();
             covid.setName("COVID-19");
-            covid.setDescription("COVID-19");
-            diseaseRepository.save(covid);
-            cacheHelper.addDiseaseToCache("COVID-19", covid);
+            covid = diseaseRepository.save(covid);
         }
+        cacheHelper.addDiseaseToCache("COVID-19", covid);
 
         System.out.println("** Début de l'import des données COVID **");
 
@@ -58,13 +56,10 @@ public class DataImportCovid19Runner implements CommandLineRunner {
         System.out.println("Import full_grouped terminé.");
 
         // 4. Import des données par comtés US
-//        System.out.println("Import des données USA par comtés...");
-//        usaCountyService.importData();
-//        System.out.println("Import USA par comtés terminé.");
+        System.out.println("Import des données USA par comtés...");
+        usaCountyService.importData();
+        System.out.println("Import USA par comtés terminé.");
 
-        System.out.println("Libération de cache...");
-        cacheHelper.clearCache();
-        System.out.println("Cache libéré.");
 
         System.out.println("** Importation des données COVID terminée avec succès **");
 
