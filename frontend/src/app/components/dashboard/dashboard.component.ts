@@ -21,12 +21,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
 import { Country } from '../../models/country.model';
 import { Page } from '../../models/pagination.model';
 import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
 import { CountryService } from '../../services/country.service';
+import { OverviewComponent } from '../tabs/overview/overview.component';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -44,8 +44,8 @@ import { CountryService } from '../../services/country.service';
     MatButtonToggleModule,
     MatSelectModule,
     MatTabsModule,
-    BaseChartDirective,
     OrderByAlphaPipe,
+    OverviewComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -70,95 +70,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   totalRecoveries: number = 648392781;
   recoveryRate: number = 96.0;
   totalTests: number = 7023456789;
-
-  // Area Chart Configuration
-  areaChartData: ChartConfiguration<'line'>['data'] = {
-    labels: Array.from({ length: 12 }, (_, i) => {
-      const date = new Date();
-      date.setMonth(date.getMonth() - (11 - i));
-      return date.toLocaleDateString('fr-FR', {
-        month: 'short',
-        year: 'numeric',
-      });
-    }),
-    datasets: [
-      {
-        label: 'Cas Totaux',
-        data: [
-          30000000, 35000000, 40000000, 45000000, 50000000, 55000000, 60000000,
-          65000000, 70000000, 75000000, 80000000, 90000000,
-        ],
-        borderColor: '#2196f3',
-        backgroundColor: 'rgba(33, 150, 243, 0.1)',
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: 'Guérisons',
-        data: [
-          25000000, 30000000, 35000000, 40000000, 45000000, 50000000, 55000000,
-          60000000, 65000000, 70000000, 75000000, 85000000,
-        ],
-        borderColor: '#4caf50',
-        backgroundColor: 'rgba(76, 175, 80, 0.1)',
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: 'Décès',
-        data: [
-          1000000, 1500000, 2000000, 2500000, 3000000, 3500000, 4000000,
-          4500000, 5000000, 5500000, 6000000, 6500000,
-        ],
-        borderColor: '#f44336',
-        backgroundColor: 'rgba(244, 67, 54, 0.1)',
-        fill: true,
-        tension: 0.4,
-      },
-    ],
-  };
-
-  areaChartOptions: ChartOptions<'line'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-        align: 'end',
-      },
-      tooltip: {
-        mode: 'index',
-        intersect: false,
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
-        },
-        ticks: {
-          callback: function (tickValue: string | number) {
-            const value = Number(tickValue);
-            if (!isNaN(value) && value >= 1000000) {
-              return (value / 1000000).toFixed(0) + 'M';
-            }
-            return tickValue;
-          },
-        },
-      },
-    },
-    interaction: {
-      mode: 'nearest',
-      axis: 'x',
-      intersect: false,
-    },
-  };
 
   constructor(private countryService: CountryService) {}
 

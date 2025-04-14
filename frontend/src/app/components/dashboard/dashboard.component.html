@@ -88,29 +88,9 @@
     class="dashboard-tabs"
   >
     <mat-tab label="Vue d'ensemble">
-      <div class="chart-container">
-        <mat-card class="chart-card">
-          <mat-card-header>
-            <mat-card-title>Cas COVID-19 Mondiaux</mat-card-title>
-            <mat-card-subtitle
-              >Répartition mensuelle des cas confirmés, actifs, guéris et
-              décès</mat-card-subtitle
-            >
-          </mat-card-header>
-          <mat-card-content>
-            <canvas
-              baseChart
-              [data]="areaChartData"
-              [options]="areaChartOptions"
-              [type]="'line'"
-            >
-            </canvas>
-          </mat-card-content>
-        </mat-card>
-      </div>
+      <app-overview />
     </mat-tab>
     <mat-tab label="Pays"></mat-tab>
     <mat-tab label="Données régionales"></mat-tab>
-    <mat-tab label="Tendances"></mat-tab>
   </mat-tab-group>
 </div>
