@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -16,14 +21,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-
+import { Country } from '../../models/country.model';
+import { Page } from '../../models/pagination.model';
+import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
+import { CountryService } from '../../services/country.service';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(), CountryService],
   imports: [
     CommonModule,
     FormsModule,
@@ -38,29 +45,23 @@ import { BaseChartDirective } from 'ng2-charts';
     MatSelectModule,
     MatTabsModule,
     BaseChartDirective,
+    OrderByAlphaPipe,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   // Form Controls
   dateRange = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });
 
-  countriesControl = new FormControl<string[]>([]);
-  countries: string[] = [
-    'France',
-    'Allemagne',
-    'Italie',
-    'Espagne',
-    'Royaume-Uni',
-    'États-Unis',
-    'Chine',
-    'Japon',
-  ];
+  countriesControl = new FormControl<Country[]>([]);
+  countries: Country[] = [];
+  currentPage = 0;
+  pageSize = 250;
 
   // KPI Data
   totalCases: number = 675432198;
@@ -159,7 +160,26 @@ export class DashboardComponent implements OnInit {
     },
   };
 
-  constructor() {}
+  constructor(private countryService: CountryService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadCountries();
+  }
+
+  loadCountries(): void {
+    this.countryService
+      .getAllCountries(this.currentPage, this.pageSize)
+      .subscribe(
+        (page: Page<Country>) => {
+          this.countries = page.content;
+        },
+        (error) => {
+          console.error('Error loading countries:', error);
+        }
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.countries = [];
+  }
 }
