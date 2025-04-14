@@ -32,4 +32,22 @@ public class CountryService {
         return countryRepository.save(country);
     }
 
+    public Country createCountry(Country country) {
+        return countryRepository.save(country);
+    }
+
+    public Country updateCountry(Integer id, Country country) {
+        if (countryRepository.existsById(id)) {
+            country.setId(id);
+            return countryRepository.save(country);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteCountry(Integer id) {
+        countryRepository.deleteById(id);
+    }
+
+
 }

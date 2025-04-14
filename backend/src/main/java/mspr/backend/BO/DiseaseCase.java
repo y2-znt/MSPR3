@@ -94,6 +94,24 @@ public class DiseaseCase {
         this.recovered = recovered;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return disease.getName(); 
+    }
+
+    public void setName(String name) {
+        if (disease != null) {
+            disease.setName(name);
+        }
+    }
+
     @Override
     public String toString() {
         return "DiseaseCase{" +
@@ -106,4 +124,5 @@ public class DiseaseCase {
                 ", recovered=" + recovered +
                 '}';
     }
+
 }

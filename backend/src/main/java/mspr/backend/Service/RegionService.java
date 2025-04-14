@@ -29,5 +29,22 @@ public class RegionService {
         return regionRepository.findByName(name);
     }
 
+    public Region createRegion(Region region) {
+        return regionRepository.save(region);
+    }
+
+    public Region updateRegion(Integer id, Region region) {
+        if (regionRepository.existsById(id)) {
+            region.setId(id);
+            return regionRepository.save(region);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteRegion(Integer id) {
+        regionRepository.deleteById(id);
+    }
+
 
 }

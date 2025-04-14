@@ -32,4 +32,33 @@ public class DiseaseCaseService {
         return diseaseCaseRepository.findById(id);
     }
 
+    // public Optional<DiseaseCase> getDiseaseCaseByName(String name) {
+    //     return diseaseCaseRepository.findAll().stream()
+    //             .filter(diseaseCase -> diseaseCase.getName().equalsIgnoreCase(name))
+    //             .findFirst();
+    // }
+
+    public Optional<DiseaseCase> getDiseaseCaseByName(String name) {
+        return Optional.ofNullable(diseaseCaseRepository.findByName(name));
+    }
+
+    public DiseaseCase createDiseaseCase(DiseaseCase diseaseCase) {
+        return diseaseCaseRepository.save(diseaseCase);
+    }
+
+    public DiseaseCase updateDiseaseCase(Integer id, DiseaseCase diseaseCase) {
+        if (diseaseCaseRepository.existsById(id)) {
+            diseaseCase.setId(id);
+            return diseaseCaseRepository.save(diseaseCase);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteDiseaseCase(Integer id) {
+        diseaseCaseRepository.deleteById(id);
+    }
+
+
+
 }
