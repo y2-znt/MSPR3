@@ -16,16 +16,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { CountryService } from '../../services/country.service';
-
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Country } from '../../models/country.model';
+import { Page } from '../../models/pagination.model';
+import { CountryService } from '../../services/country.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(), CountryService],
   imports: [
     CommonModule,
     FormsModule,
@@ -54,6 +54,8 @@ export class DashboardComponent implements OnInit {
 
   countriesControl = new FormControl<Country[]>([]);
   countries: Country[] = [];
+  currentPage = 0;
+  pageSize = 250;
 
   // KPI Data
   totalCases: number = 675432198;
@@ -158,15 +160,20 @@ export class DashboardComponent implements OnInit {
     this.loadCountries();
   }
 
-  private loadCountries(): void {
-    this.countryService.getAllCountries().subscribe(
-      (countries: Country[]) => {
-        this.countries = countries;
-        console.log('Countries loaded:', this.countries);
-      },
-      (error) => {
-        console.error('Error loading countries:', error);
-      }
-    );
+  loadCountries(): void {
+    this.countryService
+      .getAllCountries(this.currentPage, this.pageSize)
+      .subscribe(
+        (page: Page<Country>) => {
+          this.countries = page.content;
+        },
+        (error) => {
+          console.error('Error loading countries:', error);
+        }
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.countries = [];
   }
 }
