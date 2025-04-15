@@ -1,10 +1,9 @@
 package mspr.backend.Service.CsvImporter;
-
-import mspr.backend.BO.DiseaseCase;
+import mspr.backend.BO.*;
 import mspr.backend.DTO.CovidCompleteDto;
-import mspr.backend.Helpers.CleanerHelper;
+import mspr.backend.Helpers.*;
 import mspr.backend.Mapper.CovidCompleteMapper;
-import mspr.backend.Repository.DiseaseCaseRepository;
+import mspr.backend.Repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CovidCompleteService {
@@ -28,19 +29,31 @@ public class CovidCompleteService {
 
     @Autowired
     private DiseaseCaseRepository diseaseCaseRepository;
+    @Autowired
+    private CountryRepository countryRepository;
+    @Autowired
+    private RegionRepository regionRepository;
+    @Autowired
+    private LocationRepository locationRepository;
+    @Autowired
+    private DiseaseRepository diseaseRepository;
+
+
+    @Autowired
+    private CacheHelper cacheHelper;
 
     @Autowired
     private CleanerHelper cleanerHelper;
 
-    public void importData() throws Exception {
+    public int importData() throws Exception {
         String pathFile = "src/main/resources/data/" + FILE_NAME;
         Path path = Paths.get(pathFile);
 
         if (Files.isRegularFile(path) && Files.exists(path)) {
-            System.out.println("Le fichier existe et est un fichier régulier.");
+            System.out.println("Le fichier existe " + FILE_NAME + " et est un fichier régulier.");
         } else {
-            System.out.println("Le fichier n'existe pas ou n'est pas un fichier régulier.");
-            return;
+            System.out.println("ATTENTION : Le fichier " + FILE_NAME + " n'existe pas ou n'est pas un fichier régulier.");
+            return 0;
         }
 
         // Lecture du fichier CSV
@@ -89,8 +102,42 @@ public class CovidCompleteService {
             diseaseCases.add(diseaseCase);
         }
 
+        // Sauvegarder les entités mises en cache et remettre à jour les instances persistantes dans le cache
+        Map<String, Country> countries = cacheHelper.getCountries();
+        countries = countryRepository.saveAll(countries.values())
+                    .stream()
+                    .collect(Collectors.toMap(Country::getName, country -> country));
+        cacheHelper.setCountries(countries);
+
+        Map<String, Region> regions = cacheHelper.getRegions();
+        regions = regionRepository.saveAll(regions.values())
+                    .stream()
+                    .collect(Collectors.toMap(r -> r.getCountry().getName() + "|" + r.getName(), region -> region));
+        cacheHelper.setRegions(regions);
+
+        Map<String, Location> locations = cacheHelper.getLocations();
+        locations = locationRepository.saveAll(locations.values())
+                    .stream()
+                    .collect(Collectors.toMap(l -> l.getRegion().getCountry().getName() + "|" + l.getRegion().getName() + "|" + l.getName(), location -> location));
+        cacheHelper.setLocations(locations);
+
+        Map<String, Disease> diseases = cacheHelper.getDiseases();
+        diseases = diseaseRepository.saveAll(diseases.values())
+                        .stream()
+                        .collect(Collectors.toMap(Disease::getName, disease -> disease));
+        cacheHelper.setDiseases(diseases);
+
+        for (DiseaseCase dc : diseaseCases) {
+            if (dc.getDisease() != null) {
+                String diseaseName = dc.getDisease().getName();
+                Disease managedDisease = cacheHelper.getDiseases().get(diseaseName);
+                dc.setDisease(managedDisease);
+            }
+        }
+
         // Insertion en batch de tous les DiseaseCase
         diseaseCaseRepository.saveAll(diseaseCases);
         System.out.println("Import CovidComplete terminé : " + diseaseCases.size() + " cas insérés.");
+        return (lines.size()-1);
     }
 }

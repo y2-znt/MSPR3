@@ -29,7 +29,7 @@ public class Region {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "country_id")
     @JsonBackReference
     private Country country;

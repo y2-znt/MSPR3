@@ -18,12 +18,12 @@ public class DiseaseCase {
     @SequenceGenerator(name = "disease_case_seq", sequenceName = "disease_case_seq", allocationSize = 50)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "disease_id")
     @JsonBackReference
     private Disease disease; 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "location_id")
     @JsonBackReference
     private Location location;

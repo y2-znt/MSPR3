@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsaCountyService {
@@ -44,16 +45,60 @@ public class UsaCountyService {
 
     public static final String FILE_NAME = "usa_county_wise.csv";
 
-    public void importData() {
+    @Transactional
+    public int importData() {
         // Initialisation du cache en mémoire pour les entités de référence
         CacheHelper cache = new CacheHelper();
 
         // Lecture du fichier CSV et conversion en DTO (déjà en place)
-        List<UsaCountyDto> records = lireCsvUsaCounty();  // Méthode fictive pour illustrer
+        List<UsaCountyDto> dtos = new ArrayList<>();
+        List<String> lines = new ArrayList<>();
+        String pathFile = "src/main/resources/data/" + FILE_NAME;
+        Path path = Paths.get(pathFile);
+
+        if (Files.isRegularFile(path) && Files.exists(path)) {
+            System.out.println("Le fichier " + FILE_NAME + " existe et est un fichier régulier.");
+        } else {
+            System.out.println("ATTENTION : Le fichier " + FILE_NAME + " n'existe pas ou n'est pas un fichier régulier.");
+            return 0;
+        }
+
+        try {
+            lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+            // Définition du format de date tel que "M/d/yy" (par ex. "1/22/20")
+            DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("M/d/yy");
+
+            // On commence à l'index 1 pour ignorer l'en-tête
+            for (int l = 1; l < lines.size(); l++) {
+                String line = lines.get(l);
+                // Expression régulière pour traiter correctement les virgules dans des champs entre guillemets
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+                // Indices attendus (selon l'ordre du fichier usa_county_wise.csv) :
+                // 5: Admin2 (nom du comté), 6: Province_State, 7: Country_Region,
+                // 8: Lat, 9: Long_, 11: Date, 12: Confirmed, 13: Deaths
+                String county = fields[5].trim();
+                String provinceState = fields[6].trim();
+                String countryRegion = fields[7].trim();
+                double lat = Double.parseDouble(fields[8].trim());
+                double lon = Double.parseDouble(fields[9].trim());
+                LocalDate date = LocalDate.parse(fields[11].trim(), dateFmt);
+                int confirmed = fields[12].isEmpty() ? 0 : Integer.parseInt(fields[12].trim());
+                int deaths = fields[13].isEmpty() ? 0 : Integer.parseInt(fields[13].trim());
+                // Les données "recovered" et "active" ne sont pas présentes dans ce fichier
+                int recovered = 0;
+                int active = 0;
+
+                UsaCountyDto dto = new UsaCountyDto(county, provinceState, countryRegion, lat, lon, date, confirmed, deaths, recovered, active);
+                dtos.add(dto);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         List<DiseaseCase> batchList = new ArrayList<>();
         int batchSize = 1000;
-        for (UsaCountyDto dto : records) {
+        for (UsaCountyDto dto : dtos) {
             // Utilisation du mapper pour convertir le DTO en entité DiseaseCase avec références du cache
             DiseaseCase diseaseCase = usaCountyMapper.fromDto(dto, cache);
 
@@ -87,57 +132,9 @@ public class UsaCountyService {
             entityManager.clear();
             batchList.clear();
         }
+        return (lines.size()-1);
     }
 
-    /**
-     * Lit le fichier CSV usa_county_wise.csv et retourne la liste des UsaCountyDto correspondants.
-     * Utilise le chemin "src/main/resources/data/" et vérifie l'existence et la validité du fichier.
-     */
-    private List<UsaCountyDto> lireCsvUsaCounty() {
-        List<UsaCountyDto> dtos = new ArrayList<>();
-        String pathFile = "src/main/resources/data/" + FILE_NAME;
-        Path path = Paths.get(pathFile);
-
-        if (Files.isRegularFile(path) && Files.exists(path)) {
-            System.out.println("Le fichier existe et est un fichier régulier.");
-        } else {
-            System.out.println("Le fichier n'existe pas ou n'est pas un fichier régulier.");
-        }
-
-        try {
-            List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-            // Définition du format de date tel que "M/d/yy" (par ex. "1/22/20")
-            DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("M/d/yy");
-
-            // On commence à l'index 1 pour ignorer l'en-tête
-            for (int l = 1; l < lines.size(); l++) {
-                String line = lines.get(l);
-                // Expression régulière pour traiter correctement les virgules dans des champs entre guillemets
-                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-
-                // Indices attendus (selon l'ordre du fichier usa_county_wise.csv) :
-                // 5: Admin2 (nom du comté), 6: Province_State, 7: Country_Region,
-                // 8: Lat, 9: Long_, 11: Date, 12: Confirmed, 13: Deaths
-                String county = fields[5].trim();
-                String provinceState = fields[6].trim();
-                String countryRegion = fields[7].trim();
-                double lat = Double.parseDouble(fields[8].trim());
-                double lon = Double.parseDouble(fields[9].trim());
-                LocalDate date = LocalDate.parse(fields[11].trim(), dateFmt);
-                int confirmed = fields[12].isEmpty() ? 0 : Integer.parseInt(fields[12].trim());
-                int deaths = fields[13].isEmpty() ? 0 : Integer.parseInt(fields[13].trim());
-                // Les données "recovered" et "active" ne sont pas présentes dans ce fichier
-                int recovered = 0;
-                int active = 0;
-
-                UsaCountyDto dto = new UsaCountyDto(county, provinceState, countryRegion, lat, lon, date, confirmed, deaths, recovered, active);
-                dtos.add(dto);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return dtos;
-    }
 }
 
 

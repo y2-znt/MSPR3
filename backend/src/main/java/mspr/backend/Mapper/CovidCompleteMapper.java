@@ -19,6 +19,7 @@ public class CovidCompleteMapper {
         this.cleanerHelper = cleanerHelper;
         // Précharger la maladie COVID-19 pour éviter toute duplication
         this.disease = cacheHelper.getOrCreateDisease("COVID-19");
+        
     }
 
     /**

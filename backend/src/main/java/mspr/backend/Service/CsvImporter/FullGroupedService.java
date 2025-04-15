@@ -1,11 +1,11 @@
 package mspr.backend.Service.CsvImporter;
 
 import jakarta.transaction.Transactional;
-import mspr.backend.BO.DiseaseCase;
+import mspr.backend.BO.*;
 import mspr.backend.DTO.FullGroupedDto;
-import mspr.backend.Helpers.CleanerHelper;
+import mspr.backend.Helpers.*;
 import mspr.backend.Mapper.FullGroupedMapper;
-import mspr.backend.Repository.DiseaseCaseRepository;
+import mspr.backend.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,19 +32,29 @@ public class FullGroupedService {
 
     @Autowired
     private DiseaseCaseRepository diseaseCaseRepository;
+    @Autowired
+    private CountryRepository countryRepository;
+    @Autowired
+    private RegionRepository regionRepository;
+    @Autowired
+    private LocationRepository locationRepository;
+    @Autowired
+    private DiseaseRepository diseaseRepository;
 
     @Autowired
     private CleanerHelper cleanerHelper;
+    @Autowired
+    private CacheHelper cacheHelper;
 
-    public void importData() throws Exception {
+    public int importData() throws Exception {
         String pathFile = "src/main/resources/data/" + FILE_NAME;
         Path path = Paths.get(pathFile);
 
         if (Files.isRegularFile(path) && Files.exists(path)) {
-            System.out.println("Le fichier existe et est un fichier régulier.");
+            System.out.println("Le fichier " + FILE_NAME + " existe et est un fichier régulier.");
         } else {
-            System.out.println("Le fichier n'existe pas ou n'est pas un fichier régulier.");
-            return;
+            System.out.println("ATTENTION : Le fichier " + FILE_NAME + " n'existe pas ou n'est pas un fichier régulier.");
+            return 0;
         }
 
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -75,6 +87,8 @@ public class FullGroupedService {
             dtoMap.put(hashKey, dto);
         }
 
+
+     
         // Conversion des DTO en DiseaseCase via le mapper
         List<DiseaseCase> diseaseCases = new ArrayList<>();
         for (FullGroupedDto dto : dtoMap.values()) {
@@ -82,8 +96,50 @@ public class FullGroupedService {
             diseaseCases.add(diseaseCase);
         }
 
+
+
+        // Sauvegarde en batch des entités mis en cache pour éviter les erreurs de déconnexion (detached entity)
+        // 1. Countries
+        Map<String, Country> countries = cacheHelper.getCountries();
+        countries = countryRepository.saveAll(countries.values())
+                    .stream()
+                    .collect(Collectors.toMap(Country::getName, country -> country));
+        cacheHelper.setCountries(countries);
+
+        // 2. Regions
+        Map<String, Region> regions = cacheHelper.getRegions();
+        regions = regionRepository.saveAll(regions.values())
+                    .stream()
+                    .collect(Collectors.toMap(r -> r.getCountry().getName() + "|" + r.getName(), region -> region));
+        cacheHelper.setRegions(regions);
+
+        // 3. Locations
+        Map<String, Location> locations = cacheHelper.getLocations();
+        locations = locationRepository.saveAll(locations.values())
+                    .stream()
+                    .collect(Collectors.toMap(l -> l.getRegion().getCountry().getName() + "|" + l.getRegion().getName() + "|" + l.getName(), location -> location));
+        cacheHelper.setLocations(locations);
+
+
+        // 4. Diseases
+        Map<String, Disease> diseases = cacheHelper.getDiseases();
+        diseases = diseaseRepository.saveAll(diseases.values())
+                        .stream()
+                        .collect(Collectors.toMap(Disease::getName, disease -> disease));
+        cacheHelper.setDiseases(diseases);
+
+
+        for (DiseaseCase dc : diseaseCases) {
+            if (dc.getDisease() != null) {
+                String diseaseName = dc.getDisease().getName();
+                Disease managedDisease = cacheHelper.getDiseases().get(diseaseName);
+                dc.setDisease(managedDisease);
+            }
+        }
+
         // Insertion en batch de tous les DiseaseCase
         diseaseCaseRepository.saveAll(diseaseCases);
         System.out.println("Import Full Grouped terminé : " + diseaseCases.size() + " cas insérés.");
+        return (lines.size()-1);
     }
 }

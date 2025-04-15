@@ -28,7 +28,7 @@ public class Location {
     @JsonManagedReference
     private Set<DiseaseCase> diseasesCases = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "region_id")
     @JsonBackReference
     private Region region;

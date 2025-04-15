@@ -39,15 +39,15 @@ public class WorldometerService {
     @Autowired
     private LocationRepository locationRepository;
 
-    public void importData() throws Exception {
+    public int importData() throws Exception {
         String pathFile = "src/main/resources/data/" + FILE_NAME;
         Path path = Paths.get(pathFile);
 
         if (Files.isRegularFile(path) && Files.exists(path)) {
-            System.out.println("Le fichier existe et est un fichier régulier.");
+            System.out.println("Le fichier " + FILE_NAME + " existe et est un fichier régulier.");
         } else {
-            System.out.println("Le fichier n'existe pas ou n'est pas un fichier régulier.");
-            return;
+            System.out.println("ATTENTION : Le fichier " + FILE_NAME + " n'existe pas ou n'est pas un fichier régulier.");
+            return 0;
         }
 
         // Lecture du fichier CSV
@@ -101,5 +101,7 @@ public class WorldometerService {
 
         System.out.println("Importation Worldometer terminée : " + countries.size() + " pays, " +
                 regions.size() + " régions et " + locations.size() + " locations insérés.");
+
+        return (lines.size()-1);
     }
 }

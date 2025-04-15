@@ -1,7 +1,7 @@
 package mspr.backend.Helpers;
 
 import mspr.backend.BO.*;
-import mspr.backend.Repository.DiseaseRepository;
+import mspr.backend.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -87,5 +87,34 @@ public class CacheHelper {
         }
     }
 
+
+    public Map<String, Country> getCountries(){
+        return this.countries;
+    }
+    public Map<String, Region> getRegions(){
+        return regions;
+    }
+    public Map<String, Location> getLocations(){
+        return locations;
+    }
+    public Map<String, Disease> getDiseases(){
+        return diseases;
+    }
+
+
+    public void setCountries(Map<String, Country> countries) {
+        this.countries = countries;
+    }
+
+    public void setRegions(Map<String, Region> regions) {
+        this.regions = regions;
+    }
+
+    public void setLocations(Map<String, Location> locations) {
+        this.locations = locations;
+    }
+    public void setDiseases(Map<String, Disease> diseases) {
+        this.diseases = diseases;
+    }
 
 }

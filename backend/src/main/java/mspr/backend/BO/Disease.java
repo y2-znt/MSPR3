@@ -16,7 +16,7 @@ public class Disease {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "disease", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "disease", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<DiseaseCase> diseaseCases = new HashSet<>();
 
