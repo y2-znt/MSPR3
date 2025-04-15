@@ -12,12 +12,12 @@ public class CovidCompleteDto {
     private int deaths;             // Nombre de décès
     private int recovered;          // Nombre guéris
     private int active;             // Nombre actifs
-
+    private String whoRegion;       // Région OMS
 
     public CovidCompleteDto() {
     }
 
-    public CovidCompleteDto(String provinceState, String countryRegion, Double lat, Double lon, LocalDate date, int confirmed, int deaths, int recovered, int active) {
+    public CovidCompleteDto(String provinceState, String countryRegion, Double lat, Double lon, LocalDate date, int confirmed, int deaths, int recovered, int active, String whoRegion) {
         this.provinceState = provinceState;
         this.countryRegion = countryRegion;
         this.lat = lat;
@@ -27,6 +27,15 @@ public class CovidCompleteDto {
         this.deaths = deaths;
         this.recovered = recovered;
         this.active = active;
+        this.whoRegion = whoRegion;
+    }
+
+    public String getWhoRegion() {
+        return whoRegion;
+    }
+
+    public void setWhoRegion(String whoRegion) {
+        this.whoRegion = whoRegion;
     }
 
     public String getProvinceState() {

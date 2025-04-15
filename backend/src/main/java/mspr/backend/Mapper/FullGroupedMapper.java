@@ -1,76 +1,48 @@
 package mspr.backend.Mapper;
 
-import mspr.backend.BO.*;
-import mspr.backend.DTO.*;
-import mspr.backend.Helpers.CacheHelper;
-import mspr.backend.Helpers.CleanerHelper;
-import mspr.backend.Repository.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import mspr.backend.DTO.FullGroupedDto;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import mspr.backend.BO.*;
+import mspr.backend.Helpers.*;
 
 @Component
 public class FullGroupedMapper {
 
+    private final CacheHelper cacheHelper;
+    private final CleanerHelper cleanerHelper;
+    private final Disease disease;
 
     @Autowired
-    private DiseaseCaseRepository diseaseCaseRepository;
-
-    @Autowired
-    private CacheHelper cacheHelper;
-
-    @Autowired
-    private CleanerHelper cleanerHelper;
-    @Autowired
-    private CountryRepository countryRepository;
-
-    /**
-     *
-     */
-    public void dtoToEntity(HashMap<Integer, FullGroupedDto> dtoMap) {
-
-        ArrayList<DiseaseCase> diseaseCases = new ArrayList<>();
-        Disease covid19 = cacheHelper.getDiseaseByName("COVID-19");
-
-        for (FullGroupedDto fullgroupedDto : dtoMap.values()) {
-            DiseaseCase diseaseCase = new DiseaseCase();
-            diseaseCase.setDate(fullgroupedDto.getDate());
-            diseaseCase.setConfirmedCases(fullgroupedDto.getConfirmed());
-            diseaseCase.setDeaths(fullgroupedDto.getDeaths());
-            diseaseCase.setRecovered(fullgroupedDto.getRecovered());
-            diseaseCase.setDisease(covid19);
-
-            Country country = cacheHelper.getCountryByName(fullgroupedDto.getCountryRegion());
-            // if country, set the location with the standard of that country.
-            if(country != null){
-                diseaseCase.setLocation(cacheHelper.getLocationByName(country.getName()+", region standard, location standard"));
-            }
-            else{
-                Region region = cacheHelper.getRegionByName(fullgroupedDto.getCountryRegion());
-                // if region, set the location with the standard of that region.
-                if (region != null) {
-                    diseaseCase.setLocation(cacheHelper.getLocationByName(cleanerHelper.cleanRegionName(region.getName())+", location standard"));
-                }
-                // if no region , that means we must create a new country or region... No way to tell which one
-                else {
-                        System.out.println("Creating new country for "+fullgroupedDto.getCountryRegion());
-                    country = new Country();
-                    country.setName(fullgroupedDto.getCountryRegion());
-                    // TODO : set continent properly
-                    country.setContinent(cleanerHelper.cleanContinent("null"));
-                    country.setWhoRegion(cleanerHelper.cleanWhoRegion(fullgroupedDto.getWhoRegion()));
-                    countryRepository.save(country);
-                    cacheHelper.addCountryToCache(country.getName(), country);
-                }
-            }
-
-            diseaseCases.add(diseaseCase);
-        }
-        diseaseCaseRepository.saveAll(diseaseCases);
-
+    public FullGroupedMapper(CacheHelper cacheHelper, CleanerHelper cleanerHelper) {
+        this.cacheHelper = cacheHelper;
+        this.cleanerHelper = cleanerHelper;
+        // Précharger la maladie COVID-19
+        this.disease = cacheHelper.getOrCreateDisease("COVID-19");
     }
 
+    /**
+     * Convertit un FullGroupedDto en entité DiseaseCase sans persistances directes.
+     * Construit la hiérarchie Country/Region/Location via CacheHelper.
+     */
+    public DiseaseCase toEntity(FullGroupedDto dto) {
+        // Nettoyage du nom du pays
+        String countryName = cleanerHelper.cleanCountryName(dto.getCountryRegion());
+        Country country = cacheHelper.getOrCreateCountry(countryName);
+
+        Region regionStandardFromCountry = cacheHelper.getOrCreateRegion(country, "standard");
+
+        // Pas de province/état dans ce dataset, on crée directement la location au niveau du pays
+        Location location = cacheHelper.getOrCreateLocation(regionStandardFromCountry,  "standard");
+
+        DiseaseCase diseaseCase = new DiseaseCase();
+        diseaseCase.setDisease(this.disease);
+        diseaseCase.setLocation(location);
+        diseaseCase.setDate(dto.getDate());
+        diseaseCase.setConfirmedCases(dto.getConfirmed());
+        diseaseCase.setDeaths(dto.getDeaths());
+        diseaseCase.setRecovered(dto.getRecovered());
+
+        return diseaseCase;
+    }
 }

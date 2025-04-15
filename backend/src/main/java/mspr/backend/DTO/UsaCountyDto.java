@@ -14,8 +14,6 @@ public class UsaCountyDto {
     private int recovered;         // Guéris cumulés (pas fourni dans ce CSV, on mettra 0)
     private int active;            // Actifs cumulés (pas fourni, on peut mettre 0)
 
-    // + constructeur, getters, setters
-
 
     public UsaCountyDto() {
     }

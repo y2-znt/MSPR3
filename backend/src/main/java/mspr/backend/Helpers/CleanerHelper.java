@@ -2,7 +2,6 @@ package mspr.backend.Helpers;
 
 import mspr.backend.BO.Country;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +11,7 @@ public class CleanerHelper {
     HashMap<String, String> countryNameMap = new HashMap<>(
             Map.of(
                     "United States", "USA",
+                    "US", "USA",
                     "United Kingdom", "UK",
                     "South Korea", "Korea, South",
                     "North Korea", "Korea, North",
@@ -44,6 +44,17 @@ public class CleanerHelper {
                     "WesternPacific", Country.WHORegionEnum.Western_Pacific
             ));
 
+    HashMap<String, Boolean> skipList = new HashMap<>(
+            Map.of(
+                    "Diamond Princess", true,
+                    "Grand Princess", true
+            )
+    );
+
+
+    public boolean isInSkipList(String string) {
+        return skipList.containsKey(string);
+    }
 
     public String cleanCountryName(String countryName) {
 
@@ -56,6 +67,10 @@ public class CleanerHelper {
 
     public String cleanRegionName(String regionName){
         return regionName.trim();
+    }
+
+    public String cleanLocationName(String locationName){
+        return locationName.trim();
     }
 
 

@@ -1,60 +1,56 @@
 package mspr.backend.Mapper;
 
 import mspr.backend.DTO.CovidCompleteDto;
-import mspr.backend.BO.*;
-import mspr.backend.Repository.*;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.ArrayList;
-import java.util.HashMap;
+import mspr.backend.BO.*;
+import mspr.backend.Helpers.*;
 
 @Component
 public class CovidCompleteMapper {
 
-    @Autowired private CountryRepository countryRepository;
-    @Autowired private RegionRepository regionRepository;
-    @Autowired private LocationRepository locationRepository;
-    @Autowired private DiseaseRepository diseaseRepository;
-    @Autowired private DiseaseCaseRepository diseaseCaseRepository;
+    private final CacheHelper cacheHelper;
+    private final CleanerHelper cleanerHelper;
+    private final Disease disease;
 
+    @Autowired
+    public CovidCompleteMapper(CacheHelper cacheHelper, CleanerHelper cleanerHelper) {
+        this.cacheHelper = cacheHelper;
+        this.cleanerHelper = cleanerHelper;
+        // Précharger la maladie COVID-19 pour éviter toute duplication
+        this.disease = cacheHelper.getOrCreateDisease("COVID-19");
+        
+    }
 
     /**
-     * Convertit un DTO CovidCompleteDto en un objet DiseaseCase (prêt à être persisté).
-     * Cette méthode gère la création/recherche de Country, Region, Location, et lie la Disease (COVID-19).
+     * Convertit un CovidCompleteDto en entité DiseaseCase sans effectuer de sauvegarde en base.
+     * Utilise CacheHelper pour obtenir ou créer les Country/Region/Location associés.
      */
-    public void dtoToEntity(HashMap<Integer, CovidCompleteDto> dtoMap) {
-
-        ArrayList<DiseaseCase> diseaseCases = new ArrayList<>();
-        Disease covid19 = diseaseRepository.findByName("COVID-19");
-
-        for (CovidCompleteDto dto : dtoMap.values()) {
-            DiseaseCase diseaseCase = new DiseaseCase();
-            diseaseCase.setDate(dto.getDate());
-            diseaseCase.setConfirmedCases(dto.getConfirmed());
-            diseaseCase.setDeaths(dto.getDeaths());
-            diseaseCase.setRecovered(dto.getRecovered());
-            diseaseCase.setDisease(covid19);
-            Region region = regionRepository.findByName(dto.getCountryRegion());
-            // if region, set the location with the standard of that region.
-            if (region != null) {
-                diseaseCase.setLocation(locationRepository.findByName(region.getName()+", location standard"));
-            }
-            // if no region , get the country name
-            else {
-                Country country = countryRepository.findByName(dto.getCountryRegion());
-                // if country exists, set the location with the standard of the standard region of that country.
-                if (country!=null) {
-                    diseaseCase.setLocation(locationRepository.findByName(country.getName()+", region standard, location standard"));
-                } else{
-                    System.out.println("ATTENTION (full_grouped): le pays ou region "+dto.getCountryRegion()+" n'existe pas dans la base de données.");
-                }
-            }
-            diseaseCases.add(diseaseCase);
+    public DiseaseCase toEntity(CovidCompleteDto dto) {
+        // Nettoyage des noms de pays/régions via CleanerHelper
+        String countryName = cleanerHelper.cleanCountryName(dto.getCountryRegion());
+        String provinceName = dto.getProvinceState();
+        Region region = null;
+        String locationName = "standard";
+        if (provinceName != null && !provinceName.isEmpty()) {
+            // S'il y a une province/état, on la considère comme Region
+            provinceName = cleanerHelper.cleanRegionName(provinceName);
+            region = cacheHelper.getOrCreateRegion(cacheHelper.getOrCreateCountry(countryName), provinceName);
+            locationName = provinceName;
         }
+        Country country = cacheHelper.getOrCreateCountry(countryName);
+        Region regionFromCountry = cacheHelper.getOrCreateRegion(country, countryName);
+        Location location = cacheHelper.getOrCreateLocation(regionFromCountry, cleanerHelper.cleanLocationName(locationName));
 
+        // Création de l'entité principale DiseaseCase (non persistée ici)
+        DiseaseCase diseaseCase = new DiseaseCase();
+        diseaseCase.setDisease(this.disease);
+        diseaseCase.setLocation(location);
+        diseaseCase.setDate(dto.getDate());
+        diseaseCase.setConfirmedCases(dto.getConfirmed());
+        diseaseCase.setDeaths(dto.getDeaths());
+        diseaseCase.setRecovered(dto.getRecovered());
 
-
-        diseaseCaseRepository.saveAll(diseaseCases);
-
+        return diseaseCase;
     }
 }
