@@ -42,7 +42,7 @@
           <h2>Cas Totaux</h2>
           <mat-icon>people</mat-icon>
         </div>
-        <div class="kpi-value">{{ totalCases | number }}</div>
+        <div class="kpi-value">{{ this.totalCases | number }}</div>
         <div class="kpi-subtitle">Cas confirmés de COVID-19 dans le monde</div>
       </mat-card-content>
     </mat-card>
@@ -88,7 +88,11 @@
     class="dashboard-tabs"
   >
     <mat-tab label="Vue d'ensemble">
-      <app-overview />
+      <app-overview 
+      [totalCases]="totalCases"
+      [totalDeaths]="totalDeaths"
+      [totalRecoveries]="totalRecoveries"
+      />
     </mat-tab>
     <mat-tab label="Pays"></mat-tab>
     <mat-tab label="Données régionales"></mat-tab>
