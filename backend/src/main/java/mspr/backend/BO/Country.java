@@ -20,7 +20,7 @@ public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "country_seq")
     @SequenceGenerator(name = "country_seq", sequenceName = "country_seq", allocationSize = 50)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name")
     private String name;
@@ -39,10 +39,6 @@ public class Country {
 
     @Column(name = "population")
     private Integer population;
-
-    public Long getId() {
-        return id;
-    }
 
     public String getName() {
         return name;

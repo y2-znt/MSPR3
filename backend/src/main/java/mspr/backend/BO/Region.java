@@ -21,7 +21,7 @@ public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "region_seq")
     @SequenceGenerator(name = "region_seq", sequenceName = "region_seq", allocationSize = 50)
-    private Long id;
+    private Integer id;
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -40,10 +40,6 @@ public class Region {
         this.locations = locations;
         this.name = name;
         this.country = country;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public Set<Location> getLocations() {

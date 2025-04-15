@@ -16,7 +16,7 @@ public class DiseaseCase {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "disease_case_seq")
     @SequenceGenerator(name = "disease_case_seq", sequenceName = "disease_case_seq", allocationSize = 50)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "disease_id")
