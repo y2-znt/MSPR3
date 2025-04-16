@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <!-- Header -->
   <div class="dashboard-header">
-    <h1 class="mat-headline-4">Tableau de Bord COVID-19</h1>
+    <h1 class="mat-headline-4">Tableau de Bord {{ diseaseName }}</h1>
     <div class="header-actions">
       <mat-form-field appearance="outline">
         <mat-label>Période</mat-label>
@@ -31,52 +31,34 @@
   </div>
 
   <p class="dashboard-subtitle">
-    Surveiller et analyser les statistiques COVID-19 dans le monde entier
+    Surveiller et analyser les statistiques {{ diseaseName }} dans le monde
+    entier
   </p>
 
   <!-- KPI Cards -->
   <div class="kpi-grid">
-    <mat-card class="kpi-card">
+    <mat-card class="kpi-card" *ngFor="let card of kpiCards">
       <mat-card-content>
-        <div class="kpi-header">
-          <h2>Cas Totaux</h2>
-          <mat-icon>people</mat-icon>
-        </div>
-        <div class="kpi-value">{{ totalCases | number }}</div>
-        <div class="kpi-subtitle">Cas confirmés de COVID-19 dans le monde</div>
-      </mat-card-content>
-    </mat-card>
+        <ng-container *ngIf="!isLoading; else skeletonLoader">
+          <div class="kpi-header">
+            <h2>{{ card.label }}</h2>
+            <mat-icon>{{ card.icon }}</mat-icon>
+          </div>
 
-    <mat-card class="kpi-card">
-      <mat-card-content>
-        <div class="kpi-header">
-          <h2>Décès Totaux</h2>
-          <mat-icon>warning</mat-icon>
-        </div>
-        <div class="kpi-value">{{ totalDeaths | number }}</div>
-        <div class="kpi-subtitle">Taux de mortalité: {{ mortalityRate }}%</div>
-      </mat-card-content>
-    </mat-card>
+          <div class="kpi-value">{{ card.value | number }}</div>
+          <div class="kpi-subtitle">{{ card.subtitle }}</div>
+        </ng-container>
 
-    <mat-card class="kpi-card">
-      <mat-card-content>
-        <div class="kpi-header">
-          <h2>Guérisons</h2>
-          <mat-icon>health_and_safety</mat-icon>
-        </div>
-        <div class="kpi-value">{{ totalRecoveries | number }}</div>
-        <div class="kpi-subtitle">Taux de guérison: {{ recoveryRate }}%</div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="kpi-card">
-      <mat-card-content>
-        <div class="kpi-header">
-          <h2>Tests Effectués</h2>
-          <mat-icon>science</mat-icon>
-        </div>
-        <div class="kpi-value">{{ totalTests | number }}</div>
-        <div class="kpi-subtitle">Tests COVID-19 totaux dans le monde</div>
+        <ng-template #skeletonLoader>
+          <div class="kpi-skeleton">
+            <div class="kpi-header">
+              <div class="skeleton-title"></div>
+              <div class="skeleton-icon"></div>
+            </div>
+            <div class="skeleton-value"></div>
+            <div class="skeleton-subtitle"></div>
+          </div>
+        </ng-template>
       </mat-card-content>
     </mat-card>
   </div>
@@ -88,29 +70,13 @@
     class="dashboard-tabs"
   >
     <mat-tab label="Vue d'ensemble">
-      <div class="chart-container">
-        <mat-card class="chart-card">
-          <mat-card-header>
-            <mat-card-title>Cas COVID-19 Mondiaux</mat-card-title>
-            <mat-card-subtitle
-              >Répartition mensuelle des cas confirmés, actifs, guéris et
-              décès</mat-card-subtitle
-            >
-          </mat-card-header>
-          <mat-card-content>
-            <canvas
-              baseChart
-              [data]="areaChartData"
-              [options]="areaChartOptions"
-              [type]="'line'"
-            >
-            </canvas>
-          </mat-card-content>
-        </mat-card>
-      </div>
+      <app-overview
+        [totalCases]="totalCases"
+        [totalDeaths]="totalDeaths"
+        [totalRecoveries]="totalRecoveries"
+      />
     </mat-tab>
     <mat-tab label="Pays"></mat-tab>
     <mat-tab label="Données régionales"></mat-tab>
-    <mat-tab label="Tendances"></mat-tab>
   </mat-tab-group>
 </div>
