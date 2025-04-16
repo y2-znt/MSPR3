@@ -123,6 +123,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (res: any) => {
             allCases.push(...res.content);
+            this.diseaseName = allCases[0].name || 'Inconnu';
 
             if (!res.last) {
               page++;
