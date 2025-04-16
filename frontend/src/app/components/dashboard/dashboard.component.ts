@@ -26,6 +26,7 @@ import { Country } from '../../models/country.model';
 import { Page } from '../../models/pagination.model';
 import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
 import { CountryService } from '../../services/country.service';
+import { CovidDataService } from '../../services/covid-data.service';
 import { DiseaseCaseService } from '../../services/disease-case.service';
 import { OverviewComponent } from '../tabs/overview/overview.component';
 
@@ -62,6 +63,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   countriesControl = new FormControl<Country[]>([]);
   countries: Country[] = [];
+  diseaseName: string = "";
   currentPage = 0;
   pageSize = 250;
 
@@ -76,6 +78,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private countryService: CountryService,
     private diseaseCaseService: DiseaseCaseService,
+    private covidDataService: CovidDataService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -115,6 +118,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             } else {
               console.log('✅ Tous les cas récupérés:', allCases);
 
+              this.diseaseName = allCases[0].name || 'Inconnu';
+              console.log('🦠 Maladie:', this.diseaseName);
+
               this.totalCases = allCases.reduce(
                 (sum, item) => sum + item.confirmedCases,
                 0
@@ -140,6 +146,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
               console.log('💪 Total Rétablis:', this.totalRecoveries);
               console.log('📈 Taux mortalité (%):', this.mortalityRate);
               console.log('📈 Taux guérison (%):', this.recoveryRate);
+              
+              // Share data with the CovidDataService
+              this.covidDataService.updateCovidStats({
+                diseaseName: this.diseaseName,
+                totalCases: this.totalCases,
+                totalDeaths: this.totalDeaths,
+                totalRecoveries: this.totalRecoveries,
+                mortalityRate: this.mortalityRate,
+                recoveryRate: this.recoveryRate
+              });
 
               // Force the detection of changes after updating the data
               this.cdr.detectChanges();

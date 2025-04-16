@@ -14,11 +14,13 @@ export class OverviewComponent {
   @Input() totalCases!: number;
   @Input() totalDeaths!: number;
   @Input() totalRecoveries!: number;
+  @Input() diseaseName!: string;
 
   areaChartData!: ChartData<'line'>;
   areaChartOptions!: ChartOptions<'line'>;
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log("maladie", this.diseaseName);
     if (
       this.totalCases !== undefined &&
       this.totalDeaths !== undefined &&
@@ -30,20 +32,39 @@ export class OverviewComponent {
 
   updateChart() {
     this.areaChartData = {
-      labels: ['Cas Confirmés', 'Décès', 'Rétablis'],
+      labels: [`Statistiques ${this.diseaseName}`],
       datasets: [
         {
-          label: 'Statistiques COVID-19',
+          label: 'Cas Confirmés',
           data: [
-            this.totalCases,
-            this.totalDeaths,
-            this.totalRecoveries,
+            this.totalCases
           ],
           fill: true,
           borderColor: 'rgba(75,192,192,1)',
           backgroundColor: 'rgba(75,192,192,0.2)',
           tension: 0.3
+        },
+        {
+          label: 'Décès',
+          data: [
+            this.totalDeaths
+          ],
+          fill: true,
+          borderColor: 'rgb(192, 93, 75)',
+          backgroundColor: 'rgba(192, 174, 75, 0.2)',
+          tension: 0.3
+        },
+        {
+          label: 'Rétablis',
+          data: [
+            this.totalRecoveries
+          ],
+          fill: true,
+          borderColor: 'rgb(75, 122, 192)',
+          backgroundColor: 'rgba(75,192,192,0.2)',
+          tension: 0.3
         }
+
       ]
     };
 
