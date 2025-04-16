@@ -55,6 +55,8 @@ import { OverviewComponent } from '../tabs/overview/overview.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  isLoading: boolean = false;
+
   // Form Controls
   dateRange = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -63,7 +65,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   countriesControl = new FormControl<Country[]>([]);
   countries: Country[] = [];
-  diseaseName: string = "";
+  diseaseName: string = '';
   currentPage = 0;
   pageSize = 250;
 
@@ -87,40 +89,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getAllDiseasesCases();
   }
 
+  get kpiCards() {
+    return [
+      {
+        label: 'Cas Totaux',
+        icon: 'people',
+        subtitle: 'Cas confirmés de COVID-19 dans le monde',
+        value: this.totalCases,
+      },
+      {
+        label: 'Décès Totaux',
+        icon: 'warning',
+        subtitle: `Taux de mortalité: ${this.mortalityRate}%`,
+        value: this.totalDeaths,
+      },
+      {
+        label: 'Guérisons',
+        icon: 'health_and_safety',
+        subtitle: `Taux de guérison: ${this.recoveryRate}%`,
+        value: this.totalRecoveries,
+      },
+    ];
+  }
+
   public getAllDiseasesCases(): void {
+    this.isLoading = true;
     const allCases: any[] = [];
     let page = 0;
 
     const fetchPage = () => {
-      console.log(`📄 Récupération de la page ${page}`);
-
       this.diseaseCaseService
         .getAllDiseaseCases(page, this.pageSize)
         .subscribe({
           next: (res: any) => {
-            console.log(`📥 Page ${page} reçue`, res);
-
-            if (!res.content || !Array.isArray(res.content)) {
-              console.warn(
-                '⚠️ Structure inattendue, pas de "content" dans la réponse.'
-              );
-              return;
-            }
-
             allCases.push(...res.content);
-            console.log(
-              `📊 Cas cumulés après page ${page}: ${allCases.length}`
-            );
 
             if (!res.last) {
               page++;
               fetchPage();
             } else {
-              console.log('✅ Tous les cas récupérés:', allCases);
-
-              this.diseaseName = allCases[0].name || 'Inconnu';
-              console.log('🦠 Maladie:', this.diseaseName);
-
               this.totalCases = allCases.reduce(
                 (sum, item) => sum + item.confirmedCases,
                 0
@@ -141,23 +148,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 ? +((this.totalRecoveries / this.totalCases) * 100).toFixed(2)
                 : 0;
 
-              console.log('🧮 Total Confirmés:', this.totalCases);
-              console.log('⚰️ Total Décès:', this.totalDeaths);
-              console.log('💪 Total Rétablis:', this.totalRecoveries);
-              console.log('📈 Taux mortalité (%):', this.mortalityRate);
-              console.log('📈 Taux guérison (%):', this.recoveryRate);
-              
-              // Share data with the CovidDataService
-              this.covidDataService.updateCovidStats({
-                diseaseName: this.diseaseName,
-                totalCases: this.totalCases,
-                totalDeaths: this.totalDeaths,
-                totalRecoveries: this.totalRecoveries,
-                mortalityRate: this.mortalityRate,
-                recoveryRate: this.recoveryRate
-              });
+              console.log('Total Confirmés:', this.totalCases);
+              console.log('Total Décès:', this.totalDeaths);
+              console.log('Total Rétablis:', this.totalRecoveries);
+              console.log('Taux mortalité (%):', this.mortalityRate);
+              console.log('Taux guérison (%):', this.recoveryRate);
 
-              // Force the detection of changes after updating the data
+              this.isLoading = false;
               this.cdr.detectChanges();
             }
           },
@@ -166,6 +163,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               '❌ Erreur lors de la récupération des données:',
               err
             );
+            this.isLoading = false;
             this.cdr.detectChanges();
           },
         });

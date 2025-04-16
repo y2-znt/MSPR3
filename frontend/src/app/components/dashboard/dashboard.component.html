@@ -31,52 +31,34 @@
   </div>
 
   <p class="dashboard-subtitle">
-    Surveiller et analyser les statistiques {{ diseaseName }} dans le monde entier
+    Surveiller et analyser les statistiques {{ diseaseName }} dans le monde
+    entier
   </p>
 
   <!-- KPI Cards -->
   <div class="kpi-grid">
-    <mat-card class="kpi-card">
+    <mat-card class="kpi-card" *ngFor="let card of kpiCards">
       <mat-card-content>
-        <div class="kpi-header">
-          <h2>Cas Totaux</h2>
-          <mat-icon>people</mat-icon>
-        </div>
-        <div class="kpi-value">{{ this.totalCases | number }}</div>
-        <div class="kpi-subtitle">Cas confirmés de {{ diseaseName }} dans le monde</div>
-      </mat-card-content>
-    </mat-card>
+        <ng-container *ngIf="!isLoading; else skeletonLoader">
+          <div class="kpi-header">
+            <h2>{{ card.label }}</h2>
+            <mat-icon>{{ card.icon }}</mat-icon>
+          </div>
 
-    <mat-card class="kpi-card">
-      <mat-card-content>
-        <div class="kpi-header">
-          <h2>Décès Totaux</h2>
-          <mat-icon>warning</mat-icon>
-        </div>
-        <div class="kpi-value">{{ totalDeaths | number }}</div>
-        <div class="kpi-subtitle">Taux de mortalité: {{ mortalityRate }}%</div>
-      </mat-card-content>
-    </mat-card>
+          <div class="kpi-value">{{ card.value | number }}</div>
+          <div class="kpi-subtitle">{{ card.subtitle }}</div>
+        </ng-container>
 
-    <mat-card class="kpi-card">
-      <mat-card-content>
-        <div class="kpi-header">
-          <h2>Guérisons</h2>
-          <mat-icon>health_and_safety</mat-icon>
-        </div>
-        <div class="kpi-value">{{ totalRecoveries | number }}</div>
-        <div class="kpi-subtitle">Taux de guérison: {{ recoveryRate }}%</div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="kpi-card">
-      <mat-card-content>
-        <div class="kpi-header">
-          <h2>Tests Effectués</h2>
-          <mat-icon>science</mat-icon>
-        </div>
-        <div class="kpi-value">{{ totalTests | number }}</div>
-        <div class="kpi-subtitle">Tests {{ diseaseName }} totaux dans le monde</div>
+        <ng-template #skeletonLoader>
+          <div class="kpi-skeleton">
+            <div class="kpi-header">
+              <div class="skeleton-title"></div>
+              <div class="skeleton-icon"></div>
+            </div>
+            <div class="skeleton-value"></div>
+            <div class="skeleton-subtitle"></div>
+          </div>
+        </ng-template>
       </mat-card-content>
     </mat-card>
   </div>
@@ -88,10 +70,10 @@
     class="dashboard-tabs"
   >
     <mat-tab label="Vue d'ensemble">
-      <app-overview 
-      [totalCases]="totalCases"
-      [totalDeaths]="totalDeaths"
-      [totalRecoveries]="totalRecoveries"
+      <app-overview
+        [totalCases]="totalCases"
+        [totalDeaths]="totalDeaths"
+        [totalRecoveries]="totalRecoveries"
       />
     </mat-tab>
     <mat-tab label="Pays"></mat-tab>

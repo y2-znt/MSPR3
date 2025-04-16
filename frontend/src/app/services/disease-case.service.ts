@@ -14,7 +14,6 @@ export class DiseaseCaseService {
   constructor() {}
 
   getAllDiseaseCases(page: number = 0, size: number = 250): Observable<any> {
-    console.log(`📡 Appel API : ${this.url}disease-cases?page=${page}&size=${size}`);
     return this.http.get(`${this.url}disease-cases?page=${page}&size=${size}`);
   }
 
@@ -29,5 +28,4 @@ export class DiseaseCaseService {
 
     return this.http.get<any>(this.url, { params });
   }
-
 }
