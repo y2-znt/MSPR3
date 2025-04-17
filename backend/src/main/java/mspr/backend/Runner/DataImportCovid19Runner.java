@@ -83,7 +83,7 @@ public class DataImportCovid19Runner implements CommandLineRunner {
 
         // Calculate total import duration
         long totalImportTime = System.currentTimeMillis() - importStartTime;
-        
+
         // Retrieve counts from the database
         long countryCount = countryRepository.count();
         long regionCount = regionRepository.count();
@@ -123,7 +123,7 @@ public class DataImportCovid19Runner implements CommandLineRunner {
         System.out.println("************************************************************************************");
 
 
-        
+
         System.out.println("** Importation des données terminée avec succès **");
 
     }
