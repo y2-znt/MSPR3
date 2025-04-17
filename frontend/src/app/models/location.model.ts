@@ -1,7 +1,7 @@
-import { DiseaseCase } from './diseaseCase.model';
+import { Region } from './region.model';
 
 export interface Location {
   id: number;
   name: string;
-  diseasesCases: DiseaseCase[];
+  region: Region[];
 }

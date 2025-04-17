@@ -1,7 +1,7 @@
-import { Location } from './location.model';
+import { Country } from './country.model';
 
 export interface Region {
   id: number;
   name: string;
-  locations: Location[];
+  country: Country[];
 }
