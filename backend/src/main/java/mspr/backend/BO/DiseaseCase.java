@@ -25,7 +25,6 @@ public class DiseaseCase {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "location_id")
-    @JsonBackReference
     private Location location;
 
     @Column(name = "date")

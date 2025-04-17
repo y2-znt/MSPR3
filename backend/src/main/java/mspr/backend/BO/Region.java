@@ -31,7 +31,6 @@ public class Region {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "country_id")
-    @JsonBackReference
     private Country country;
 
     public Region() {}
