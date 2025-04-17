@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.BatchSize;
@@ -24,7 +24,7 @@ public class Region {
     private Integer id;
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private Set<Location> locations = new HashSet<>();
 
     private String name;

@@ -3,7 +3,7 @@ package mspr.backend.BO;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.BatchSize;
 
@@ -107,8 +107,9 @@ public class DiseaseCase {
         this.id = id;
     }
 
+    @JsonIgnore
     public String getName() {
-        return disease.getName(); 
+        return (disease != null) ? disease.getName() : null;
     }
 
     public void setName(String name) {
