@@ -52,6 +52,21 @@ Une fois connecté, vous pouvez :
 \d nom_table
 ```
 
+## Documentation API avec Swagger UI
+
+Une fois l'application démarrée, vous pouvez accéder à la documentation interactive de l'API via Swagger UI :
+
+```
+http://localhost:8080/api-docs
+```
+
+Cette interface vous permet de :
+
+- Explorer tous les endpoints disponibles
+- Tester les requêtes directement depuis le navigateur
+- Voir les modèles de données et les schémas
+- Comprendre les paramètres requis pour chaque endpoint
+
 ## Exécution des tests
 
 Pour lancer les tests depuis le conteneur backend :
