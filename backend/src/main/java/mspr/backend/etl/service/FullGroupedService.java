@@ -1,11 +1,11 @@
-package mspr.backend.ETL.Service;
+package mspr.backend.etl.service;
 
 import jakarta.transaction.Transactional;
 import mspr.backend.BO.*;
-import mspr.backend.ETL.DTO.FullGroupedDto;
-import mspr.backend.ETL.Helpers.*;
-import mspr.backend.ETL.Mapper.FullGroupedMapper;
-import mspr.backend.ETL.exceptions.*;
+import mspr.backend.etl.dto.FullGroupedDto;
+import mspr.backend.etl.helpers.*;
+import mspr.backend.etl.mapper.FullGroupedMapper;
+import mspr.backend.etl.exceptions.*;
 import mspr.backend.Repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

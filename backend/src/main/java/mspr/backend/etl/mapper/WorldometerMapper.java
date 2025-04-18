@@ -1,8 +1,8 @@
-package mspr.backend.ETL.Mapper;
+package mspr.backend.etl.mapper;
 
 import mspr.backend.BO.*;
-import mspr.backend.ETL.Helpers.*;
-import mspr.backend.ETL.DTO.WorldometerDto;
+import mspr.backend.etl.helpers.*;
+import mspr.backend.etl.dto.WorldometerDto;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 

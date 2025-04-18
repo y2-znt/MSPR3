@@ -1,4 +1,4 @@
-package mspr.backend.ETL.exceptions;
+package mspr.backend.etl.exceptions;
 
 /**
  * Base exception for all ETL-related errors

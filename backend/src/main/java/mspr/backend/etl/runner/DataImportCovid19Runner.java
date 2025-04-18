@@ -1,10 +1,10 @@
-package mspr.backend.ETL.Runner;
+package mspr.backend.etl.runner;
 
 import mspr.backend.BO.Disease;
-import mspr.backend.ETL.Helpers.CacheHelper;
-import mspr.backend.ETL.exceptions.*;
+import mspr.backend.etl.helpers.CacheHelper;
+import mspr.backend.etl.exceptions.*;
 import mspr.backend.Repository.*;
-import mspr.backend.ETL.Service.*;
+import mspr.backend.etl.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

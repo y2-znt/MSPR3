@@ -1,9 +1,9 @@
-package mspr.backend.ETL.Service;
+package mspr.backend.etl.service;
 import mspr.backend.BO.*;
-import mspr.backend.ETL.DTO.CovidCompleteDto;
-import mspr.backend.ETL.Helpers.*;
-import mspr.backend.ETL.Mapper.CovidCompleteMapper;
-import mspr.backend.ETL.exceptions.*;
+import mspr.backend.etl.dto.CovidCompleteDto;
+import mspr.backend.etl.helpers.*;
+import mspr.backend.etl.mapper.CovidCompleteMapper;
+import mspr.backend.etl.exceptions.*;
 import mspr.backend.Repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class CovidCompleteService {

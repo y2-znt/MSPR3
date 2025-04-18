@@ -1,4 +1,4 @@
-package mspr.backend.ETL.exceptions;
+package mspr.backend.etl.exceptions;
 
 /**
  * Exception thrown when a required data file is not found

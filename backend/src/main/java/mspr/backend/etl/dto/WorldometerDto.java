@@ -1,6 +1,4 @@
-package mspr.backend.ETL.DTO;
-
-import mspr.backend.BO.Country;
+package mspr.backend.etl.dto;
 
 public class WorldometerDto {
     private String country;     // Pays

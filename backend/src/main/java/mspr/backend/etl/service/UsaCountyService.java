@@ -1,12 +1,12 @@
-package mspr.backend.ETL.Service;
+package mspr.backend.etl.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import mspr.backend.BO.*;
-import mspr.backend.ETL.DTO.UsaCountyDto;
-import mspr.backend.ETL.Helpers.*;
-import mspr.backend.ETL.Mapper.UsaCountyMapper;
-import mspr.backend.ETL.exceptions.*;
+import mspr.backend.etl.dto.UsaCountyDto;
+import mspr.backend.etl.helpers.*;
+import mspr.backend.etl.mapper.UsaCountyMapper;
+import mspr.backend.etl.exceptions.*;
 import mspr.backend.Repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jakarta.transaction.Transactional;

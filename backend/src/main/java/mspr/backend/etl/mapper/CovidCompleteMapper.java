@@ -1,10 +1,10 @@
-package mspr.backend.ETL.Mapper;
+package mspr.backend.etl.mapper;
 
-import mspr.backend.ETL.DTO.CovidCompleteDto;
+import mspr.backend.etl.dto.CovidCompleteDto;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import mspr.backend.BO.*;
-import mspr.backend.ETL.Helpers.*;
+import mspr.backend.etl.helpers.*;
 
 @Component
 public class CovidCompleteMapper {

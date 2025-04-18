@@ -1,10 +1,10 @@
-package mspr.backend.ETL.Mapper;
+package mspr.backend.etl.mapper;
 
-import mspr.backend.ETL.DTO.FullGroupedDto;
+import mspr.backend.etl.dto.FullGroupedDto;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import mspr.backend.BO.*;
-import mspr.backend.ETL.Helpers.*;
+import mspr.backend.etl.helpers.*;
 
 @Component
 public class FullGroupedMapper {

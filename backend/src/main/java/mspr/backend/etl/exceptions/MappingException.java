@@ -1,4 +1,4 @@
-package mspr.backend.ETL.exceptions;
+package mspr.backend.etl.exceptions;
 
 /**
  * Exception thrown when there's an error mapping data between DTO and entity objects

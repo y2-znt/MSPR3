@@ -1,8 +1,8 @@
-package mspr.backend.ETL.Mapper;
+package mspr.backend.etl.mapper;
 
-import mspr.backend.ETL.DTO.UsaCountyDto;
+import mspr.backend.etl.dto.UsaCountyDto;
 import mspr.backend.BO.*;
-import mspr.backend.ETL.Helpers.CacheHelper;
+import mspr.backend.etl.helpers.CacheHelper;
 import org.springframework.stereotype.Component;
 
 

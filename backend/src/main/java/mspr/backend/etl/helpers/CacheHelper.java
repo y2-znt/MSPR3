@@ -1,4 +1,4 @@
-package mspr.backend.ETL.Helpers;
+package mspr.backend.etl.helpers;
 
 import mspr.backend.BO.*;
 import mspr.backend.Repository.*;
@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 
 @Component
 public class CacheHelper {
