@@ -34,6 +34,16 @@ public class FullGroupedService {
 
     private static final Logger logger = LoggerFactory.getLogger(FullGroupedService.class);
     public static final String FILE_NAME = "full_grouped.csv";
+    
+    // CSV field indices for full_grouped.csv
+    private static final int IDX_DATE = 0;
+    private static final int IDX_COUNTRY_REGION = 1;
+    private static final int IDX_CONFIRMED = 2;
+    private static final int IDX_DEATHS = 3;
+    private static final int IDX_RECOVERED = 4;
+    private static final int IDX_ACTIVE = 5;
+    private static final int IDX_WHO_REGION = 9;
+    private static final int MIN_FIELDS_REQUIRED = 10;
 
     @Autowired
     private FullGroupedMapper mapper;
@@ -96,41 +106,44 @@ public class FullGroupedService {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             logger.debug("Processing data lines...");
             
-            for (int l = 1; l < lines.size(); l++) {
+            // Process each line starting from line 1 (after header)
+            for (int lineIndex = 1; lineIndex < lines.size(); lineIndex++) {
                 try {
-                    String line = lines.get(l);
+                    String line = lines.get(lineIndex);
                     String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
-                    if (fields.length < 10) {
-                        logger.warn("Line {}: Insufficient fields (expected at least 10, got {}). Skipping line.", l, fields.length);
+                    if (fields.length < MIN_FIELDS_REQUIRED) {
+                        logger.warn("Line {}: Insufficient fields (expected at least {}, got {}). Skipping line.", 
+                                lineIndex, MIN_FIELDS_REQUIRED, fields.length);
                         lineErrors++;
                         continue;
                     }
 
                     LocalDate date;
                     try {
-                        date = LocalDate.parse(fields[0].trim(), dateFormatter);
+                        date = LocalDate.parse(fields[IDX_DATE].trim(), dateFormatter);
                     } catch (DateTimeParseException e) {
-                        logger.warn("Line {}: Error parsing date: {}", l, e.getMessage());
+                        logger.warn("Line {}: Error parsing date: {}", lineIndex, e.getMessage());
                         lineErrors++;
                         continue;
                     }
                     
-                    String countryRegionName = cleanerHelper.cleanRegionName(cleanerHelper.cleanCountryName(fields[1].trim()));
+                    String countryRegionName = cleanerHelper.cleanRegionName(
+                            cleanerHelper.cleanCountryName(fields[IDX_COUNTRY_REGION].trim()));
                     
                     int confirmed = 0, deaths = 0, recovered = 0, active = 0;
                     try {
-                        confirmed = fields[2].isEmpty() ? 0 : Integer.parseInt(fields[2].trim());
-                        deaths = fields[3].isEmpty() ? 0 : Integer.parseInt(fields[3].trim());
-                        recovered = fields[4].isEmpty() ? 0 : Integer.parseInt(fields[4].trim());
-                        active = fields[5].isEmpty() ? 0 : Integer.parseInt(fields[5].trim());
+                        confirmed = fields[IDX_CONFIRMED].isEmpty() ? 0 : Integer.parseInt(fields[IDX_CONFIRMED].trim());
+                        deaths = fields[IDX_DEATHS].isEmpty() ? 0 : Integer.parseInt(fields[IDX_DEATHS].trim());
+                        recovered = fields[IDX_RECOVERED].isEmpty() ? 0 : Integer.parseInt(fields[IDX_RECOVERED].trim());
+                        active = fields[IDX_ACTIVE].isEmpty() ? 0 : Integer.parseInt(fields[IDX_ACTIVE].trim());
                     } catch (NumberFormatException e) {
-                        logger.warn("Line {}: Error parsing numeric fields: {}", l, e.getMessage());
+                        logger.warn("Line {}: Error parsing numeric fields: {}", lineIndex, e.getMessage());
                         lineErrors++;
                         continue;
                     }
                     
-                    String whoRegion = fields[9].trim();
+                    String whoRegion = fields[IDX_WHO_REGION].trim();
 
                     FullGroupedDto dto = new FullGroupedDto(
                             date,
@@ -144,7 +157,7 @@ public class FullGroupedService {
                     int hashKey = (date + countryRegionName + confirmed + deaths + recovered + active).hashCode();
                     dtoMap.put(hashKey, dto);
                 } catch (Exception e) {
-                    logger.warn("Line {}: Unexpected error processing line: {}", l, e.getMessage());
+                    logger.warn("Line {}: Unexpected error processing line: {}", lineIndex, e.getMessage());
                     lineErrors++;
                 }
             }

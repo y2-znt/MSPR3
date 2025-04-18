@@ -37,6 +37,17 @@ public class UsaCountyService {
 
     private static final Logger logger = LoggerFactory.getLogger(UsaCountyService.class);
 
+    // CSV field indices for usa_county_wise.csv
+    private static final int IDX_COUNTY = 5; // Admin2
+    private static final int IDX_PROVINCE_STATE = 6;
+    private static final int IDX_COUNTRY_REGION = 7;
+    private static final int IDX_LATITUDE = 8;
+    private static final int IDX_LONGITUDE = 9;
+    private static final int IDX_DATE = 11;
+    private static final int IDX_CONFIRMED = 12;
+    private static final int IDX_DEATHS = 13;
+    private static final int MIN_FIELDS_REQUIRED = 14;
+
     @Autowired
     private DiseaseCaseRepository diseaseCaseRepository;
     @Autowired
@@ -45,13 +56,15 @@ public class UsaCountyService {
     private RegionRepository regionRepository;
     @Autowired
     private LocationRepository locationRepository;
+    @Autowired
+    private DiseaseRepository diseaseRepository;
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired
     private UsaCountyMapper usaCountyMapper;
 
-
     public static final String FILE_NAME = "usa_county_wise.csv";
+    public static final String COVID_19_DISEASE_NAME = "COVID-19";
 
     /**
      * Import data from USA county CSV file
@@ -68,6 +81,18 @@ public class UsaCountyService {
             // Initialize in-memory cache for reference entities
             CacheHelper cache = new CacheHelper();
             logger.debug("Initialized cache for USA county data import");
+            
+            // Ensure COVID-19 disease is created and persisted first
+            Disease covidDisease = diseaseRepository.findByName(COVID_19_DISEASE_NAME);
+            if (covidDisease == null) {
+                logger.debug("Creating COVID-19 disease entity");
+                covidDisease = new Disease();
+                covidDisease.setName(COVID_19_DISEASE_NAME);
+                covidDisease = diseaseRepository.save(covidDisease);
+            }
+            // Add to cache
+            cache.addDiseaseToCache(COVID_19_DISEASE_NAME, covidDisease);
+            logger.debug("Added COVID-19 disease to cache with ID: {}", covidDisease.getId());
 
             // Read CSV file and convert to DTOs
             List<UsaCountyDto> dtos = new ArrayList<>();
@@ -101,51 +126,50 @@ public class UsaCountyService {
 
             // Skip header
             logger.debug("Processing data lines...");
-            for (int l = 1; l < lines.size(); l++) {
+            for (int lineIndex = 1; lineIndex < lines.size(); lineIndex++) {
                 try {
-                    String line = lines.get(l);
+                    String line = lines.get(lineIndex);
                     // Regular expression to properly handle commas in quoted fields
                     String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
-                    if (fields.length < 14) {
-                        logger.warn("Line {}: Insufficient fields (expected at least 14, got {}). Skipping line.", l, fields.length);
+                    if (fields.length < MIN_FIELDS_REQUIRED) {
+                        logger.warn("Line {}: Insufficient fields (expected at least {}, got {}). Skipping line.", 
+                                lineIndex, MIN_FIELDS_REQUIRED, fields.length);
                         lineErrors++;
                         continue;
                     }
 
-                    // Expected indices (according to usa_county_wise.csv order):
-                    // 5: Admin2 (county name), 6: Province_State, 7: Country_Region,
-                    // 8: Lat, 9: Long_, 11: Date, 12: Confirmed, 13: Deaths
-                    String county = fields[5].trim();
-                    String provinceState = fields[6].trim();
-                    String countryRegion = fields[7].trim();
+                    // Expected indices (according to usa_county_wise.csv order)
+                    String county = fields[IDX_COUNTY].trim();
+                    String provinceState = fields[IDX_PROVINCE_STATE].trim();
+                    String countryRegion = fields[IDX_COUNTRY_REGION].trim();
                     
                     double lat = 0.0, lon = 0.0;
                     LocalDate date;
                     int confirmed = 0, deaths = 0;
                     
                     try {
-                        lat = Double.parseDouble(fields[8].trim());
-                        lon = Double.parseDouble(fields[9].trim());
+                        lat = Double.parseDouble(fields[IDX_LATITUDE].trim());
+                        lon = Double.parseDouble(fields[IDX_LONGITUDE].trim());
                     } catch (NumberFormatException e) {
-                        logger.warn("Line {}: Error parsing geographic coordinates: {}", l, e.getMessage());
+                        logger.warn("Line {}: Error parsing geographic coordinates: {}", lineIndex, e.getMessage());
                         lineErrors++;
                         continue;
                     }
                     
                     try {
-                        date = LocalDate.parse(fields[11].trim(), dateFmt);
+                        date = LocalDate.parse(fields[IDX_DATE].trim(), dateFmt);
                     } catch (DateTimeParseException e) {
-                        logger.warn("Line {}: Error parsing date: {}", l, e.getMessage());
+                        logger.warn("Line {}: Error parsing date: {}", lineIndex, e.getMessage());
                         lineErrors++;
                         continue;
                     }
                     
                     try {
-                        confirmed = fields[12].isEmpty() ? 0 : Integer.parseInt(fields[12].trim());
-                        deaths = fields[13].isEmpty() ? 0 : Integer.parseInt(fields[13].trim());
+                        confirmed = fields[IDX_CONFIRMED].isEmpty() ? 0 : Integer.parseInt(fields[IDX_CONFIRMED].trim());
+                        deaths = fields[IDX_DEATHS].isEmpty() ? 0 : Integer.parseInt(fields[IDX_DEATHS].trim());
                     } catch (NumberFormatException e) {
-                        logger.warn("Line {}: Error parsing numeric fields: {}", l, e.getMessage());
+                        logger.warn("Line {}: Error parsing numeric fields: {}", lineIndex, e.getMessage());
                         lineErrors++;
                         continue;
                     }
@@ -157,7 +181,7 @@ public class UsaCountyService {
                     UsaCountyDto dto = new UsaCountyDto(county, provinceState, countryRegion, lat, lon, date, confirmed, deaths, recovered, active);
                     dtos.add(dto);
                 } catch (Exception e) {
-                    logger.warn("Line {}: Unexpected error processing line: {}", l, e.getMessage());
+                    logger.warn("Line {}: Unexpected error processing line: {}", lineIndex, e.getMessage());
                     lineErrors++;
                 }
             }

@@ -9,6 +9,11 @@ import mspr.backend.ETL.Helpers.*;
 @Component
 public class FullGroupedMapper {
 
+    // Constants for standard names
+    public static final String STANDARD_REGION_NAME = "standard";
+    public static final String STANDARD_LOCATION_NAME = "standard";
+    public static final String COVID_19_DISEASE_NAME = "COVID-19";
+
     private final CacheHelper cacheHelper;
     private final CleanerHelper cleanerHelper;
     private final Disease disease;
@@ -17,23 +22,23 @@ public class FullGroupedMapper {
     public FullGroupedMapper(CacheHelper cacheHelper, CleanerHelper cleanerHelper) {
         this.cacheHelper = cacheHelper;
         this.cleanerHelper = cleanerHelper;
-        // Précharger la maladie COVID-19
-        this.disease = cacheHelper.getOrCreateDisease("COVID-19");
+        // Preload COVID-19 disease
+        this.disease = cacheHelper.getOrCreateDisease(COVID_19_DISEASE_NAME);
     }
 
     /**
-     * Convertit un FullGroupedDto en entité DiseaseCase sans persistances directes.
-     * Construit la hiérarchie Country/Region/Location via CacheHelper.
+     * Converts a FullGroupedDto to a DiseaseCase entity without direct persistence.
+     * Builds the Country/Region/Location hierarchy via CacheHelper.
      */
     public DiseaseCase toEntity(FullGroupedDto dto) {
-        // Nettoyage du nom du pays
+        // Clean country name
         String countryName = cleanerHelper.cleanCountryName(dto.getCountryRegion());
         Country country = cacheHelper.getOrCreateCountry(countryName);
 
-        Region regionStandardFromCountry = cacheHelper.getOrCreateRegion(country, "standard");
+        Region regionStandardFromCountry = cacheHelper.getOrCreateRegion(country, STANDARD_REGION_NAME);
 
-        // Pas de province/état dans ce dataset, on crée directement la location au niveau du pays
-        Location location = cacheHelper.getOrCreateLocation(regionStandardFromCountry,  "standard");
+        // No province/state in this dataset, create location directly at country level
+        Location location = cacheHelper.getOrCreateLocation(regionStandardFromCountry, STANDARD_LOCATION_NAME);
 
         DiseaseCase diseaseCase = new DiseaseCase();
         diseaseCase.setDisease(this.disease);

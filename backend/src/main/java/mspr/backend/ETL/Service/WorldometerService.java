@@ -33,6 +33,17 @@ public class WorldometerService {
 
     private static final Logger logger = LoggerFactory.getLogger(WorldometerService.class);
     public static final String FILE_NAME = "worldometer_data.csv";
+    
+    // CSV field indices for worldometer_data.csv
+    private static final int IDX_COUNTRY_NAME = 0;
+    private static final int IDX_CONTINENT = 1;
+    private static final int IDX_POPULATION = 2;
+    private static final int IDX_TOTAL_CASES = 3;
+    private static final int IDX_TOTAL_DEATHS = 5;
+    private static final int IDX_TOTAL_RECOVERED = 7;
+    private static final int IDX_ACTIVE_CASES = 9;
+    private static final int IDX_WHO_REGION = 15;
+    private static final int MIN_FIELDS_REQUIRED = 16;
 
     @Autowired
     private WorldometerMapper mapper;
@@ -86,40 +97,41 @@ public class WorldometerService {
 
             // Skip header
             logger.debug("Processing data lines...");
-            for (int l = 1; l < lines.size(); l++) {
+            for (int lineIndex = 1; lineIndex < lines.size(); lineIndex++) {
                 try {
-                    String line = lines.get(l);
+                    String line = lines.get(lineIndex);
                     String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
-                    if (fields.length < 16) {
-                        logger.warn("Line {}: Insufficient fields (expected at least 16, got {}). Skipping line.", l, fields.length);
+                    if (fields.length < MIN_FIELDS_REQUIRED) {
+                        logger.warn("Line {}: Insufficient fields (expected at least {}, got {}). Skipping line.", 
+                                lineIndex, MIN_FIELDS_REQUIRED, fields.length);
                         lineErrors++;
                         continue;
                     }
 
-                    String countryName = fields[0];
-                    String continent = fields[1];
+                    String countryName = fields[IDX_COUNTRY_NAME];
+                    String continent = fields[IDX_CONTINENT];
                     
                     int population = 0, totalCases = 0, totalDeaths = 0, totalRecovered = 0, activeCases = 0;
                     try {
-                        population = fields[2].isEmpty() ? 0 : Integer.parseInt(fields[2]);
-                        totalCases = fields[3].isEmpty() ? 0 : Integer.parseInt(fields[3]);
-                        totalDeaths = fields[5].isEmpty() ? 0 : Integer.parseInt(fields[5]);
-                        totalRecovered = fields[7].isEmpty() ? 0 : Integer.parseInt(fields[7]);
-                        activeCases = fields[9].isEmpty() ? 0 : Integer.parseInt(fields[9]);
+                        population = fields[IDX_POPULATION].isEmpty() ? 0 : Integer.parseInt(fields[IDX_POPULATION]);
+                        totalCases = fields[IDX_TOTAL_CASES].isEmpty() ? 0 : Integer.parseInt(fields[IDX_TOTAL_CASES]);
+                        totalDeaths = fields[IDX_TOTAL_DEATHS].isEmpty() ? 0 : Integer.parseInt(fields[IDX_TOTAL_DEATHS]);
+                        totalRecovered = fields[IDX_TOTAL_RECOVERED].isEmpty() ? 0 : Integer.parseInt(fields[IDX_TOTAL_RECOVERED]);
+                        activeCases = fields[IDX_ACTIVE_CASES].isEmpty() ? 0 : Integer.parseInt(fields[IDX_ACTIVE_CASES]);
                     } catch (NumberFormatException e) {
-                        logger.warn("Line {}: Error parsing numeric fields: {}", l, e.getMessage());
+                        logger.warn("Line {}: Error parsing numeric fields: {}", lineIndex, e.getMessage());
                         lineErrors++;
                         continue;
                     }
                     
-                    String whoRegion = fields[15];
+                    String whoRegion = fields[IDX_WHO_REGION];
 
                     WorldometerDto dto = new WorldometerDto(countryName, continent, population, totalCases, totalDeaths, totalRecovered, activeCases, whoRegion);
                     int hashKey = (countryName + continent + population + totalCases + totalDeaths + totalRecovered + activeCases).hashCode();
                     dtoMap.put(hashKey, dto);
                 } catch (Exception e) {
-                    logger.warn("Line {}: Unexpected error processing line: {}", l, e.getMessage());
+                    logger.warn("Line {}: Unexpected error processing line: {}", lineIndex, e.getMessage());
                     lineErrors++;
                 }
             }

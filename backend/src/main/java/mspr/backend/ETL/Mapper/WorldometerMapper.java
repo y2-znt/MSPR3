@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Component
 public class WorldometerMapper {
 
+    // Constants for standard names
+    public static final String STANDARD_REGION_NAME = "standard";
+    public static final String STANDARD_LOCATION_NAME = "standard";
+
     private final CacheHelper cacheHelper;
     private final CleanerHelper cleanerHelper;
 
@@ -19,7 +23,7 @@ public class WorldometerMapper {
     }
 
     /**
-     * Conteneur pour le résultat (Country, Region, Location) retourné par le mapper Worldometer.
+     * Container for the result (Country, Region, Location) returned by the Worldometer mapper.
      */
     public static class CountryRegionLocation {
         private final Country country;
@@ -36,18 +40,20 @@ public class WorldometerMapper {
     }
 
     /**
-     * Convertit un WorldometerDto en triple Country/Region/Location.
-     * Aucune sauvegarde en base n'est effectuée ici.
+     * Converts a WorldometerDto to a Country/Region/Location triple.
+     * No database saving is performed here.
      */
     public CountryRegionLocation toEntity(WorldometerDto dto) {
-        // Nettoyage du nom de pays
+        // Clean country name
         String countryName = cleanerHelper.cleanCountryName(dto.getCountry());
         Country country = cacheHelper.getOrCreateCountry(countryName);
-        Region region = cacheHelper.getOrCreateRegion(country, "standard");;
-        Location location = cacheHelper.getOrCreateLocation(region, "standard");
-        // Mettre à jour éventuellement les attributs statiques du pays (ex: population)
+        Region region = cacheHelper.getOrCreateRegion(country, STANDARD_REGION_NAME);
+        Location location = cacheHelper.getOrCreateLocation(region, STANDARD_LOCATION_NAME);
+        
+        // Update country static attributes (e.g., population)
         country.setPopulation(dto.getPopulation());
-        // (D'autres champs de dto, comme totalCases, peuvent être utilisés si nécessaire)
+        // (Other dto fields, like totalCases, can be used if needed)
+        
         return new CountryRegionLocation(country, region, location);
     }
 }
