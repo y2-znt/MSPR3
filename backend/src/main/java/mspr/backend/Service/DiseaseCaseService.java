@@ -32,6 +32,20 @@ public class DiseaseCaseService {
         return diseaseCaseRepository.findById(id);
     }
 
+    public long sumCases() {
+        return diseaseCaseRepository.sumCases();
+    }
+
+    public long sumDeaths() {
+        return diseaseCaseRepository.sumDeaths();
+    }
+    
+    public long sumRecovered() {
+        return diseaseCaseRepository.sumRecovered();
+    }
+
+    
+
     // public Optional<DiseaseCase> getDiseaseCaseByName(String name) {
     //     return diseaseCaseRepository.findAll().stream()
     //             .filter(diseaseCase -> diseaseCase.getName().equalsIgnoreCase(name))

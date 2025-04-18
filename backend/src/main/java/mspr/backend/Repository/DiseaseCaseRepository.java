@@ -12,4 +12,14 @@ public interface DiseaseCaseRepository extends JpaRepository<DiseaseCase, Intege
     // DiseaseCase findByName(String name);
     @Query("SELECT dc FROM DiseaseCase dc JOIN dc.disease d WHERE d.name = :name")
     DiseaseCase findByName(@Param("name") String name);
+
+    @Query("SELECT COALESCE(SUM(dc.deaths), 0) FROM DiseaseCase dc")
+    long sumDeaths();
+
+    @Query("SELECT COALESCE(SUM(dc.recovered), 0) FROM DiseaseCase dc")
+    long sumRecovered();
+
+    @Query("SELECT COALESCE(SUM(dc.confirmedCases), 0) FROM DiseaseCase dc")
+    long sumCases();
+    
 }

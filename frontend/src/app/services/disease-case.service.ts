@@ -4,10 +4,20 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { DiseaseCase } from '../models/diseaseCase.model';
 
+export interface TotalKpiDto {
+  totalCases: number;
+  totalDeaths: number;
+  totalRecovered: number;
+  mortalityRate: number;
+  recoveryRate: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
+
 export class DiseaseCaseService {
+  
   private http: HttpClient = inject(HttpClient);
   private url: string = environment.apiUrl;
 
@@ -27,5 +37,9 @@ export class DiseaseCaseService {
       .set('size', size.toString());
 
     return this.http.get<any>(this.url, { params });
+  }
+
+  getTotalKpi(): Observable<TotalKpiDto> {
+    return this.http.get<TotalKpiDto>(`${this.url}disease-cases/kpi`);
   }
 }

@@ -27,7 +27,7 @@ import { Page } from '../../models/pagination.model';
 import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
 import { CountryService } from '../../services/country.service';
 import { CovidDataService } from '../../services/covid-data.service';
-import { DiseaseCaseService } from '../../services/disease-case.service';
+import { DiseaseCaseService, TotalKpiDto } from '../../services/disease-case.service';
 import { OverviewComponent } from '../tabs/overview/overview.component';
 
 @Component({
@@ -86,7 +86,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadCountries();
-    this.getAllDiseasesCases();
+    this.diseaseCaseService.getTotalKpi().subscribe((kpi: TotalKpiDto) => {
+      this.totalCases = kpi.totalCases;
+      this.totalDeaths = kpi.totalDeaths;
+      this.mortalityRate = kpi.mortalityRate;
+      this.totalRecoveries = kpi.totalRecovered;
+      this.recoveryRate = kpi.recoveryRate;
+    });
   }
 
   get kpiCards() {
