@@ -1,8 +1,8 @@
-package mspr.backend.Mapper;
+package mspr.backend.ETL.Mapper;
 
 import mspr.backend.BO.*;
-import mspr.backend.Helpers.*;
-import mspr.backend.DTO.WorldometerDto;
+import mspr.backend.ETL.Helpers.*;
+import mspr.backend.ETL.DTO.WorldometerDto;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,7 +37,7 @@ public class WorldometerMapper {
 
     /**
      * Convertit un WorldometerDto en triple Country/Region/Location.
-     * Aucune sauvegarde en base n’est effectuée ici.
+     * Aucune sauvegarde en base n'est effectuée ici.
      */
     public CountryRegionLocation toEntity(WorldometerDto dto) {
         // Nettoyage du nom de pays

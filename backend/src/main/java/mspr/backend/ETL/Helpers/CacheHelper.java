@@ -1,7 +1,7 @@
 package mspr.backend.ETL.Helpers;
 
-import mspr.backend.ETL.BO.*;
-import mspr.backend.ETL.Repository.*;
+import mspr.backend.BO.*;
+import mspr.backend.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

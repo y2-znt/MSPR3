@@ -3,7 +3,7 @@ package mspr.backend.ETL.Mapper;
 import mspr.backend.ETL.DTO.FullGroupedDto;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import mspr.backend.ETL.BO.*;
+import mspr.backend.BO.*;
 import mspr.backend.ETL.Helpers.*;
 
 @Component
