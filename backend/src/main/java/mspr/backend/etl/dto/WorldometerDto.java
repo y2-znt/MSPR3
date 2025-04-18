@@ -3,7 +3,7 @@ package mspr.backend.etl.dto;
 public class WorldometerDto {
     private String country;     // Pays
     private String continent;   // Continent
-    private int population;     // Population du pays
+    private long population;     // Population du pays
     private int totalCases;     // Total des cas confirmés (cumulé)
     private int totalDeaths;    // Total des décès
     private int totalRecovered; // Total des guérisons
@@ -14,7 +14,7 @@ public class WorldometerDto {
     public WorldometerDto() {
     }
 
-    public WorldometerDto(String country, String continent, int population, int totalCases, int totalDeaths, int totalRecovered, int activeCases, String whoRegion) {
+    public WorldometerDto(String country, String continent, long population, int totalCases, int totalDeaths, int totalRecovered, int activeCases, String whoRegion) {
         this.country = country;
         this.continent = continent;
         this.population = population;
@@ -49,11 +49,11 @@ public class WorldometerDto {
         this.continent = continent;
     }
 
-    public int getPopulation() {
+    public long getPopulation() {
         return population;
     }
 
-    public void setPopulation(int population) {
+    public void setPopulation(long population) {
         this.population = population;
     }
 

@@ -66,6 +66,22 @@ public class CacheHelper {
         return location;
     }
 
+    /**
+     * Generates the standard cache key for a location.
+     *
+     * @param countryName  The name of the country.
+     * @param regionName   The name of the region.
+     * @param locationName The name of the location.
+     * @return The composite key used for the location cache, or null if any part is null/empty.
+     */
+    public String getLocationKey(String countryName, String regionName, String locationName) {
+        if (countryName == null || countryName.isEmpty() ||
+            regionName == null || regionName.isEmpty() ||
+            locationName == null || locationName.isEmpty()) {
+            return null;
+        }
+        return countryName + "|" + regionName + "|" + locationName;
+    }
 
     public Disease getOrCreateDisease(String diseaseName) {
         if (diseaseName == null || diseaseName.isEmpty()) {

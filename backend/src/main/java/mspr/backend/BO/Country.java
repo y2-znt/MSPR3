@@ -39,7 +39,7 @@ public class Country {
     private WHORegionEnum whoRegion;
 
     @Column(name = "population")
-    private Integer population;
+    private Long population;
 
     public String getName() {
         return name;
@@ -73,11 +73,11 @@ public class Country {
         this.whoRegion = whoRegion;
     }
 
-    public Integer getPopulation() {
+    public Long getPopulation() {
         return population;
     }
 
-    public void setPopulation(Integer population) {
+    public void setPopulation(Long population) {
         this.population = population;
     }
 
@@ -102,7 +102,7 @@ public class Country {
 
     public Country() {}
 
-    public Country(String name, ContinentEnum continent, WHORegionEnum whoRegion, Integer population, Integer totalTests) {
+    public Country(String name, ContinentEnum continent, WHORegionEnum whoRegion, Long population, Integer totalTests) {
         this.name = name;
         this.continent = continent;
         this.whoRegion = whoRegion;
