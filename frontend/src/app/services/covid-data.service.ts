@@ -10,12 +10,24 @@ export interface CovidStats {
   recoveryRate: number;
 }
 
+export interface CountryData {
+  country: string;
+  totalCases: number;
+  deaths: number;
+  recovered: number;
+  mortalityRate: number;
+  recoveryRate: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CovidDataService {
   private covidStatsSubject = new BehaviorSubject<CovidStats | null>(null);
   covidStats$ = this.covidStatsSubject.asObservable();
+  
+  private countriesDataSubject = new BehaviorSubject<CountryData[]>([]);
+  countriesData$ = this.countriesDataSubject.asObservable();
 
   constructor() { }
 
@@ -25,5 +37,13 @@ export class CovidDataService {
 
   getCovidStats(): CovidStats | null {
     return this.covidStatsSubject.value;
+  }
+  
+  updateCountriesData(data: CountryData[]): void {
+    this.countriesDataSubject.next(data);
+  }
+  
+  getCountriesData(): CountryData[] {
+    return this.countriesDataSubject.value;
   }
 }

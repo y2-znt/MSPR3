@@ -1,10 +1,11 @@
 .covid-data-container {
-  padding: 20px;
+  padding: 16px;
   
   h2 {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     color: #333;
     text-align: center;
+    font-size: 1.8rem;
   }
 }
 
@@ -12,8 +13,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: 30px;
-  gap: 10px;
+  margin-bottom: 32px;
+  gap: 16px;
 }
 
 .stat-card {
@@ -21,14 +22,34 @@
   border-radius: 8px;
   padding: 16px;
   flex: 1;
-  min-width: 180px;
+  min-width: 150px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   text-align: center;
   transition: transform 0.2s, box-shadow 0.2s;
   
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  &:nth-child(1) {
+    border-top: 4px solid #3f51b5;
+  }
+  
+  &:nth-child(2) {
+    border-top: 4px solid #f44336;
+  }
+  
+  &:nth-child(3) {
+    border-top: 4px solid #4caf50;
+  }
+  
+  &:nth-child(4) {
+    border-top: 4px solid #ff9800;
+  }
+  
+  &:nth-child(5) {
+    border-top: 4px solid #2196f3;
   }
 }
 
@@ -44,9 +65,15 @@
   color: #333;
 }
 
-mat-form-field {
+.filter-field {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+}
+
+.table-container {
+  position: relative;
+  min-height: 400px;
+  overflow: auto;
 }
 
 table {
@@ -58,22 +85,40 @@ table {
 }
 
 .mat-column-country {
-  min-width: 120px;
+  min-width: 140px;
 }
 
-.mat-column-totalCases,
-.mat-column-deaths,
-.mat-column-recovered {
-  text-align: right;
+.death-cell {
+  color: #f44336;
 }
 
-.mat-column-mortalityRate,
-.mat-column-recoveryRate {
-  text-align: right;
+.recovery-cell {
+  color: #4caf50;
+}
+
+.mortality-rate {
+  font-weight: 500;
   color: #d32f2f;
 }
 
-.mat-column-recoveryRate {
-  color: #388e3c;
+.recovery-rate {
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.no-data-message {
+  padding: 16px;
+  text-align: center;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .global-stats {
+    flex-direction: column;
+  }
+  
+  .stat-card {
+    min-width: 100%;
+  }
 }
 
