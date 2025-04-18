@@ -5,6 +5,7 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import {
   FormControl,
@@ -26,9 +27,10 @@ import { Country } from '../../models/country.model';
 import { Page } from '../../models/pagination.model';
 import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
 import { CountryService } from '../../services/country.service';
-import { CovidDataService } from '../../services/covid-data.service';
+import { CountryData, CovidDataService } from '../../services/covid-data.service';
 import { DiseaseCaseService } from '../../services/disease-case.service';
 import { OverviewComponent } from '../tabs/overview/overview.component';
+import { CountriesComponent } from '../tabs/countries/countries.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -49,6 +51,7 @@ import { OverviewComponent } from '../tabs/overview/overview.component';
     MatTabsModule,
     OrderByAlphaPipe,
     OverviewComponent,
+    CountriesComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -113,32 +116,46 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   public getAllDiseasesCases(): void {
-    this.isLoading = true;
     const allCases: any[] = [];
     let page = 0;
 
     const fetchPage = () => {
+      console.log(`📄 Récupération de la page ${page}`);
+
       this.diseaseCaseService
         .getAllDiseaseCases(page, this.pageSize)
         .subscribe({
           next: (res: any) => {
+            console.log(`📥 Page ${page} reçue`, res);
+
+            if (!res.content || !Array.isArray(res.content)) {
+              console.warn('⚠️ Structure inattendue, pas de "content" dans la réponse.');
+              return;
+            }
+
             allCases.push(...res.content);
-            this.diseaseName = allCases[0].name || 'Inconnu';
+            console.log(`📊 Cas cumulés après page ${page}: ${allCases.length}`);
 
             if (!res.last) {
               page++;
               fetchPage();
             } else {
+              console.log('✅ Tous les cas récupérés:', allCases);
+
+              this.diseaseName = allCases[0]?.name || 'COVID-19';
+              console.log('🦠 Maladie:', this.diseaseName);
+
+              // Calcul des statistiques globales
               this.totalCases = allCases.reduce(
-                (sum, item) => sum + item.confirmedCases,
+                (sum, item) => sum + (item.confirmedCases || 0),
                 0
               );
               this.totalDeaths = allCases.reduce(
-                (sum, item) => sum + item.deaths,
+                (sum, item) => sum + (item.deaths || 0),
                 0
               );
               this.totalRecoveries = allCases.reduce(
-                (sum, item) => sum + item.recovered,
+                (sum, item) => sum + (item.recovered || 0),
                 0
               );
 
@@ -149,22 +166,60 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 ? +((this.totalRecoveries / this.totalCases) * 100).toFixed(2)
                 : 0;
 
-              console.log('Total Confirmés:', this.totalCases);
-              console.log('Total Décès:', this.totalDeaths);
-              console.log('Total Rétablis:', this.totalRecoveries);
-              console.log('Taux mortalité (%):', this.mortalityRate);
-              console.log('Taux guérison (%):', this.recoveryRate);
+              console.log('🧮 Total Confirmés:', this.totalCases);
+              console.log('⚰️ Total Décès:', this.totalDeaths);
+              console.log('💪 Total Rétablis:', this.totalRecoveries);
+              console.log('📈 Taux mortalité (%):', this.mortalityRate);
+              console.log('📈 Taux guérison (%):', this.recoveryRate);
+              
+              // Partager les statistiques globales via le service
+              this.covidDataService.updateCovidStats({
+                diseaseName: this.diseaseName,
+                totalCases: this.totalCases,
+                totalDeaths: this.totalDeaths,
+                totalRecoveries: this.totalRecoveries,
+                mortalityRate: this.mortalityRate,
+                recoveryRate: this.recoveryRate
+              });
+              
+              // Regroupement des données par pays
+              const countryMap = new Map<string, CountryData>();
+              
+              allCases.forEach(item => {
+                const countryName = item.country?.name || 'Unknown';
+                
+                if (!countryMap.has(countryName)) {
+                  countryMap.set(countryName, {
+                    country: countryName,
+                    totalCases: 0,
+                    deaths: 0,
+                    recovered: 0,
+                    mortalityRate: 0,
+                    recoveryRate: 0
+                  });
+                }
+                
+                const countryData = countryMap.get(countryName)!;
+                countryData.totalCases += item.confirmedCases || 0;
+                countryData.deaths += item.deaths || 0;
+                countryData.recovered += item.recovered || 0;
+              });
+              
+              // Calcul des taux pour chaque pays
+              countryMap.forEach(data => {
+                data.mortalityRate = data.totalCases > 0 ? +(data.deaths / data.totalCases * 100).toFixed(2) : 0;
+                data.recoveryRate = data.totalCases > 0 ? +(data.recovered / data.totalCases * 100).toFixed(2) : 0;
+              });
+              
+              // Partager les données par pays via le service
+              this.covidDataService.updateCountriesData(Array.from(countryMap.values()));
 
-              this.isLoading = false;
+              // Forcer la détection des changements après la mise à jour des données
               this.cdr.detectChanges();
             }
           },
           error: (err) => {
-            console.error(
-              '❌ Erreur lors de la récupération des données:',
-              err
-            );
-            this.isLoading = false;
+            console.error('❌ Erreur lors de la récupération des données:', err);
             this.cdr.detectChanges();
           },
         });

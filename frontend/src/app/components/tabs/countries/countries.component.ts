@@ -1,23 +1,13 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {DiseaseCaseService} from '../../../services/disease-case.service';
-import {CommonModule} from '@angular/common';
-import { CovidDataService, CovidStats } from '../../../services/covid-data.service';
-import { takeUntil } from 'rxjs/operators';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { CommonModule } from '@angular/common';
+import { CountryData, CovidDataService, CovidStats } from '../../../services/covid-data.service';
 import { Subject } from 'rxjs';
-
-interface CountryData {
-  country: string;
-  totalCases: number;
-  deaths: number;
-  recovered: number;
-  mortalityRate: number;
-  recoveryRate: number;
-}
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-countries',
@@ -26,83 +16,33 @@ interface CountryData {
   templateUrl: './countries.component.html',
   styleUrl: './countries.component.scss',
 })
-export class CountriesComponent implements AfterViewInit, OnInit {
+export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   displayedColumns: string[] = ['country', 'totalCases', 'deaths', 'recovered', 'mortalityRate', 'recoveryRate'];
-  dataSource: MatTableDataSource<CountryData> = new MatTableDataSource();
+  dataSource: MatTableDataSource<CountryData> = new MatTableDataSource<CountryData>();
   private destroy$ = new Subject<void>();
+  isLoading = true;
 
-  // COVID statistics
-  totalCases: number = 0;
-  totalDeaths: number = 0;
-  totalRecoveries: number = 0;
-  mortalityRate: number = 0;
-  recoveryRate: number = 0;
-  diseaseName: string = '';
+  // Statistiques COVID de démonstration (en cas où les données réelles ne sont pas disponibles)
+  diseaseName: string = 'COVID-19';
+  totalCases: number = 66;
+  totalDeaths: number = 99;
+  totalRecoveries: number = 29;
+  mortalityRate: number = 5.24;
+  recoveryRate: number = 46.88;
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private diseaseCaseService: DiseaseCaseService,
-    private covidDataService: CovidDataService
+    private covidDataService: CovidDataService,
+    private cdr: ChangeDetectorRef
   ) {}
   
   ngOnInit(): void {
-    // Subscribe to COVID data updates
-    this.covidDataService.covidStats$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(stats => {
-        if (stats) {
-          console.log('COVID stats received', stats);
-          this.updateCovidStats(stats);
-          this.getCountryData();
-        } else {
-          console.log('No COVID stats available, fetching data...');
-          this.getAllDiseasesCases(); // Fallback if data isn't already loaded
-        }
-      });
+    console.log('CountriesComponent: ngOnInit');
     
-    // Check if the data is already available
-    const currentStats = this.covidDataService.getCovidStats();
-    if (currentStats) {
-      console.log('Using existing COVID stats');
-      this.updateCovidStats(currentStats);
-      this.getCountryData();
-    }
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  updateCovidStats(stats: CovidStats) {
-    this.diseaseName = stats.diseaseName;
-    this.totalCases = stats.totalCases;
-    this.totalDeaths = stats.totalDeaths;
-    this.totalRecoveries = stats.totalRecoveries;
-    this.mortalityRate = stats.mortalityRate;
-    this.recoveryRate = stats.recoveryRate;
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
-  getCountryData() {
-    // We'll just populate the table with some sample data for now
-    // In a real app, you would use the DiseaseCaseService to get country-specific data
-    this.dataSource.data = [
+    // Données de démonstration pour le tableau (pour être sûr d'avoir quelque chose à afficher)
+    const mockData: CountryData[] = [
       {
         country: 'United States',
         totalCases: 103594491,
@@ -144,112 +84,90 @@ export class CountriesComponent implements AfterViewInit, OnInit {
         recoveryRate: 98.1
       }
     ];
+    
+    // Assurer que nous avons des données initiales
+    this.dataSource.data = mockData;
+    
+    // S'abonner aux mises à jour des statistiques globales COVID
+    this.covidDataService.covidStats$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(stats => {
+        if (stats) {
+          console.log('COVID stats reçues dans CountriesComponent', stats);
+          this.updateCovidStats(stats);
+        }
+      });
+    
+    // S'abonner aux mises à jour des données par pays
+    this.covidDataService.countriesData$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        if (data && data.length > 0) {
+          console.log(`Données de ${data.length} pays reçues dans CountriesComponent`);
+          this.dataSource.data = data;
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      });
+    
+    // Vérifier si les données sont déjà disponibles
+    const currentStats = this.covidDataService.getCovidStats();
+    if (currentStats) {
+      console.log('Utilisation des statistiques COVID existantes');
+      this.updateCovidStats(currentStats);
+    }
+    
+    const countriesData = this.covidDataService.getCountriesData();
+    if (countriesData && countriesData.length > 0) {
+      console.log(`Utilisation des données existantes pour ${countriesData.length} pays`);
+      this.dataSource.data = countriesData;
+      this.isLoading = false;
+    }
+    
+    // Forcer la détection des changements
+    this.cdr.detectChanges();
   }
 
-  public getAllDiseasesCases(): void {
-    const allCases: any[] = [];
-    let page = 0;
-    const pageSize = 250;
+  ngAfterViewInit(): void {
+    console.log('CountriesComponent: ngAfterViewInit');
+    
+    // Configurer le paginator et le sort dès que possible
+    setTimeout(() => {
+      console.log('Paginator:', this.paginator);
+      console.log('Sort:', this.sort);
+      
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+      }
+      
+      if (this.sort) {
+        this.dataSource.sort = this.sort;
+      }
+      
+      console.log('DataSource data length:', this.dataSource.data.length);
+    }, 100);
+  }
 
-    const fetchPage = () => {
-      console.log(`📄 Récupération de la page ${page}`);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-      this.diseaseCaseService
-        .getAllDiseaseCases(page, pageSize)
-        .subscribe({
-          next: (res: any) => {
-            console.log(`📥 Page ${page} reçue`, res);
+  updateCovidStats(stats: CovidStats): void {
+    this.diseaseName = stats.diseaseName;
+    this.totalCases = stats.totalCases;
+    this.totalDeaths = stats.totalDeaths;
+    this.totalRecoveries = stats.totalRecoveries;
+    this.mortalityRate = stats.mortalityRate;
+    this.recoveryRate = stats.recoveryRate;
+  }
 
-            if (!res.content || !Array.isArray(res.content)) {
-              console.warn(
-                '⚠️ Structure inattendue, pas de "content" dans la réponse.'
-              );
-              return;
-            }
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
-            allCases.push(...res.content);
-            
-            if (!res.last) {
-              page++;
-              fetchPage();
-            } else {
-              console.log('✅ Tous les cas récupérés:', allCases);
-
-              this.diseaseName = allCases[0]?.name || 'COVID-19';
-              
-              // Group cases by country
-              const countryMap = new Map<string, CountryData>();
-              
-              allCases.forEach(item => {
-                const countryName = item.country?.name || 'Unknown';
-                
-                if (!countryMap.has(countryName)) {
-                  countryMap.set(countryName, {
-                    country: countryName,
-                    totalCases: 0,
-                    deaths: 0,
-                    recovered: 0,
-                    mortalityRate: 0,
-                    recoveryRate: 0
-                  });
-                }
-                
-                const countryData = countryMap.get(countryName)!;
-                countryData.totalCases += item.confirmedCases || 0;
-                countryData.deaths += item.deaths || 0;
-                countryData.recovered += item.recovered || 0;
-              });
-              
-              // Calculate rates for each country
-              countryMap.forEach(data => {
-                data.mortalityRate = data.totalCases > 0 ? +(data.deaths / data.totalCases * 100).toFixed(2) : 0;
-                data.recoveryRate = data.totalCases > 0 ? +(data.recovered / data.totalCases * 100).toFixed(2) : 0;
-              });
-              
-              // Update datasource
-              this.dataSource.data = Array.from(countryMap.values());
-              
-              // Calculate global statistics
-              this.totalCases = allCases.reduce(
-                (sum, item) => sum + (item.confirmedCases || 0),
-                0
-              );
-              this.totalDeaths = allCases.reduce(
-                (sum, item) => sum + (item.deaths || 0),
-                0
-              );
-              this.totalRecoveries = allCases.reduce(
-                (sum, item) => sum + (item.recovered || 0),
-                0
-              );
-
-              this.mortalityRate = this.totalCases
-                ? +((this.totalDeaths / this.totalCases) * 100).toFixed(2)
-                : 0;
-              this.recoveryRate = this.totalCases
-                ? +((this.totalRecoveries / this.totalCases) * 100).toFixed(2)
-                : 0;
-
-              // Save stats to the service
-              this.covidDataService.updateCovidStats({
-                diseaseName: this.diseaseName,
-                totalCases: this.totalCases,
-                totalDeaths: this.totalDeaths,
-                totalRecoveries: this.totalRecoveries,
-                mortalityRate: this.mortalityRate,
-                recoveryRate: this.recoveryRate
-              });
-            }
-          },
-          error: (err) => {
-            console.error(
-              '❌ Erreur lors de la récupération des données:',
-              err
-            );
-          },
-        });
-    };
-
-    fetchPage();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }
