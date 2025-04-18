@@ -2,6 +2,7 @@ package mspr.backend.ETL.Runner;
 
 import mspr.backend.BO.Disease;
 import mspr.backend.ETL.Helpers.CacheHelper;
+import mspr.backend.ETL.exceptions.*;
 import mspr.backend.Repository.*;
 import mspr.backend.ETL.Service.*;
 import org.slf4j.Logger;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Component
 public class DataImportCovid19Runner implements CommandLineRunner {
@@ -62,34 +65,106 @@ public class DataImportCovid19Runner implements CommandLineRunner {
         // 1. Import Worldometer Data
         logger.info("Importing Worldometer data...");
         startTime = System.currentTimeMillis();
-        linesWorldometer = worldometerService.importData();
-        endTime = System.currentTimeMillis();
-        durationWorldometer = endTime - startTime;
-        logger.info("Worldometer import completed: {} lines in {} ms", linesWorldometer, durationWorldometer);
+        try {
+            linesWorldometer = worldometerService.importData();
+            endTime = System.currentTimeMillis();
+            durationWorldometer = endTime - startTime;
+            logger.info("Worldometer import completed: {} lines in {} ms", linesWorldometer, durationWorldometer);
+        } catch (DataFileNotFoundException e) {
+            logger.error("Worldometer data file not found: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationWorldometer = endTime - startTime;
+        } catch (PersistenceException e) {
+            logger.error("Database error during Worldometer import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationWorldometer = endTime - startTime;
+        } catch (IOException e) {
+            logger.error("IO error during Worldometer import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationWorldometer = endTime - startTime;
+        } catch (EtlException e) {
+            logger.error("Error during Worldometer import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationWorldometer = endTime - startTime;
+        }
 
         // 2. Import detailed global data (covid_19_clean_complete.csv)
         logger.info("Importing covid_19_clean_complete data...");
         startTime = System.currentTimeMillis();
-        linesCovidComplete = covidCompleteService.importData();
-        endTime = System.currentTimeMillis();
-        durationCovidComplete = endTime - startTime;
-        logger.info("covid_19_clean_complete import completed: {} lines in {} ms", linesCovidComplete, durationCovidComplete);
+        try {
+            linesCovidComplete = covidCompleteService.importData();
+            endTime = System.currentTimeMillis();
+            durationCovidComplete = endTime - startTime;
+            logger.info("covid_19_clean_complete import completed: {} lines in {} ms", linesCovidComplete, durationCovidComplete);
+        } catch (DataFileNotFoundException e) {
+            logger.error("COVID complete data file not found: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationCovidComplete = endTime - startTime;
+        } catch (PersistenceException e) {
+            logger.error("Database error during COVID complete import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationCovidComplete = endTime - startTime;
+        } catch (IOException e) {
+            logger.error("IO error during COVID complete import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationCovidComplete = endTime - startTime;
+        } catch (EtlException e) {
+            logger.error("Error during COVID complete import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationCovidComplete = endTime - startTime;
+        }
 
         // 3. Import aggregated global data (full_grouped.csv)
         logger.info("Importing full_grouped data...");
         startTime = System.currentTimeMillis();
-        linesFullGrouped = fullGroupedService.importData();
-        endTime = System.currentTimeMillis();
-        durationFullGrouped = endTime - startTime;
-        logger.info("full_grouped import completed: {} lines in {} ms", linesFullGrouped, durationFullGrouped);
+        try {
+            linesFullGrouped = fullGroupedService.importData();
+            endTime = System.currentTimeMillis();
+            durationFullGrouped = endTime - startTime;
+            logger.info("full_grouped import completed: {} lines in {} ms", linesFullGrouped, durationFullGrouped);
+        } catch (DataFileNotFoundException e) {
+            logger.error("Full grouped data file not found: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationFullGrouped = endTime - startTime;
+        } catch (PersistenceException e) {
+            logger.error("Database error during Full grouped import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationFullGrouped = endTime - startTime;
+        } catch (IOException e) {
+            logger.error("IO error during Full grouped import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationFullGrouped = endTime - startTime;
+        } catch (EtlException e) {
+            logger.error("Error during Full grouped import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationFullGrouped = endTime - startTime;
+        }
 
         // 4. Import USA county data (usa_county_wise.csv)
         logger.info("Importing USA county data...");
         startTime = System.currentTimeMillis();
-        linesUsaCounty = usaCountyService.importData();
-        endTime = System.currentTimeMillis();
-        durationUsaCounty = endTime - startTime;
-        logger.info("USA county data import completed: {} lines in {} ms", linesUsaCounty, durationUsaCounty);
+        try {
+            linesUsaCounty = usaCountyService.importData();
+            endTime = System.currentTimeMillis();
+            durationUsaCounty = endTime - startTime;
+            logger.info("USA county data import completed: {} lines in {} ms", linesUsaCounty, durationUsaCounty);
+        } catch (DataFileNotFoundException e) {
+            logger.error("USA county data file not found: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationUsaCounty = endTime - startTime;
+        } catch (PersistenceException e) {
+            logger.error("Database error during USA county import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationUsaCounty = endTime - startTime;
+        } catch (IOException e) {
+            logger.error("IO error during USA county import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationUsaCounty = endTime - startTime;
+        } catch (EtlException e) {
+            logger.error("Error during USA county import: {}", e.getMessage());
+            endTime = System.currentTimeMillis();
+            durationUsaCounty = endTime - startTime;
+        }
 
         // Calculate total import duration
         long totalImportTime = System.currentTimeMillis() - importStartTime;
