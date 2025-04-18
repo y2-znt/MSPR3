@@ -74,7 +74,7 @@ public class DataImportCovid19Runner implements CommandLineRunner {
             try {
                 return worldometerService.importData();
             } catch (Exception e) {
-                throw new RuntimeException(e); // Wrap checked exceptions
+                throw new RuntimeException(e);
             }
         }, "Worldometer");
 
