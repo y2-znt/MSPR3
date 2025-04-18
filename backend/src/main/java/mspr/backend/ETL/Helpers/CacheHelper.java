@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 @Component
 public class CacheHelper {
@@ -102,19 +103,76 @@ public class CacheHelper {
     }
 
 
-    public void setCountries(Map<String, Country> countries) {
-        this.countries = countries;
+    /**
+     * Updates the country cache from an iterable of saved/managed Country entities.
+     * The internal map is cleared and rebuilt.
+     * @param savedCountries An iterable (e.g., List) of Country entities, typically from saveAll.
+     */
+    public void setCountries(Iterable<Country> savedCountries) {
+        this.countries.clear();
+        if (savedCountries != null) {
+            for (Country country : savedCountries) {
+                if (country != null && country.getName() != null) {
+                    this.countries.put(country.getName(), country);
+                }
+            }
+        }
     }
 
-    public void setRegions(Map<String, Region> regions) {
-        this.regions = regions;
+    /**
+     * Updates the region cache from an iterable of saved/managed Region entities.
+     * The internal map is cleared and rebuilt using composite keys ("CountryName|RegionName").
+     * @param savedRegions An iterable (e.g., List) of Region entities, typically from saveAll.
+     */
+    public void setRegions(Iterable<Region> savedRegions) {
+        this.regions.clear();
+        if (savedRegions != null) {
+            for (Region region : savedRegions) {
+                // Ensure necessary fields for the key are present
+                if (region != null && region.getName() != null && region.getCountry() != null && region.getCountry().getName() != null) {
+                    String regionKey = region.getCountry().getName() + "|" + region.getName();
+                    this.regions.put(regionKey, region);
+                }
+            }
+        }
     }
 
-    public void setLocations(Map<String, Location> locations) {
-        this.locations = locations;
-    }
-    public void setDiseases(Map<String, Disease> diseases) {
-        this.diseases = diseases;
+    /**
+     * Updates the location cache from an iterable of saved/managed Location entities.
+     * The internal map is cleared and rebuilt using composite keys ("CountryName|RegionName|LocationName").
+     * @param savedLocations An iterable (e.g., List) of Location entities, typically from saveAll.
+     */
+    public void setLocations(Iterable<Location> savedLocations) {
+        this.locations.clear();
+        if (savedLocations != null) {
+            for (Location location : savedLocations) {
+                // Ensure necessary fields for the key are present
+                if (location != null && location.getName() != null &&
+                    location.getRegion() != null && location.getRegion().getName() != null &&
+                    location.getRegion().getCountry() != null && location.getRegion().getCountry().getName() != null)
+                {
+                    String locationKey = location.getRegion().getCountry().getName() + "|" +
+                                         location.getRegion().getName() + "|" +
+                                         location.getName();
+                    this.locations.put(locationKey, location);
+                }
+            }
+        }
     }
 
+    /**
+     * Updates the disease cache from an iterable of saved/managed Disease entities.
+     * The internal map is cleared and rebuilt.
+     * @param savedDiseases An iterable (e.g., List) of Disease entities, typically from saveAll.
+     */
+    public void setDiseases(Iterable<Disease> savedDiseases) {
+        this.diseases.clear();
+        if (savedDiseases != null) {
+            for (Disease disease : savedDiseases) {
+                if (disease != null && disease.getName() != null) {
+                    this.diseases.put(disease.getName(), disease);
+                }
+            }
+        }
+    }
 }

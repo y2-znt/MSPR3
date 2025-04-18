@@ -87,148 +87,24 @@ public class FullGroupedService {
 
         try {
             // Read CSV file
-            List<String> lines;
-            try {
-                lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-            } catch (NoSuchFileException e) {
-                throw new DataFileNotFoundException(FILE_NAME, e);
-            } catch (IOException e) {
-                logger.error("IO error reading file {}: {}", FILE_NAME, e.getMessage());
-                throw e; // rethrow as it's already a specific exception
-            }
-            
+            List<String> lines = readCsvFile(path);
             logger.info("Read {} lines from {}", lines.size(), FILE_NAME);
             
-            HashMap<Integer, FullGroupedDto> dtoMap = new HashMap<>();
-            int lineErrors = 0;
+            // Process DTOs
+            HashMap<Integer, FullGroupedDto> dtoMap = processCsvLines(lines);
             
-            // Skip header
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            logger.debug("Processing data lines...");
+            // Map DTOs to entities
+            List<DiseaseCase> diseaseCases = mapDtosToEntities(dtoMap);
             
-            // Process each line starting from line 1 (after header)
-            for (int lineIndex = 1; lineIndex < lines.size(); lineIndex++) {
-                try {
-                    String line = lines.get(lineIndex);
-                    String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-
-                    if (fields.length < MIN_FIELDS_REQUIRED) {
-                        logger.warn("Line {}: Insufficient fields (expected at least {}, got {}). Skipping line.", 
-                                lineIndex, MIN_FIELDS_REQUIRED, fields.length);
-                        lineErrors++;
-                        continue;
-                    }
-
-                    LocalDate date;
-                    try {
-                        date = LocalDate.parse(fields[IDX_DATE].trim(), dateFormatter);
-                    } catch (DateTimeParseException e) {
-                        logger.warn("Line {}: Error parsing date: {}", lineIndex, e.getMessage());
-                        lineErrors++;
-                        continue;
-                    }
-                    
-                    String countryRegionName = cleanerHelper.cleanRegionName(
-                            cleanerHelper.cleanCountryName(fields[IDX_COUNTRY_REGION].trim()));
-                    
-                    int confirmed = 0, deaths = 0, recovered = 0, active = 0;
-                    try {
-                        confirmed = fields[IDX_CONFIRMED].isEmpty() ? 0 : Integer.parseInt(fields[IDX_CONFIRMED].trim());
-                        deaths = fields[IDX_DEATHS].isEmpty() ? 0 : Integer.parseInt(fields[IDX_DEATHS].trim());
-                        recovered = fields[IDX_RECOVERED].isEmpty() ? 0 : Integer.parseInt(fields[IDX_RECOVERED].trim());
-                        active = fields[IDX_ACTIVE].isEmpty() ? 0 : Integer.parseInt(fields[IDX_ACTIVE].trim());
-                    } catch (NumberFormatException e) {
-                        logger.warn("Line {}: Error parsing numeric fields: {}", lineIndex, e.getMessage());
-                        lineErrors++;
-                        continue;
-                    }
-                    
-                    String whoRegion = fields[IDX_WHO_REGION].trim();
-
-                    FullGroupedDto dto = new FullGroupedDto(
-                            date,
-                            countryRegionName,
-                            confirmed,
-                            deaths,
-                            recovered,
-                            active,
-                            whoRegion
-                    );
-                    int hashKey = (date + countryRegionName + confirmed + deaths + recovered + active).hashCode();
-                    dtoMap.put(hashKey, dto);
-                } catch (Exception e) {
-                    logger.warn("Line {}: Unexpected error processing line: {}", lineIndex, e.getMessage());
-                    lineErrors++;
-                }
-            }
-
-            logger.info("Processed {} unique records with {} errors", dtoMap.size(), lineErrors);
-         
-            // Convert DTOs to DiseaseCase via mapper
-            List<DiseaseCase> diseaseCases = new ArrayList<>();
-            logger.debug("Converting DTOs to entities...");
-            for (FullGroupedDto dto : dtoMap.values()) {
-                try {
-                    DiseaseCase diseaseCase = mapper.toEntity(dto);
-                    diseaseCases.add(diseaseCase);
-                } catch (Exception e) {
-                    logger.warn("Error mapping DTO to entity: {}", e.getMessage());
-                    throw new MappingException("Error mapping FullGroupedDto to entity objects", e);
-                }
-            }
-
-            try {
-                logger.debug("Saving entities to database...");
-                
-                // Save in batch the cache entities to avoid detached entity errors
-                // 1. Countries
-                Map<String, Country> countries = cacheHelper.getCountries();
-                logger.debug("Saving {} countries", countries.size());
-                countries = countryRepository.saveAll(countries.values())
-                            .stream()
-                            .collect(Collectors.toMap(Country::getName, country -> country));
-                cacheHelper.setCountries(countries);
-
-                // 2. Regions
-                Map<String, Region> regions = cacheHelper.getRegions();
-                logger.debug("Saving {} regions", regions.size());
-                regions = regionRepository.saveAll(regions.values())
-                            .stream()
-                            .collect(Collectors.toMap(r -> r.getCountry().getName() + "|" + r.getName(), region -> region));
-                cacheHelper.setRegions(regions);
-
-                // 3. Locations
-                Map<String, Location> locations = cacheHelper.getLocations();
-                logger.debug("Saving {} locations", locations.size());
-                locations = locationRepository.saveAll(locations.values())
-                            .stream()
-                            .collect(Collectors.toMap(l -> l.getRegion().getCountry().getName() + "|" + l.getRegion().getName() + "|" + l.getName(), location -> location));
-                cacheHelper.setLocations(locations);
-
-                // 4. Diseases
-                Map<String, Disease> diseases = cacheHelper.getDiseases();
-                logger.debug("Saving {} diseases", diseases.size());
-                diseases = diseaseRepository.saveAll(diseases.values())
-                                .stream()
-                                .collect(Collectors.toMap(Disease::getName, disease -> disease));
-                cacheHelper.setDiseases(diseases);
-
-                // Set managed disease entities
-                for (DiseaseCase dc : diseaseCases) {
-                    if (dc.getDisease() != null) {
-                        String diseaseName = dc.getDisease().getName();
-                        Disease managedDisease = cacheHelper.getDiseases().get(diseaseName);
-                        dc.setDisease(managedDisease);
-                    }
-                }
-
-                // Batch insert all DiseaseCases
-                logger.info("Saving {} disease cases", diseaseCases.size());
-                diseaseCaseRepository.saveAll(diseaseCases);
-            } catch (DataAccessException e) {
-                logger.error("Database error while saving entities: {}", e.getMessage());
-                throw new PersistenceException("Error saving Full Grouped data to database", e);
-            }
+            // Save related entities and update cache
+            saveRelatedEntities();
+            
+            // Update references in disease cases
+            updateDiseaseCaseReferences(diseaseCases);
+            
+            // Save disease cases
+            logger.info("Saving {} disease cases", diseaseCases.size());
+            diseaseCaseRepository.saveAll(diseaseCases);
             
             logger.info("Full Grouped import completed: {} cases inserted", diseaseCases.size());
             
@@ -240,6 +116,243 @@ public class FullGroupedService {
             // Wrap any other exceptions
             logger.error("Unexpected error during import of {}: {}", FILE_NAME, e.getMessage(), e);
             throw new EtlException("Unexpected error during import of " + FILE_NAME, e);
+        }
+    }
+    
+    /**
+     * Reads CSV file and returns lines
+     * 
+     * @param path Path to the CSV file
+     * @return List of lines from the CSV file
+     * @throws IOException if there is an error reading the file
+     * @throws DataFileNotFoundException if the file is not found
+     */
+    private List<String> readCsvFile(Path path) throws IOException, DataFileNotFoundException {
+        try {
+            return Files.readAllLines(path, StandardCharsets.UTF_8);
+        } catch (NoSuchFileException e) {
+            throw new DataFileNotFoundException(FILE_NAME, e);
+        } catch (IOException e) {
+            logger.error("IO error reading file {}: {}", FILE_NAME, e.getMessage());
+            throw e; // rethrow as it's already a specific exception
+        }
+    }
+    
+    /**
+     * Processes CSV lines into DTOs
+     * 
+     * @param lines Lines from the CSV file
+     * @return Map of processed DTOs
+     */
+    private HashMap<Integer, FullGroupedDto> processCsvLines(List<String> lines) {
+        HashMap<Integer, FullGroupedDto> dtoMap = new HashMap<>();
+        int lineErrors = 0;
+        
+        // Skip header
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        logger.debug("Processing data lines...");
+        
+        // Process each line starting from line 1 (after header)
+        for (int lineIndex = 1; lineIndex < lines.size(); lineIndex++) {
+            try {
+                FullGroupedDto dto = processLine(lines.get(lineIndex), dateFormatter, lineIndex);
+                if (dto != null) {
+                    int hashKey = (dto.getDate() + dto.getCountryRegion() + dto.getConfirmed() + 
+                                  dto.getDeaths() + dto.getRecovered() + dto.getActive()).hashCode();
+                    dtoMap.put(hashKey, dto);
+                } else {
+                    lineErrors++;
+                }
+            } catch (Exception e) {
+                logger.warn("Line {}: Unexpected error processing line: {}", lineIndex, e.getMessage());
+                lineErrors++;
+            }
+        }
+
+        logger.info("Processed {} unique records with {} errors", dtoMap.size(), lineErrors);
+        return dtoMap;
+    }
+    
+    /**
+     * Processes a single CSV line into a DTO
+     * 
+     * @param line CSV line
+     * @param dateFormatter Date formatter
+     * @param lineIndex Line index for logging
+     * @return DTO or null if the line couldn't be processed
+     */
+    private FullGroupedDto processLine(String line, DateTimeFormatter dateFormatter, int lineIndex) {
+        String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+        if (fields.length < MIN_FIELDS_REQUIRED) {
+            logger.warn("Line {}: Insufficient fields (expected at least {}, got {}). Skipping line.", 
+                    lineIndex, MIN_FIELDS_REQUIRED, fields.length);
+            return null;
+        }
+
+        LocalDate date;
+        try {
+            date = LocalDate.parse(fields[IDX_DATE].trim(), dateFormatter);
+        } catch (DateTimeParseException e) {
+            logger.warn("Line {}: Error parsing date: {}", lineIndex, e.getMessage());
+            return null;
+        }
+        
+        String countryRegionName = cleanerHelper.cleanRegionName(
+                cleanerHelper.cleanCountryName(fields[IDX_COUNTRY_REGION].trim()));
+        
+        int confirmed = 0, deaths = 0, recovered = 0, active = 0;
+        try {
+            confirmed = fields[IDX_CONFIRMED].isEmpty() ? 0 : Integer.parseInt(fields[IDX_CONFIRMED].trim());
+            deaths = fields[IDX_DEATHS].isEmpty() ? 0 : Integer.parseInt(fields[IDX_DEATHS].trim());
+            recovered = fields[IDX_RECOVERED].isEmpty() ? 0 : Integer.parseInt(fields[IDX_RECOVERED].trim());
+            active = fields[IDX_ACTIVE].isEmpty() ? 0 : Integer.parseInt(fields[IDX_ACTIVE].trim());
+        } catch (NumberFormatException e) {
+            logger.warn("Line {}: Error parsing numeric fields: {}", lineIndex, e.getMessage());
+            return null;
+        }
+        
+        String whoRegion = fields[IDX_WHO_REGION].trim();
+
+        return new FullGroupedDto(
+                date,
+                countryRegionName,
+                confirmed,
+                deaths,
+                recovered,
+                active,
+                whoRegion
+        );
+    }
+    
+    /**
+     * Maps DTOs to entities
+     * 
+     * @param dtoMap Map of DTOs
+     * @return List of mapped entities
+     * @throws MappingException if there is an error during mapping
+     */
+    private List<DiseaseCase> mapDtosToEntities(HashMap<Integer, FullGroupedDto> dtoMap) throws MappingException {
+        List<DiseaseCase> diseaseCases = new ArrayList<>();
+        logger.debug("Converting DTOs to entities...");
+        
+        for (FullGroupedDto dto : dtoMap.values()) {
+            try {
+                DiseaseCase diseaseCase = mapper.toEntity(dto);
+                diseaseCases.add(diseaseCase);
+            } catch (Exception e) {
+                logger.warn("Error mapping DTO to entity: {}", e.getMessage());
+                throw new MappingException("Error mapping FullGroupedDto to entity objects", e);
+            }
+        }
+        
+        return diseaseCases;
+    }
+    
+    /**
+     * Saves related entities (countries, regions, locations, diseases) and updates the cache
+     * 
+     * @throws PersistenceException if there's an error saving entities
+     */
+    private void saveRelatedEntities() throws PersistenceException {
+        try {
+            logger.debug("Saving entities to database...");
+            
+            // 1. Countries
+            saveCountries();
+
+            // 2. Regions
+            saveRegions();
+
+            // 3. Locations
+            saveLocations();
+
+            // 4. Diseases
+            saveDiseases();
+            
+        } catch (DataAccessException e) {
+            logger.error("Database error while saving entities: {}", e.getMessage());
+            throw new PersistenceException("Error saving Full Grouped data to database", e);
+        }
+    }
+    
+    /**
+     * Saves countries and updates the cache
+     */
+    private void saveCountries() {
+        Map<String, Country> countriesToSave = cacheHelper.getCountries();
+        logger.debug("Saving {} countries", countriesToSave.size());
+        if (!countriesToSave.isEmpty()) {
+            List<Country> savedCountries = countryRepository.saveAll(countriesToSave.values());
+            cacheHelper.setCountries(savedCountries); // Update cache with managed entities
+            logger.debug("Updated country cache with {} managed entities", savedCountries.size());
+        } else {
+            logger.debug("No new countries to save.");
+        }
+    }
+    
+    /**
+     * Saves regions and updates the cache
+     */
+    private void saveRegions() {
+        Map<String, Region> regionsToSave = cacheHelper.getRegions();
+        logger.debug("Saving {} regions", regionsToSave.size());
+        if (!regionsToSave.isEmpty()) {
+            List<Region> savedRegions = regionRepository.saveAll(regionsToSave.values());
+            cacheHelper.setRegions(savedRegions); // Update cache with managed entities
+            logger.debug("Updated region cache with {} managed entities", savedRegions.size());
+        } else {
+            logger.debug("No new regions to save.");
+        }
+    }
+    
+    /**
+     * Saves locations and updates the cache
+     */
+    private void saveLocations() {
+        Map<String, Location> locationsToSave = cacheHelper.getLocations();
+        logger.debug("Saving {} locations", locationsToSave.size());
+        if (!locationsToSave.isEmpty()) {
+            List<Location> savedLocations = locationRepository.saveAll(locationsToSave.values());
+            cacheHelper.setLocations(savedLocations); // Update cache with managed entities
+            logger.debug("Updated location cache with {} managed entities", savedLocations.size());
+        } else {
+            logger.debug("No new locations to save.");
+        }
+    }
+    
+    /**
+     * Saves diseases and updates the cache
+     */
+    private void saveDiseases() {
+        Map<String, Disease> diseasesToSave = cacheHelper.getDiseases();
+        logger.debug("Saving {} diseases", diseasesToSave.size());
+        if (!diseasesToSave.isEmpty()) {
+            List<Disease> savedDiseases = diseaseRepository.saveAll(diseasesToSave.values());
+            cacheHelper.setDiseases(savedDiseases); // Update cache with managed entities
+            logger.debug("Updated disease cache with {} managed entities", savedDiseases.size());
+        } else {
+            logger.debug("No new diseases to save.");
+        }
+    }
+    
+    /**
+     * Updates references in disease cases to managed entities
+     * 
+     * @param diseaseCases List of disease cases to update
+     */
+    private void updateDiseaseCaseReferences(List<DiseaseCase> diseaseCases) {
+        // Set managed disease entities
+        for (DiseaseCase dc : diseaseCases) {
+            if (dc.getDisease() != null) {
+                String diseaseName = dc.getDisease().getName();
+                Disease managedDisease = cacheHelper.getDiseases().get(diseaseName);
+                if (managedDisease != null) {
+                    dc.setDisease(managedDisease);
+                } else {
+                    logger.warn("Could not find managed Disease entity in cache for name: {}", diseaseName);
+                }
+            }
         }
     }
 }

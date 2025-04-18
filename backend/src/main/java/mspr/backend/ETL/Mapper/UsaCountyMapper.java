@@ -25,6 +25,24 @@ public class UsaCountyMapper {
             return null;
         }
         
+        // Process location data
+        Location location = processLocationData(dto, cache);
+        
+        // Get the Disease entity from cache
+        Disease disease = getDiseaseFromCache(cache);
+
+        // Create DiseaseCase entity
+        return createDiseaseCase(dto, location, disease);
+    }
+    
+    /**
+     * Processes location data from DTO and returns a Location entity
+     * 
+     * @param dto The DTO containing location data
+     * @param cache The cache helper
+     * @return The Location entity
+     */
+    private Location processLocationData(UsaCountyDto dto, CacheHelper cache) {
         // Clean country/region/location names (trim and aliases)
         String countryName = dto.getCountryRegion() != null ? dto.getCountryRegion().trim() : DEFAULT_EMPTY_NAME;
         String regionName = dto.getProvinceState() != null ? dto.getProvinceState().trim() : DEFAULT_EMPTY_NAME;
@@ -38,15 +56,33 @@ public class UsaCountyMapper {
         // Get or create reference entities from cache
         Country country = cache.getOrCreateCountry(countryName);
         Region region = cache.getOrCreateRegion(country, regionName);
-        Location location = cache.getOrCreateLocation(region, locationName);
-        
-        // Get the Disease entity from cache - this should be pre-loaded and persisted
+        return cache.getOrCreateLocation(region, locationName);
+    }
+    
+    /**
+     * Gets the Disease entity from cache
+     * 
+     * @param cache The cache helper
+     * @return The Disease entity
+     * @throws IllegalStateException if COVID-19 disease is not found in cache
+     */
+    private Disease getDiseaseFromCache(CacheHelper cache) {
         Disease disease = cache.getDiseases().get(COVID_19_DISEASE_NAME);
         if (disease == null) {
             throw new IllegalStateException("COVID-19 disease not found in cache. Ensure it's added before mapping.");
         }
-
-        // Map DTO to DiseaseCase entity
+        return disease;
+    }
+    
+    /**
+     * Creates a DiseaseCase entity from the DTO and related entities
+     * 
+     * @param dto The DTO with disease case data
+     * @param location The Location entity
+     * @param disease The Disease entity
+     * @return The DiseaseCase entity
+     */
+    private DiseaseCase createDiseaseCase(UsaCountyDto dto, Location location, Disease disease) {
         DiseaseCase diseaseCase = new DiseaseCase();
         diseaseCase.setDisease(disease);
         diseaseCase.setLocation(location);

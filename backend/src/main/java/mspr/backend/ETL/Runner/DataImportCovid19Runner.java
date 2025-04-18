@@ -154,8 +154,8 @@ public class DataImportCovid19Runner implements CommandLineRunner {
             durationUsaCounty = endTime - startTime;
         } catch (PersistenceException e) {
             logger.error("Database error during USA county import: {}", e.getMessage());
-            endTime = System.currentTimeMillis();
-            durationUsaCounty = endTime - startTime;
+                endTime = System.currentTimeMillis();
+                durationUsaCounty = endTime - startTime;
         } catch (IOException e) {
             logger.error("IO error during USA county import: {}", e.getMessage());
             endTime = System.currentTimeMillis();

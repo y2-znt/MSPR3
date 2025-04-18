@@ -44,16 +44,56 @@ public class WorldometerMapper {
      * No database saving is performed here.
      */
     public CountryRegionLocation toEntity(WorldometerDto dto) {
-        // Clean country name
-        String countryName = cleanerHelper.cleanCountryName(dto.getCountry());
-        Country country = cacheHelper.getOrCreateCountry(countryName);
-        Region region = cacheHelper.getOrCreateRegion(country, STANDARD_REGION_NAME);
-        Location location = cacheHelper.getOrCreateLocation(region, STANDARD_LOCATION_NAME);
+        // Create country, region, and location entities
+        Country country = createCountry(dto);
+        Region region = createRegion(country);
+        Location location = createLocation(region);
         
-        // Update country static attributes (e.g., population)
-        country.setPopulation(dto.getPopulation());
-        // (Other dto fields, like totalCases, can be used if needed)
+        // Update country attributes
+        updateCountryAttributes(country, dto);
         
         return new CountryRegionLocation(country, region, location);
+    }
+    
+    /**
+     * Creates a Country entity from the DTO
+     * 
+     * @param dto The DTO containing country data
+     * @return The Country entity
+     */
+    private Country createCountry(WorldometerDto dto) {
+        String countryName = cleanerHelper.cleanCountryName(dto.getCountry());
+        return cacheHelper.getOrCreateCountry(countryName);
+    }
+    
+    /**
+     * Creates a Region entity for the given Country
+     * 
+     * @param country The Country entity
+     * @return The Region entity
+     */
+    private Region createRegion(Country country) {
+        return cacheHelper.getOrCreateRegion(country, STANDARD_REGION_NAME);
+    }
+    
+    /**
+     * Creates a Location entity for the given Region
+     * 
+     * @param region The Region entity
+     * @return The Location entity
+     */
+    private Location createLocation(Region region) {
+        return cacheHelper.getOrCreateLocation(region, STANDARD_LOCATION_NAME);
+    }
+    
+    /**
+     * Updates attributes of the Country entity from the DTO
+     * 
+     * @param country The Country entity to update
+     * @param dto The DTO containing country data
+     */
+    private void updateCountryAttributes(Country country, WorldometerDto dto) {
+        country.setPopulation(dto.getPopulation());
+        // Other attributes can be updated here if needed
     }
 }
