@@ -1,25 +1,23 @@
-package mspr.backend.DTO;
+package mspr.backend.etl.dto;
 
 import java.time.LocalDate;
 
-public class UsaCountyDto {
-    private String county;         // Nom du comté (Admin2 dans le CSV, ex: "Los Angeles")
-    private String provinceState;  // État (Province_State dans le CSV, ex: "California")
-    private String countryRegion;  // Pays (devrait être "US" pour toutes les lignes de ce fichier)
-    private Double lat;            // Latitude du comté
-    private Double lon;            // Longitude du comté
-    private LocalDate date;        // Date
-    private int confirmed;         // Confirmés cumulés
-    private int deaths;            // Décès cumulés
-    private int recovered;         // Guéris cumulés (pas fourni dans ce CSV, on mettra 0)
-    private int active;            // Actifs cumulés (pas fourni, on peut mettre 0)
+public class CovidCompleteDto {
+    private String provinceState;   // Province ou État (peut être vide si non applicable)
+    private String countryRegion;   // Pays
+    private Double lat;             // Latitude
+    private Double lon;             // Longitude
+    private LocalDate date;         // Date des données
+    private int confirmed;          // Nombre confirmé
+    private int deaths;             // Nombre de décès
+    private int recovered;          // Nombre guéris
+    private int active;             // Nombre actifs
+    private String whoRegion;       // Région OMS
 
-
-    public UsaCountyDto() {
+    public CovidCompleteDto() {
     }
 
-    public UsaCountyDto(String county, String provinceState, String countryRegion, Double lat, Double lon, LocalDate date, int confirmed, int deaths, int recovered, int active) {
-        this.county = county;
+    public CovidCompleteDto(String provinceState, String countryRegion, Double lat, Double lon, LocalDate date, int confirmed, int deaths, int recovered, int active, String whoRegion) {
         this.provinceState = provinceState;
         this.countryRegion = countryRegion;
         this.lat = lat;
@@ -29,14 +27,15 @@ public class UsaCountyDto {
         this.deaths = deaths;
         this.recovered = recovered;
         this.active = active;
+        this.whoRegion = whoRegion;
     }
 
-    public String getCounty() {
-        return county;
+    public String getWhoRegion() {
+        return whoRegion;
     }
 
-    public void setCounty(String county) {
-        this.county = county;
+    public void setWhoRegion(String whoRegion) {
+        this.whoRegion = whoRegion;
     }
 
     public String getProvinceState() {
@@ -111,4 +110,3 @@ public class UsaCountyDto {
         this.active = active;
     }
 }
-

@@ -1,4 +1,4 @@
-package mspr.backend.DTO;
+package mspr.backend.etl.dto;
 
 import java.time.LocalDate;
 
