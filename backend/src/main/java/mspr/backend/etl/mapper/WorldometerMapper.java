@@ -9,10 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Component
 public class WorldometerMapper {
 
-    // Constants for standard names
-    public static final String STANDARD_REGION_NAME = "standard";
-    public static final String STANDARD_LOCATION_NAME = "standard";
-
     private final CacheHelper cacheHelper;
     private final CleanerHelper cleanerHelper;
 
@@ -63,7 +59,7 @@ public class WorldometerMapper {
      */
     private Country createCountry(WorldometerDto dto) {
         String countryName = cleanerHelper.cleanCountryName(dto.getCountry());
-        return cacheHelper.getOrCreateCountry(countryName);
+        return cacheHelper.getOrCreateCountry(countryName, dto.getContinent(), dto.getWhoRegion());
     }
     
     /**
@@ -73,7 +69,8 @@ public class WorldometerMapper {
      * @return The Region entity
      */
     private Region createRegion(Country country) {
-        return cacheHelper.getOrCreateRegion(country, STANDARD_REGION_NAME);
+        // Utilisez la méthode qui gère les cas spéciaux pour les régions standard
+        return cacheHelper.getOrCreateRegionWithEmptyHandling(country, null);
     }
     
     /**
@@ -83,7 +80,8 @@ public class WorldometerMapper {
      * @return The Location entity
      */
     private Location createLocation(Region region) {
-        return cacheHelper.getOrCreateLocation(region, STANDARD_LOCATION_NAME);
+        // Utilisez la méthode qui gère les cas spéciaux pour les locations standard
+        return cacheHelper.getOrCreateLocationWithEmptyHandling(region, null);
     }
     
     /**
@@ -94,6 +92,7 @@ public class WorldometerMapper {
      */
     private void updateCountryAttributes(Country country, WorldometerDto dto) {
         country.setPopulation(dto.getPopulation());
-        // Other attributes can be updated here if needed
+        
+        // Note : La mise à jour du continent et de la région WHO est désormais gérée par getOrCreateCountry
     }
 }

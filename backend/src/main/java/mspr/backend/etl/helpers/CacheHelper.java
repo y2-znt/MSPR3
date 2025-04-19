@@ -14,12 +14,38 @@ public class CacheHelper {
     @Autowired
     private DiseaseRepository diseaseRepository;
 
+    @Autowired
+    private CleanerHelper cleanerHelper;
+
     private Map<String, Country> countries = new HashMap<>();
     private Map<String, Region> regions = new HashMap<>();
     private Map<String, Location> locations = new HashMap<>();
+    // Cache pour détecter les noms de location en double à travers différentes régions
+    private Map<String, Location> locationsByNameOnly = new HashMap<>();
     private Map<String, Disease> diseases = new HashMap<>();
 
+    // Constants for standard names
+    private static final String STANDARD_REGION_SUFFIX = "region standard";
+    private static final String STANDARD_LOCATION_SUFFIX = "location standard";
+    private static final String STANDARD = "standard";
+
+    /**
+     * Gets or creates a Country entity with just a name
+     * @param countryName The name of the country
+     * @return The Country entity
+     */
     public Country getOrCreateCountry(String countryName) {
+        return getOrCreateCountry(countryName, null, null);
+    }
+
+    /**
+     * Gets or creates a Country entity with name, continent and WHO region
+     * @param countryName The name of the country
+     * @param continentStr The continent name (will be cleaned)
+     * @param whoRegionStr The WHO region name (will be cleaned)
+     * @return The Country entity
+     */
+    public Country getOrCreateCountry(String countryName, String continentStr, String whoRegionStr) {
         if (countryName == null || countryName.isEmpty()) {
             return null;
         }
@@ -29,7 +55,23 @@ public class CacheHelper {
         if (country == null) {
             country = new Country();
             country.setName(countryName);
+            
+            // Nettoyer et définir le continent si fourni
+            if (continentStr != null && !continentStr.isEmpty()) {
+                Country.ContinentEnum continent = cleanerHelper.cleanContinent(continentStr);
+                country.setContinent(continent);
+            }
+            
+            // Nettoyer et définir la région WHO si fournie
+            if (whoRegionStr != null && !whoRegionStr.isEmpty()) {
+                Country.WHORegionEnum whoRegion = cleanerHelper.cleanWhoRegion(whoRegionStr);
+                country.setWhoRegion(whoRegion);
+            }
+            
             countries.put(countryKey, country);
+            
+            // Créer automatiquement une région standard pour le nouveau pays
+            getOrCreateRegion(country, countryName + " - " + STANDARD_REGION_SUFFIX);
         }
         return country;
     }
@@ -38,6 +80,12 @@ public class CacheHelper {
         if (country == null || regionName == null || regionName.isEmpty()) {
             return null;
         }
+        
+        // Si le nom de la région est juste "standard", le remplacer par le nom du pays + "region standard"
+        if (STANDARD.equalsIgnoreCase(regionName)) {
+            regionName = country.getName() + " - " + STANDARD_REGION_SUFFIX;
+        }
+        
         // Clé composite pour la région: "CountryName|RegionName"
         String regionKey = country.getName() + "|" + regionName;
         Region region = regions.get(regionKey);
@@ -46,6 +94,9 @@ public class CacheHelper {
             region.setName(regionName);
             region.setCountry(country);
             regions.put(regionKey, region);
+            
+            // Créer automatiquement une location standard pour la nouvelle région
+            getOrCreateLocation(region, regionName + " - " + STANDARD_LOCATION_SUFFIX);
         }
         return region;
     }
@@ -54,16 +105,81 @@ public class CacheHelper {
         if (region == null || locationName == null || locationName.isEmpty()) {
             return null;
         }
+        
+        // Si le nom de la location est juste "standard", le remplacer par le nom de la région + "location standard"
+        if (STANDARD.equalsIgnoreCase(locationName)) {
+            locationName = region.getName() + " - " + STANDARD_LOCATION_SUFFIX;
+        }
+        
         // Clé composite pour la location: "CountryName|RegionName|LocationName"
         String locationKey = region.getCountry().getName() + "|" + region.getName() + "|" + locationName;
         Location location = locations.get(locationKey);
+        
         if (location == null) {
-            location = new Location();
-            location.setName(locationName);
-            location.setRegion(region);
-            locations.put(locationKey, location);
+            // Vérifier si un nom identique existe dans une autre région
+            Location existingByName = locationsByNameOnly.get(locationName);
+            if (existingByName != null && existingByName.getRegion() != region) {
+                // Si une location avec ce nom existe déjà dans une autre région, modifier le nom pour le rendre unique
+                String uniqueName = region.getName() + " - " + locationName;
+                
+                // Vérifier si cette version unique existe déjà
+                String uniqueKey = region.getCountry().getName() + "|" + region.getName() + "|" + uniqueName;
+                Location existingUnique = locations.get(uniqueKey);
+                
+                if (existingUnique != null) {
+                    return existingUnique;
+                }
+                
+                location = new Location();
+                location.setName(uniqueName);
+                location.setRegion(region);
+                locations.put(uniqueKey, location);
+                locationsByNameOnly.put(uniqueName, location);
+            } else {
+                // Nom original unique ou dans la même région, on peut l'utiliser tel quel
+                location = new Location();
+                location.setName(locationName);
+                location.setRegion(region);
+                locations.put(locationKey, location);
+                locationsByNameOnly.put(locationName, location);
+            }
         }
+        
         return location;
+    }
+
+    /**
+     * Gère les cas où le nom de la région ou de la location est vide,
+     * en utilisant le nom parent suivi du suffixe correspondant
+     */
+    public Region getOrCreateRegionWithEmptyHandling(Country country, String regionName) {
+        if (country == null) {
+            return null;
+        }
+        
+        // Si le nom de la région est vide ou standard, utiliser le nom du pays + suffixe standard
+        if (regionName == null || regionName.isEmpty() || STANDARD.equalsIgnoreCase(regionName)) {
+            regionName = country.getName() + " - " + STANDARD_REGION_SUFFIX;
+        }
+        
+        return getOrCreateRegion(country, regionName);
+    }
+
+    /**
+     * Gère les cas où le nom de la location est vide,
+     * en utilisant le nom parent suivi du suffixe correspondant
+     */
+    public Location getOrCreateLocationWithEmptyHandling(Region region, String locationName) {
+        if (region == null) {
+            return null;
+        }
+        
+        // Si le nom de la location est vide ou standard, utiliser le nom de la région + suffixe standard
+        if (locationName == null || locationName.isEmpty() || STANDARD.equalsIgnoreCase(locationName)) {
+            locationName = region.getName() + " - " + STANDARD_LOCATION_SUFFIX;
+        }
+        
+        return getOrCreateLocation(region, locationName);
     }
 
     /**
@@ -159,6 +275,7 @@ public class CacheHelper {
      */
     public void setLocations(Iterable<Location> savedLocations) {
         this.locations.clear();
+        this.locationsByNameOnly.clear();
         if (savedLocations != null) {
             for (Location location : savedLocations) {
                 // Ensure necessary fields for the key are present
@@ -170,6 +287,7 @@ public class CacheHelper {
                                          location.getRegion().getName() + "|" +
                                          location.getName();
                     this.locations.put(locationKey, location);
+                    this.locationsByNameOnly.put(location.getName(), location);
                 }
             }
         }

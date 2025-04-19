@@ -3,15 +3,21 @@ package mspr.backend.etl.mapper;
 import mspr.backend.etl.dto.UsaCountyDto;
 import mspr.backend.BO.*;
 import mspr.backend.etl.helpers.CacheHelper;
+import mspr.backend.etl.helpers.CleanerHelper;
 import org.springframework.stereotype.Component;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 public class UsaCountyMapper {
 
-    // Constants for standard names
-    public static final String DEFAULT_EMPTY_NAME = "";
     public static final String COVID_19_DISEASE_NAME = "COVID-19";
+    
+    private CleanerHelper cleanerHelper;
+    
+    @Autowired
+    public UsaCountyMapper(CleanerHelper cleanerHelper) {
+        this.cleanerHelper = cleanerHelper;
+    }
 
     /**
      * Converts a UsaCountyDto to a DiseaseCase entity using the provided cache
@@ -44,19 +50,18 @@ public class UsaCountyMapper {
      */
     private Location processLocationData(UsaCountyDto dto, CacheHelper cache) {
         // Clean country/region/location names (trim and aliases)
-        String countryName = dto.getCountryRegion() != null ? dto.getCountryRegion().trim() : DEFAULT_EMPTY_NAME;
-        String regionName = dto.getProvinceState() != null ? dto.getProvinceState().trim() : DEFAULT_EMPTY_NAME;
-        String locationName = dto.getCounty() != null ? dto.getCounty().trim() : DEFAULT_EMPTY_NAME;
+        String countryName = dto.getCountryRegion() != null ? dto.getCountryRegion().trim() : null;
+        String regionName = dto.getProvinceState() != null ? dto.getProvinceState().trim() : null;
+        String locationName = dto.getCounty() != null ? dto.getCounty().trim() : null;
         
-        // If location (county) field is empty, use region name as location
-        if (locationName.isEmpty()) {
-            locationName = regionName;
-        }
-
-        // Get or create reference entities from cache
-        Country country = cache.getOrCreateCountry(countryName);
-        Region region = cache.getOrCreateRegion(country, regionName);
-        return cache.getOrCreateLocation(region, locationName);
+        // Pour les US on connaît le continent (Amérique du Nord) et la région WHO (Americas)
+        Country country = cache.getOrCreateCountry(countryName, "North America", "Americas");
+        
+        // Crée la région (ou la récupère si elle existe déjà), en gérant les cas vides
+        Region region = cache.getOrCreateRegionWithEmptyHandling(country, regionName);
+        
+        // Crée la location (ou la récupère si elle existe déjà), en gérant les cas vides
+        return cache.getOrCreateLocationWithEmptyHandling(region, locationName);
     }
     
     /**

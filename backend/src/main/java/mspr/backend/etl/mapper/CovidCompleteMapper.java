@@ -9,8 +9,6 @@ import mspr.backend.etl.helpers.*;
 @Component
 public class CovidCompleteMapper {
 
-    // Constants for standard names
-    public static final String STANDARD_LOCATION_NAME = "standard";
     public static final String COVID_19_DISEASE_NAME = "COVID-19";
 
     private final CacheHelper cacheHelper;
@@ -33,19 +31,25 @@ public class CovidCompleteMapper {
         // Clean country/region names via CleanerHelper
         String countryName = cleanerHelper.cleanCountryName(dto.getCountryRegion());
         String provinceName = dto.getProvinceState();
-        Region region = null;
-        String locationName = STANDARD_LOCATION_NAME;
+        
+        // Créer le pays avec la région WHO (pas de continent disponible dans ce DTO)
+        Country country = cacheHelper.getOrCreateCountry(countryName, null, dto.getWhoRegion());
+        
+        Region region;
+        Location location;
         
         if (provinceName != null && !provinceName.isEmpty()) {
-            // If there's a province/state, consider it as the Region
+            // Si une province/état est spécifié, l'utiliser comme Région
             provinceName = cleanerHelper.cleanRegionName(provinceName);
-            region = cacheHelper.getOrCreateRegion(cacheHelper.getOrCreateCountry(countryName), provinceName);
-            locationName = provinceName;
+            region = cacheHelper.getOrCreateRegion(country, provinceName);
+            // Créer une location avec le même nom que la province (elle sera ajustée si nécessaire)
+            location = cacheHelper.getOrCreateLocationWithEmptyHandling(region, provinceName);
+        } else {
+            // Si pas de province, utiliser la région standard du pays
+            region = cacheHelper.getOrCreateRegionWithEmptyHandling(country, null);
+            // Et utiliser la location standard de cette région
+            location = cacheHelper.getOrCreateLocationWithEmptyHandling(region, null);
         }
-        
-        Country country = cacheHelper.getOrCreateCountry(countryName);
-        Region regionFromCountry = cacheHelper.getOrCreateRegion(country, countryName);
-        Location location = cacheHelper.getOrCreateLocation(regionFromCountry, cleanerHelper.cleanLocationName(locationName));
 
         // Create main DiseaseCase entity (not persisted here)
         DiseaseCase diseaseCase = new DiseaseCase();

@@ -9,9 +9,6 @@ import mspr.backend.etl.helpers.*;
 @Component
 public class FullGroupedMapper {
 
-    // Constants for standard names
-    public static final String STANDARD_REGION_NAME = "standard";
-    public static final String STANDARD_LOCATION_NAME = "standard";
     public static final String COVID_19_DISEASE_NAME = "COVID-19";
 
     private final CacheHelper cacheHelper;
@@ -33,12 +30,15 @@ public class FullGroupedMapper {
     public DiseaseCase toEntity(FullGroupedDto dto) {
         // Clean country name
         String countryName = cleanerHelper.cleanCountryName(dto.getCountryRegion());
-        Country country = cacheHelper.getOrCreateCountry(countryName);
-
-        Region regionStandardFromCountry = cacheHelper.getOrCreateRegion(country, STANDARD_REGION_NAME);
-
-        // No province/state in this dataset, create location directly at country level
-        Location location = cacheHelper.getOrCreateLocation(regionStandardFromCountry, STANDARD_LOCATION_NAME);
+        
+        // Crée le pays (ou le récupère s'il existe déjà) avec la région WHO
+        Country country = cacheHelper.getOrCreateCountry(countryName, null, dto.getWhoRegion());
+        
+        // Création automatique de la région standard pour ce pays
+        Region region = cacheHelper.getOrCreateRegionWithEmptyHandling(country, null);
+        
+        // Création automatique de la location standard pour cette région
+        Location location = cacheHelper.getOrCreateLocationWithEmptyHandling(region, null);
 
         DiseaseCase diseaseCase = new DiseaseCase();
         diseaseCase.setDisease(this.disease);

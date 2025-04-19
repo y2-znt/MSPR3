@@ -8,19 +8,28 @@ import java.util.Map;
 @Service
 public class CleanerHelper {
 
-    HashMap<String, String> countryNameMap = new HashMap<>(
-            Map.of(
-                    "United States", "USA",
-                    "US", "USA",
-                    "United Kingdom", "UK",
-                    "South Korea", "Korea, South",
-                    "North Korea", "Korea, North",
-                    "Czech Republic", "Czechia",
-                    "Ivory Coast", "Côte d'Ivoire",
-                    "Republic of the Congo", "Congo",
-                    "Democratic Republic of the Congo", "Congo, Democratic Republic of the"
-            )
-    );
+    private static final Map<String, String> countryNameMap = new HashMap<>();
+    static {
+        countryNameMap.put("United States", "USA");
+        countryNameMap.put("US", "USA");
+        countryNameMap.put("UK", "United Kingdom");
+        countryNameMap.put("UAE", "United Arab Emirates");
+        countryNameMap.put("Myanmar", "Burma");
+        countryNameMap.put("Palestine", "West Bank and Gaza");
+        countryNameMap.put("Korea, South", "South Korea");
+        countryNameMap.put("S. Korea", "South Korea");
+        countryNameMap.put("Korea, North", "North Korea");
+        countryNameMap.put("Czech Republic", "Czechia");
+        countryNameMap.put("Ivory Coast", "Côte d'Ivoire");
+        countryNameMap.put("Cote d'Ivoire", "Côte d'Ivoire");
+        countryNameMap.put("Taiwan*", "Taiwan");
+        countryNameMap.put("CAR", "Central African Republic");
+        countryNameMap.put("DRC", "Congo (Kinshasa)");
+        countryNameMap.put("Congo", "Congo (Brazzaville)");
+        countryNameMap.put("Vatican City", "Holy See");
+        countryNameMap.put("St. Vincent Grenadines", "Saint Vincent and the Grenadines");
+    }
+
 
 
     HashMap<String, Country.ContinentEnum> continentNameMap = new HashMap<>(
