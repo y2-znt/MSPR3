@@ -1,5 +1,7 @@
 package mspr.backend.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,17 +41,15 @@ public class DiseaseCaseService {
     public long sumDeaths() {
         return diseaseCaseRepository.sumDeaths();
     }
-    
+
     public long sumRecovered() {
         return diseaseCaseRepository.sumRecovered();
     }
 
-    
-
     // public Optional<DiseaseCase> getDiseaseCaseByName(String name) {
-    //     return diseaseCaseRepository.findAll().stream()
-    //             .filter(diseaseCase -> diseaseCase.getName().equalsIgnoreCase(name))
-    //             .findFirst();
+    // return diseaseCaseRepository.findAll().stream()
+    // .filter(diseaseCase -> diseaseCase.getName().equalsIgnoreCase(name))
+    // .findFirst();
     // }
 
     public Optional<DiseaseCase> getDiseaseCaseByName(String name) {
@@ -73,6 +73,19 @@ public class DiseaseCaseService {
         diseaseCaseRepository.deleteById(id);
     }
 
-
+    public List<Object[]> getAggregatedCasesByDateBetween(LocalDate start, LocalDate end) {
+        List<Object[]> all = diseaseCaseRepository.getAggregatedCasesByDate();
+        if (start == null && end == null)
+            return all;
+        List<Object[]> filtered = new ArrayList<>();
+        for (Object[] row : all) {
+            LocalDate date = (LocalDate) row[0];
+            boolean afterStart = (start == null) || !date.isBefore(start);
+            boolean beforeEnd = (end == null) || !date.isAfter(end);
+            if (afterStart && beforeEnd)
+                filtered.add(row);
+        }
+        return filtered;
+    }
 
 }
