@@ -37,6 +37,13 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  
+  // public displayedColumns: string[] = ['country', 'totalCases', 'deaths', 'recovered', 'mortalityRate', 'recoveryRate'];
+  // public dataSource: MatTableDataSource<CountryData> = new MatTableDataSource<CountryData>();
+  // private destroy$ = new Subject<void>();
+  // private countriesData: CountryData[] = [];
+  // public error: string | null = null;
+
   constructor(
     private covidDataService: CovidDataService,
     private countryService: CountryService,
@@ -78,18 +85,13 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   updateCovidStats(stats: CovidStats): void {
     this.diseaseName = stats.diseaseName;
     this.totalCases = stats.totalCases;
     this.totalDeaths = stats.totalDeaths;
     this.totalRecoveries = stats.totalRecoveries;
-    this.mortalityRate = stats.mortalityRate;
-    this.recoveryRate = stats.recoveryRate;
+    // this.mortalityRate = stats.mortalityRate;
+    // this.recoveryRate = stats.recoveryRate;
   }
 
   private loadCountriesStats(): void {
@@ -159,5 +161,10 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

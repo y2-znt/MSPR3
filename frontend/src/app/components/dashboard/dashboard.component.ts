@@ -82,9 +82,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Changer l'ordre des appels
-    this.loadCountries(); // D'abord charger la liste des pays
-    this.loadKpiData(); // Ensuite charger les données KPI
+    this.loadCountries(); 
+    this.loadKpiData(); 
   }
 
   ngOnDestroy(): void {}
@@ -141,7 +140,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
           // Mettre à jour le service avec la liste initiale des pays
           this.covidDataService.updateCountriesData(countryData);
           console.log('📤 Données pays mises à jour dans le service:', countryData);
-
           this.isLoading = false;
           this.cdr.detectChanges();
         },
