@@ -77,7 +77,16 @@
       />
     </mat-tab>
     <mat-tab label="Pays">
-      <app-countries></app-countries>
+      <app-countries 
+        [countries]="countries"
+        [isLoading]="isLoading"
+        [totalCases]="totalCases"
+        [totalDeaths]="totalDeaths"
+        [totalRecoveries]="totalRecoveries"
+        [recoveryRate]="recoveryRate"
+        [mortalityRate]="mortalityRate"
+        [diseaseName]="diseaseName">
+      </app-countries>
     </mat-tab>
     <mat-tab label="Données régionales"></mat-tab>
   </mat-tab-group>

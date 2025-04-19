@@ -39,6 +39,10 @@
         <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center; height: 100px;">
             Chargement des données...
         </div>
+
+        <div *ngIf="error" style="color: red; text-align: center; padding: 20px;">
+            {{ error }}
+        </div>
         
         <!-- Debug info -->
         <div style="padding: 10px; color: blue; font-size: 12px;">

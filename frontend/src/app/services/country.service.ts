@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { Country } from '../models/country.model';
 import { Page } from '../models/pagination.model';
@@ -22,6 +22,7 @@ export class CountryService {
       `${this.url}countries?page=${page}&size=${size}`
     );
   }
+  
 
   getCountryById(id: number): Observable<Country> {
     return this.http.get<Country>(`${this.url}countries/${id}`);

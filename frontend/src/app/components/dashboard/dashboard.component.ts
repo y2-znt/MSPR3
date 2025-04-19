@@ -228,19 +228,66 @@ export class DashboardComponent implements OnInit, OnDestroy {
     fetchPage();
   }
 
+  // loadCountries(): void {
+  //   this.countryService
+  //     .getAllCountries(this.currentPage, this.pageSize)
+  //     .subscribe(
+  //       (page: Page<Country>) => {
+  //         this.countries = page.content;
+  //         console.log('Countries loaded:', this.countries);
+  //       },
+  //       (error) => {
+  //         console.error('Error loading countries:', error);
+  //       }
+  //     );
+  // }
+
   loadCountries(): void {
+    console.log('🌍 Début du chargement des pays...');
+    this.isLoading = true;
+    
     this.countryService
       .getAllCountries(this.currentPage, this.pageSize)
-      .subscribe(
-        (page: Page<Country>) => {
+      .subscribe({
+        next: (page: Page<Country>) => {
+          console.log('✅ Pays chargés avec succès:', {
+            totalElements: page.content.length,
+            firstCountry: page.content[0],
+            lastCountry: page.content[page.content.length - 1]
+          });
+          
           this.countries = page.content;
+          
+          // Ajout : Mettre à jour les données dans le service
+          const countryData: CountryData[] = this.countries.map(country => ({
+            country: country.name,
+            totalCases: 0,
+            deaths: 0,
+            recovered: 0,
+            mortalityRate: 0,
+            recoveryRate: 0
+          }));
+          
+          // Mettre à jour le service avec la liste initiale des pays
+          this.covidDataService.updateCountriesData(countryData);
+          console.log('📤 Données pays mises à jour dans le service:', countryData);
+  
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
-        (error) => {
-          console.error('Error loading countries:', error);
+        error: (error) => {
+          console.error('❌ Erreur lors du chargement des pays:', error);
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        },
+        complete: () => {
+          console.log('🏁 Chargement des pays terminé');
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
-      );
+      });
   }
-
+  
   ngOnDestroy(): void {
     this.countries = [];
   }

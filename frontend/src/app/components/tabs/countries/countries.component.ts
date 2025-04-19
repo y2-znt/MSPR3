@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { CountryData, CovidDataService, CovidStats } from '../../../services/covid-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Country } from '../../../models/country.model';
 
 @Component({
   selector: 'app-countries',
@@ -17,21 +18,24 @@ import { takeUntil } from 'rxjs/operators';
   styleUrl: './countries.component.scss',
 })
 export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
-  displayedColumns: string[] = ['country', 'totalCases', 'deaths', 'recovered', 'mortalityRate', 'recoveryRate'];
-  dataSource: MatTableDataSource<CountryData> = new MatTableDataSource<CountryData>();
-  private destroy$ = new Subject<void>();
-  isLoading = true;
+  @Input() countries: Country[] = [];
+  @Input() isLoading = false;
+  @Input() totalCases = 0;
+  @Input() totalDeaths = 0;
+  @Input() totalRecoveries = 0;
+  @Input() mortalityRate = 0;
+  @Input() recoveryRate = 0;
+  @Input() diseaseName = '';
 
-  // Statistiques COVID de démonstration (en cas où les données réelles ne sont pas disponibles)
-  diseaseName: string = 'COVID-19';
-  totalCases: number = 66;
-  totalDeaths: number = 99;
-  totalRecoveries: number = 29;
-  mortalityRate: number = 5.24;
-  recoveryRate: number = 46.88;
-  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  
+  public displayedColumns: string[] = ['country', 'totalCases', 'deaths', 'recovered', 'mortalityRate', 'recoveryRate'];
+  public dataSource: MatTableDataSource<CountryData> = new MatTableDataSource<CountryData>();
+  private destroy$ = new Subject<void>();
+  private countriesData: CountryData[] = [];
+  public error: string | null = null;
 
   constructor(
     private covidDataService: CovidDataService,
@@ -39,54 +43,8 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   ) {}
   
   ngOnInit(): void {
-    console.log('CountriesComponent: ngOnInit');
-    
-    // Données de démonstration pour le tableau (pour être sûr d'avoir quelque chose à afficher)
-    const mockData: CountryData[] = [
-      {
-        country: 'United States',
-        totalCases: 103594491,
-        deaths: 1127152,
-        recovered: 100619424,
-        mortalityRate: 1.09,
-        recoveryRate: 97.13
-      },
-      {
-        country: 'India',
-        totalCases: 44986461,
-        deaths: 531832,
-        recovered: 44446514,
-        mortalityRate: 1.18,
-        recoveryRate: 98.8
-      },
-      {
-        country: 'France',
-        totalCases: 39908640,
-        deaths: 165624,
-        recovered: 39723212,
-        mortalityRate: 0.41,
-        recoveryRate: 99.54
-      },
-      {
-        country: 'Germany',
-        totalCases: 38431588,
-        deaths: 173585,
-        recovered: 38240100,
-        mortalityRate: 0.45,
-        recoveryRate: 99.5
-      },
-      {
-        country: 'Brazil',
-        totalCases: 37608203,
-        deaths: 704394,
-        recovered: 36895086,
-        mortalityRate: 1.87,
-        recoveryRate: 98.1
-      }
-    ];
-    
     // Assurer que nous avons des données initiales
-    this.dataSource.data = mockData;
+    this.dataSource.data = this.countriesData
     
     // S'abonner aux mises à jour des statistiques globales COVID
     this.covidDataService.covidStats$
@@ -97,18 +55,35 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
           this.updateCovidStats(stats);
         }
       });
-    
-    // S'abonner aux mises à jour des données par pays
+
     this.covidDataService.countriesData$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(data => {
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data) => {
+        console.log('Données pays reçues:', data);
         if (data && data.length > 0) {
-          console.log(`Données de ${data.length} pays reçues dans CountriesComponent`);
-          this.dataSource.data = data;
-          this.isLoading = false;
-          this.cdr.detectChanges();
+          this.countriesData = data; 
+          this.dataSource.data = this.countriesData;
+          this.error = null;
+          console.log('Nombre de pays chargés:', data.length);
+          // Afficher le premier pays pour vérifier la structure
+          console.log('Premier pays:', data[0]);
+        } else {
+          this.error = 'Aucune donnée disponible';
+          this.countriesData = [];
+          console.log('Aucune donnée reçue');
         }
-      });
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des données:', err);
+        this.error = 'Erreur lors du chargement des données';
+        this.isLoading = false;
+        this.countriesData = [];
+        this.cdr.detectChanges();
+      }
+    });
     
     // Vérifier si les données sont déjà disponibles
     const currentStats = this.covidDataService.getCovidStats();
@@ -148,9 +123,27 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     }, 100);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['countries'] && changes['countries'].currentValue) {
+      console.log('Countries data received:', this.countries);
+      // Mettre à jour le tableau avec les nouvelles données
+      this.updateTableData();
+    }
+  }
+
+  private updateTableData() {
+    if (this.countries.length > 0) {
+      const countryData: CountryData[] = this.countries.map(country => ({
+        country: country.name,
+        totalCases: 0,
+        deaths: 0,
+        recovered: 0,
+        mortalityRate: 0,
+        recoveryRate: 0
+      }));
+      this.dataSource.data = countryData;
+      console.log('Table data updated with', this.dataSource.data.length, 'countries');
+    }
   }
 
   updateCovidStats(stats: CovidStats): void {
@@ -158,8 +151,8 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     this.totalCases = stats.totalCases;
     this.totalDeaths = stats.totalDeaths;
     this.totalRecoveries = stats.totalRecoveries;
-    this.mortalityRate = stats.mortalityRate;
-    this.recoveryRate = stats.recoveryRate;
+    // this.mortalityRate = stats.mortalityRate;
+    // this.recoveryRate = stats.recoveryRate;
   }
 
   applyFilter(event: Event): void {
@@ -169,5 +162,10 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
