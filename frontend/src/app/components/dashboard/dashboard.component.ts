@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -52,7 +46,6 @@ import { OverviewComponent } from '../tabs/overview/overview.component';
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
@@ -78,14 +71,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private countryService: CountryService,
-    private diseaseCaseService: DiseaseCaseService,
-    private cdr: ChangeDetectorRef
+    private diseaseCaseService: DiseaseCaseService
   ) {}
 
   ngOnInit(): void {
     this.loadCountries();
     this.loadKpiData();
   }
+
+  ngOnDestroy(): void {}
 
   get kpiCards() {
     return [
@@ -116,7 +110,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (page: Page<Country>) => {
           this.countries = page.content;
-          this.cdr.markForCheck();
         },
         (error) => {
           console.error('Error loading countries:', error);
@@ -137,10 +130,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       (error) => {
         console.error('Error loading KPI data:', error);
         this.isLoading = false;
-        this.cdr.markForCheck();
       }
     );
   }
-
-  ngOnDestroy(): void {}
 }
