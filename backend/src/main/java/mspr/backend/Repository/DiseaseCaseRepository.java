@@ -1,5 +1,7 @@
 package mspr.backend.Repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +23,9 @@ public interface DiseaseCaseRepository extends JpaRepository<DiseaseCase, Intege
 
     @Query("SELECT COALESCE(SUM(dc.confirmedCases), 0) FROM DiseaseCase dc")
     long sumCases();
-    
+
+    @Query("SELECT dc.date, SUM(dc.confirmedCases), SUM(dc.deaths), SUM(dc.recovered) " +
+            "FROM DiseaseCase dc GROUP BY dc.date ORDER BY dc.date")
+    List<Object[]> getAggregatedCasesByDate();
+
 }
