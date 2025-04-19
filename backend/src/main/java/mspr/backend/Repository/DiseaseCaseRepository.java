@@ -1,5 +1,6 @@
 package mspr.backend.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +28,19 @@ public interface DiseaseCaseRepository extends JpaRepository<DiseaseCase, Intege
     @Query("SELECT dc.date, SUM(dc.confirmedCases), SUM(dc.deaths), SUM(dc.recovered) " +
             "FROM DiseaseCase dc GROUP BY dc.date ORDER BY dc.date")
     List<Object[]> getAggregatedCasesByDate();
+
+    // Avec filtre pays
+    @Query("SELECT dc.date, c.name, SUM(dc.confirmedCases), SUM(dc.deaths), SUM(dc.recovered) " +
+            "FROM DiseaseCase dc JOIN dc.location l JOIN l.region r JOIN r.country c " +
+            "WHERE c.name IN :countries " +
+            "GROUP BY dc.date, c.name ORDER BY dc.date, c.name")
+    List<Object[]> getAggregatedCasesByDateAndCountries(
+            @Param("countries") List<String> countries);
+
+    // Sans filtre pays
+    @Query("SELECT dc.date, c.name, SUM(dc.confirmedCases), SUM(dc.deaths), SUM(dc.recovered) " +
+            "FROM DiseaseCase dc JOIN dc.location l JOIN l.region r JOIN r.country c " +
+            "GROUP BY dc.date, c.name ORDER BY dc.date, c.name")
+    List<Object[]> getAggregatedCasesByDateAllCountries();
 
 }

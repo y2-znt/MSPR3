@@ -50,17 +50,19 @@ public class DiseaseCaseController {
     @GetMapping("/aggregated-by-date")
     public List<Map<String, Object>> getAggregatedCasesByDate(
             @RequestParam(required = false) String start,
-            @RequestParam(required = false) String end) {
+            @RequestParam(required = false) String end,
+            @RequestParam(required = false) List<String> countries) {
         LocalDate startDate = (start != null) ? LocalDate.parse(start) : null;
         LocalDate endDate = (end != null) ? LocalDate.parse(end) : null;
-        List<Object[]> results = diseaseCaseService.getAggregatedCasesByDateBetween(startDate, endDate);
+        List<Object[]> results = diseaseCaseService.getAggregatedCasesByDateAndCountries(startDate, endDate, countries);
         List<Map<String, Object>> response = new ArrayList<>();
         for (Object[] row : results) {
             Map<String, Object> map = new HashMap<>();
             map.put("date", row[0]);
-            map.put("confirmedCases", row[1]);
-            map.put("deaths", row[2]);
-            map.put("recovered", row[3]);
+            map.put("country", row[1]);
+            map.put("confirmedCases", row[2]);
+            map.put("deaths", row[3]);
+            map.put("recovered", row[4]);
             response.add(map);
         }
         return response;
