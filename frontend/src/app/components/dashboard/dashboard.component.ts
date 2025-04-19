@@ -1,5 +1,16 @@
 import { CommonModule } from '@angular/common';
+<<<<<<< HEAD
 import { Component, OnDestroy, OnInit } from '@angular/core';
+=======
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+>>>>>>> 66e459bf017c9244ea00e4bf579298630eb8a8be
 import {
   FormControl,
   FormGroup,
