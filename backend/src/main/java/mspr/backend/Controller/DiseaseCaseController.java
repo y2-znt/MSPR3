@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import mspr.backend.BO.DiseaseCase;
+import mspr.backend.DTO.TotalKpiDto;
 import mspr.backend.Service.DiseaseCaseService;
 
 import org.springframework.data.domain.Page;
@@ -17,9 +18,17 @@ public class DiseaseCaseController {
 
     @GetMapping
     public Page<DiseaseCase> getAllDiseaseCases(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return diseaseCaseService.getAllDiseaseCases(page, size);
+    }
+
+    @GetMapping("/kpi")
+    public TotalKpiDto getKpi() {
+        long cases = diseaseCaseService.sumCases();
+        long deaths = diseaseCaseService.sumDeaths();
+        long recovered = diseaseCaseService.sumRecovered();
+        return new TotalKpiDto(cases, deaths, recovered);
     }
 
     @GetMapping("/{id}")
@@ -30,20 +39,5 @@ public class DiseaseCaseController {
     @GetMapping("/name/{name}")
     public DiseaseCase getDiseaseCaseByName(@PathVariable String name) {
         return diseaseCaseService.getDiseaseCaseByName(name).orElse(null);
-    }
-
-    @PostMapping
-    public DiseaseCase createDiseaseCase(@RequestBody DiseaseCase diseaseCase) {
-        return diseaseCaseService.createDiseaseCase(diseaseCase);
-    }
-
-    @PutMapping("/{id}")
-    public DiseaseCase updateDiseaseCase(@PathVariable Integer id, @RequestBody DiseaseCase diseaseCase) {
-        return diseaseCaseService.updateDiseaseCase(id, diseaseCase);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteDiseaseCase(@PathVariable Integer id) {
-        diseaseCaseService.deleteDiseaseCase(id);
     }
 }

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import { DiseaseCase } from '../models/diseaseCase.model';
+import { DiseaseCase, TotalKpiDto } from '../models/diseaseCase.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +27,9 @@ export class DiseaseCaseService {
       .set('size', size.toString());
 
     return this.http.get<any>(this.url, { params });
+  }
+
+  getTotalKpi(): Observable<TotalKpiDto> {
+    return this.http.get<TotalKpiDto>(`${this.url}disease-cases/kpi`);
   }
 }
