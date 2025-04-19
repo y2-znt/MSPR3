@@ -77,23 +77,6 @@ public class CleanerHelper {
         // Navires de croisière
         skipList.put("Diamond Princess", true);
         skipList.put("Grand Princess", true);
-        skipList.put("MS Zaandam", true);
-        
-        // Entités non reconnues ou problématiques
-        skipList.put("Cruise Ship", true);
-        skipList.put("Ships", true);
-        skipList.put("Others", true);
-        skipList.put("Unknown", true);
-        skipList.put("Unassigned", true);
-        skipList.put("Unassigned Location", true);
-        skipList.put("(unassigned)", true);
-        skipList.put("International", true);
-        skipList.put("International conveyance", true);
-        
-        // Territoires non standards
-        skipList.put("Western Sahara", true);
-        skipList.put("Summer Olympics 2020", true);
-        skipList.put("Winter Olympics 2022", true);
     }
 
     // Special cases mapping for countries with specific WHO regions
