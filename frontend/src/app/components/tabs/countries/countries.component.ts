@@ -28,6 +28,8 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   displayedColumns: string[] = ['country', 'totalCases', 'deaths', 'recovered', 'mortalityRate', 'recoveryRate'];
   dataSource: MatTableDataSource<CountryData> = new MatTableDataSource<CountryData>();
   private destroy$ = new Subject<void>();
+  private countriesData: CountryData[] = [];
+  public error: string | null = null;
 
   // Statistiques COVID de démonstration (en cas où les données réelles ne sont pas disponibles)
   diseaseName: string = 'COVID-19';
@@ -36,13 +38,6 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-  
-  // public displayedColumns: string[] = ['country', 'totalCases', 'deaths', 'recovered', 'mortalityRate', 'recoveryRate'];
-  // public dataSource: MatTableDataSource<CountryData> = new MatTableDataSource<CountryData>();
-  // private destroy$ = new Subject<void>();
-  // private countriesData: CountryData[] = [];
-  // public error: string | null = null;
 
   constructor(
     private covidDataService: CovidDataService,
@@ -61,21 +56,24 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit(): void {
     console.log('CountriesComponent: ngAfterViewInit');
     
-    // Configurer le paginator et le sort dès que possible
-    setTimeout(() => {
-      console.log('Paginator:', this.paginator);
-      console.log('Sort:', this.sort);
-      
-      if (this.paginator) {
-        this.dataSource.paginator = this.paginator;
+    if (this.paginator) {
+      this.dataSource.paginator = this.paginator;
+    }
+    
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+    }
+    
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'totalCases': return item.totalCases;
+        case 'deaths': return item.deaths;
+        case 'recovered': return item.recovered;
+        case 'mortalityRate': return item.mortalityRate;
+        case 'recoveryRate': return item.recoveryRate;
+        default: return item[property as keyof CountryData] as string;
       }
-      
-      if (this.sort) {
-        this.dataSource.sort = this.sort;
-      }
-      
-      console.log('DataSource data length:', this.dataSource.data.length);
-    }, 100);
+    };
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -90,8 +88,6 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     this.totalCases = stats.totalCases;
     this.totalDeaths = stats.totalDeaths;
     this.totalRecoveries = stats.totalRecoveries;
-    // this.mortalityRate = stats.mortalityRate;
-    // this.recoveryRate = stats.recoveryRate;
   }
 
   private loadCountriesStats(): void {
@@ -101,11 +97,12 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     }
     
     this.isLoading = true;
-    console.log('Chargement des stats pour', this.countries.length, 'pays');
+    console.log(`Chargement des stats pour ${this.countries.length} pays`);
     
-    // Créer un tableau de requêtes pour chaque pays
     const requests = this.countries.map(country => {
-      console.log(`Requête pour ${country.name}`);
+      if (this.countries.indexOf(country) < 3) {
+        console.log(`Requête pour ${country.name}`);
+      }
       return this.countryService.getCountriesStats(country.name);
     });
     
@@ -113,17 +110,17 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (results) => {
-          console.log('Résultats reçus:', results);
+          console.log(`Résultats reçus pour ${results.length} pays`);
           
-          // Transformer les résultats en format pour le tableau
           const countryData: CountryData[] = this.countries.map((country, index) => {
             const countryResults = results[index];
             
-            // Prendre la dernière entrée (la plus récente) si disponible
             let latestStats = null;
             if (countryResults && countryResults.length > 0) {
-              latestStats = countryResults[countryResults.length - 1]; // Prendre le dernier élément
-              console.log(`Dernière stats pour ${country.name}:`, latestStats);
+              latestStats = countryResults[countryResults.length - 1];
+              if (index < 3) {
+                console.log(`Dernière stats pour ${country.name}:`, latestStats);
+              }
             }
             
             return {
@@ -136,14 +133,17 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
             };
           });
           
-          console.log('Données finales pour le tableau:', countryData);
+          console.log(`Données générées pour ${countryData.length} pays`);
           this.dataSource.data = countryData;
+          this.countriesData = countryData;
           this.isLoading = false;
+          this.error = null;
           this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Erreur lors du chargement des stats:', error);
           this.isLoading = false;
+          this.error = "Erreur lors du chargement des données";
           this.cdr.detectChanges();
         }
       });
