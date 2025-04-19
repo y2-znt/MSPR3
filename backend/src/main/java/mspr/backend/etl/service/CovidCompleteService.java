@@ -158,7 +158,7 @@ public class CovidCompleteService extends AbstractCsvImportService<CovidComplete
             
             if (dc.getDisease() != null) {
                 String diseaseName = dc.getDisease().getName();
-                Disease managedDisease = cacheHelper.getDiseases().get(diseaseName);
+                Disease managedDisease = cacheManager.getDiseases().get(diseaseName);
                 if (managedDisease != null) {
                     dc.setDisease(managedDisease);
                 } else {
@@ -168,7 +168,7 @@ public class CovidCompleteService extends AbstractCsvImportService<CovidComplete
             } else {
                 logger.warn("DiseaseCase has null Disease, skipping reference update");
             }
-            // Location references should be handled by the mapper using CacheHelper
+            // Location references should be handled by the mapper using CacheManager
         }
          if (updateErrors > 0) {
             logger.warn("Encountered {} errors while updating disease references.", updateErrors);

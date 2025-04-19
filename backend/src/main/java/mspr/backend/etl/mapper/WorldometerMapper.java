@@ -2,6 +2,7 @@ package mspr.backend.etl.mapper;
 
 import mspr.backend.BO.*;
 import mspr.backend.etl.helpers.*;
+import mspr.backend.etl.helpers.cache.CacheManager;
 import mspr.backend.etl.dto.WorldometerDto;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Component
 public class WorldometerMapper {
 
-    private final CacheHelper cacheHelper;
+    private final CacheManager cacheManager;
     private final CleanerHelper cleanerHelper;
 
     @Autowired
-    public WorldometerMapper(CacheHelper cacheHelper, CleanerHelper cleanerHelper) {
-        this.cacheHelper = cacheHelper;
+    public WorldometerMapper(CacheManager cacheManager, CleanerHelper cleanerHelper) {
+        this.cacheManager = cacheManager;
         this.cleanerHelper = cleanerHelper;
     }
 
@@ -67,7 +68,7 @@ public class WorldometerMapper {
      */
     private Country createCountry(WorldometerDto dto) {
         String countryName = cleanerHelper.cleanCountryName(dto.getCountry());
-        return cacheHelper.getOrCreateCountry(countryName, dto.getContinent(), dto.getWhoRegion());
+        return cacheManager.getOrCreateCountry(countryName, dto.getContinent(), dto.getWhoRegion());
     }
     
     /**
@@ -78,7 +79,7 @@ public class WorldometerMapper {
      */
     private Region createRegion(Country country) {
         // Utilisez la méthode qui gère les cas spéciaux pour les régions standard
-        return cacheHelper.getOrCreateRegionWithEmptyHandling(country, null);
+        return cacheManager.getOrCreateRegionWithEmptyHandling(country, null);
     }
     
     /**
@@ -89,7 +90,7 @@ public class WorldometerMapper {
      */
     private Location createLocation(Region region) {
         // Utilisez la méthode qui gère les cas spéciaux pour les locations standard
-        return cacheHelper.getOrCreateLocationWithEmptyHandling(region, null);
+        return cacheManager.getOrCreateLocationWithEmptyHandling(region, null);
     }
     
     /**

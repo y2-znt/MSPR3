@@ -1,7 +1,7 @@
 package mspr.backend.etl.service;
 
 import mspr.backend.etl.exceptions.*;
-import mspr.backend.etl.helpers.CacheHelper;
+import mspr.backend.etl.helpers.cache.CacheManager;
 import mspr.backend.etl.helpers.CleanerHelper;
 import mspr.backend.etl.helpers.CsvReaderHelper;
 import mspr.backend.etl.helpers.PersistenceHelper;
@@ -34,7 +34,7 @@ public abstract class AbstractCsvImportService<DTO> {
     protected PersistenceHelper persistenceHelper;
 
     @Autowired
-    protected CacheHelper cacheHelper;
+    protected CacheManager cacheManager;
 
     @Autowired
     protected CleanerHelper cleanerHelper; // Common helper, might not be used by all subclasses

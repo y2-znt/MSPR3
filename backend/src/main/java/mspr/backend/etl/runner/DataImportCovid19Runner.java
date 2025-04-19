@@ -1,7 +1,7 @@
 package mspr.backend.etl.runner;
 
 import mspr.backend.BO.Disease;
-import mspr.backend.etl.helpers.CacheHelper;
+import mspr.backend.etl.helpers.cache.CacheManager;
 import mspr.backend.etl.exceptions.*;
 import mspr.backend.Repository.*;
 import mspr.backend.etl.service.*;
@@ -30,7 +30,7 @@ public class DataImportCovid19Runner implements CommandLineRunner {
     @Autowired private DiseaseCaseRepository diseaseCaseRepository;
     @Autowired private DiseaseRepository diseaseRepository;
 
-    @Autowired private CacheHelper cacheHelper;
+    @Autowired private CacheManager cacheManager;
 
     // Define a simple class or record to hold the result of an import
     private static class ImportResult {
@@ -64,7 +64,7 @@ public class DataImportCovid19Runner implements CommandLineRunner {
         } else {
             logger.debug("Found existing COVID-19 disease entity with ID: {}", covid.getId());
         }
-        cacheHelper.addDiseaseToCache("COVID-19", covid);
+        cacheManager.addDiseaseToCache("COVID-19", covid);
         logger.debug("Added COVID-19 disease to cache");
 
         // Use the helper method for each import

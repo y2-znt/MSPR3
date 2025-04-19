@@ -2,7 +2,7 @@ package mspr.backend.etl.mapper;
 
 import mspr.backend.etl.dto.UsaCountyDto;
 import mspr.backend.BO.*;
-import mspr.backend.etl.helpers.CacheHelper;
+import mspr.backend.etl.helpers.cache.CacheManager;
 import mspr.backend.etl.helpers.CleanerHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +27,10 @@ public class UsaCountyMapper {
      * Returns null if the mapping shouldn't be processed (e.g., in skip list).
      *
      * @param dto The UsaCountyDto to map
-     * @param cacheHelper The CacheHelper to use for looking up related entities
+     * @param cacheManager The CacheManager to use for looking up related entities
      * @return A DiseaseCase entity, or null if it should be skipped
      */
-    public DiseaseCase fromDto(UsaCountyDto dto, CacheHelper cacheHelper) {
+    public DiseaseCase fromDto(UsaCountyDto dto, CacheManager cacheManager) {
         // Sanity checks first
         if (dto == null) {
             logger.warn("Received null DTO, cannot process");
@@ -55,7 +55,7 @@ public class UsaCountyMapper {
 
         // Process location data (country, region, location)
         try {
-            Location location = processLocationData(dto, cacheHelper);
+            Location location = processLocationData(dto, cacheManager);
             if (location == null) {
                 logger.debug("Could not create or find location for DTO: country={}, province={}, county={}",
                     dto.getCountryRegion(), dto.getProvinceState(), dto.getCounty());
@@ -63,7 +63,7 @@ public class UsaCountyMapper {
             }
 
             // Get disease from cache (should be COVID-19)
-            Disease disease = getDiseaseFromCache(cacheHelper);
+            Disease disease = getDiseaseFromCache(cacheManager);
             
             // Now create the DiseaseCase entity
             return createDiseaseCase(dto, location, disease);
@@ -78,10 +78,10 @@ public class UsaCountyMapper {
      * Gets country, region, and location entities from the cache.
      *
      * @param dto The DTO containing location data
-     * @param cacheHelper The CacheHelper to use
+     * @param cacheManager The CacheManager to use
      * @return A Location entity
      */
-    private Location processLocationData(UsaCountyDto dto, CacheHelper cacheHelper) {
+    private Location processLocationData(UsaCountyDto dto, CacheManager cacheManager) {
         String countryName = dto.getCountryRegion();
         if (countryName == null || countryName.isEmpty()) {
             logger.warn("DTO has null or empty country name");
@@ -106,21 +106,21 @@ public class UsaCountyMapper {
         }
 
         // Look up or create country
-        Country country = cacheHelper.getOrCreateCountry(countryName, "NORTH_AMERICA", "Americas");
+        Country country = cacheManager.getOrCreateCountry(countryName, "NORTH_AMERICA", "Americas");
         if (country == null) {
             logger.warn("Failed to create country: {}", countryName);
             return null;
         }
 
         // Look up or create region
-        Region region = cacheHelper.getOrCreateRegion(country, regionName);
+        Region region = cacheManager.getOrCreateRegion(country, regionName);
         if (region == null) {
             logger.warn("Failed to create region: {} in {}", regionName, countryName);
             return null;
         }
 
         // Look up or create location (county)
-        Location location = cacheHelper.getOrCreateLocation(region, locationName);
+        Location location = cacheManager.getOrCreateLocation(region, locationName);
         if (location == null) {
             logger.warn("Failed to create location: {} in {} ({})", locationName, regionName, countryName);
             return null;
@@ -132,12 +132,12 @@ public class UsaCountyMapper {
     /**
      * Gets the COVID-19 Disease entity from the cache.
      *
-     * @param cacheHelper The CacheHelper to use
+     * @param cacheManager The CacheManager to use
      * @return The COVID-19 Disease entity
      * @throws IllegalStateException if COVID-19 disease is not found in cache
      */
-    private Disease getDiseaseFromCache(CacheHelper cacheHelper) {
-        Disease disease = cacheHelper.getDiseases().get(COVID_19_DISEASE_NAME);
+    private Disease getDiseaseFromCache(CacheManager cacheManager) {
+        Disease disease = cacheManager.getDiseases().get(COVID_19_DISEASE_NAME);
         if (disease == null) {
             logger.error("COVID-19 disease not found in cache - this should not happen as it should be created in preProcessing");
             throw new IllegalStateException("COVID-19 disease not found in cache");
