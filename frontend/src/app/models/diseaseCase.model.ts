@@ -15,3 +15,10 @@ export interface TotalKpiDto {
   mortalityRate: number;
   recoveryRate: number;
 }
+
+export interface AggregatedDiseaseCase {
+  date: string;
+  recovered: number;
+  confirmedCases: number;
+  deaths: number;
+}
