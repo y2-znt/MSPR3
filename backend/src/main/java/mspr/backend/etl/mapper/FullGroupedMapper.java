@@ -26,10 +26,18 @@ public class FullGroupedMapper {
     /**
      * Converts a FullGroupedDto to a DiseaseCase entity without direct persistence.
      * Builds the Country/Region/Location hierarchy via CacheHelper.
+     * 
+     * @param dto The DTO to convert
+     * @return The mapped DiseaseCase entity or null if the country is in the skip list
      */
     public DiseaseCase toEntity(FullGroupedDto dto) {
         // Clean country name
         String countryName = cleanerHelper.cleanCountryName(dto.getCountryRegion());
+        
+        // Vérifier si le pays est dans la liste à ignorer
+        if (cleanerHelper.isInSkipList(countryName)) {
+            return null; // Ignorer ce DTO
+        }
         
         // Crée le pays (ou le récupère s'il existe déjà) avec la région WHO
         Country country = cacheHelper.getOrCreateCountry(countryName, null, dto.getWhoRegion());

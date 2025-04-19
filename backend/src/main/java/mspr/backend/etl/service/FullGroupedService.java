@@ -123,7 +123,12 @@ public class FullGroupedService extends AbstractCsvImportService<FullGroupedDto>
         try {
             // Mapper uses injected cacheHelper implicitly to get/create related entities
             DiseaseCase diseaseCase = mapper.toEntity(dto);
-            diseaseCasesToSave.add(diseaseCase);
+            // Vérifier si l'entité est null avant de l'ajouter à la liste
+            if (diseaseCase != null) {
+                diseaseCasesToSave.add(diseaseCase);
+            } else {
+                logger.debug("Mapper returned null entity for DTO: {}, skipping", dto);
+            }
         } catch (Exception e) {
             // Catch specific mapping errors if possible, or rethrow as MappingException
             logger.warn("Error mapping FullGroupedDto to entity: {}", e.getMessage());
@@ -137,6 +142,9 @@ public class FullGroupedService extends AbstractCsvImportService<FullGroupedDto>
     @Override
     protected void postProcessing() throws PersistenceException {
         logger.debug("Starting post-processing for FullGroupedService...");
+        // Filtrer les entrées null avant de mettre à jour les références
+        diseaseCasesToSave.removeIf(dc -> dc == null);
+        
         // 1. Update references to managed entities from the cache
         updateDiseaseCaseReferences(this.diseaseCasesToSave);
 
@@ -168,6 +176,12 @@ public class FullGroupedService extends AbstractCsvImportService<FullGroupedDto>
         int updateErrors = 0;
         // Use cacheHelper injected from the abstract class
         for (DiseaseCase dc : diseaseCases) {
+            // Vérifier si dc est null avant d'y accéder
+            if (dc == null) {
+                logger.warn("Encountered null DiseaseCase in the list, skipping");
+                continue;
+            }
+            
             if (dc.getDisease() != null) {
                 String diseaseName = dc.getDisease().getName();
                 Disease managedDisease = cacheHelper.getDiseases().get(diseaseName);
@@ -178,6 +192,8 @@ public class FullGroupedService extends AbstractCsvImportService<FullGroupedDto>
                     logger.warn("Could not find managed Disease entity in cache for name: {} during reference update.", diseaseName);
                     updateErrors++;
                 }
+            } else {
+                logger.warn("DiseaseCase has null Disease, skipping reference update");
             }
             // Note: Location references are likely handled during the mapping phase by the mapper using CacheHelper
         }

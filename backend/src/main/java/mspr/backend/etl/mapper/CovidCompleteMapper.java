@@ -26,11 +26,24 @@ public class CovidCompleteMapper {
     /**
      * Converts a CovidCompleteDto to a DiseaseCase entity without saving to database.
      * Uses CacheHelper to obtain or create associated Country/Region/Location.
+     * 
+     * @param dto The DTO to convert
+     * @return The mapped DiseaseCase entity or null if country or province is in skip list
      */
     public DiseaseCase toEntity(CovidCompleteDto dto) {
         // Clean country/region names via CleanerHelper
         String countryName = cleanerHelper.cleanCountryName(dto.getCountryRegion());
         String provinceName = dto.getProvinceState();
+        
+        // Vérifier si le pays est dans la liste à ignorer
+        if (cleanerHelper.isInSkipList(countryName)) {
+            return null; // Ignorer ce DTO
+        }
+        
+        // Vérifier si la province/état est dans la liste à ignorer (si elle existe)
+        if (provinceName != null && !provinceName.isEmpty() && cleanerHelper.isInSkipList(provinceName)) {
+            return null; // Ignorer ce DTO
+        }
         
         // Créer le pays avec la région WHO (pas de continent disponible dans ce DTO)
         Country country = cacheHelper.getOrCreateCountry(countryName, null, dto.getWhoRegion());

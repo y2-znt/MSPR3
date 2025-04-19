@@ -111,7 +111,12 @@ public class CovidCompleteService extends AbstractCsvImportService<CovidComplete
     protected void processDto(CovidCompleteDto dto) throws MappingException {
         try {
             DiseaseCase diseaseCase = mapper.toEntity(dto);
-            diseaseCasesToSave.add(diseaseCase);
+            // Vérifier si l'entité est null avant de l'ajouter à la liste
+            if (diseaseCase != null) {
+                diseaseCasesToSave.add(diseaseCase);
+            } else {
+                logger.debug("Mapper returned null entity for DTO: {}, skipping", dto);
+            }
         } catch (Exception e) {
             logger.warn("Error mapping CovidCompleteDto to entity: {}", e.getMessage());
             throw new MappingException("Error mapping CovidCompleteDto to entity objects", e);
@@ -121,6 +126,9 @@ public class CovidCompleteService extends AbstractCsvImportService<CovidComplete
     @Override
     protected void postProcessing() throws PersistenceException {
         logger.debug("Starting post-processing for CovidCompleteService...");
+        // Filtrer les entrées null avant de mettre à jour les références
+        diseaseCasesToSave.removeIf(dc -> dc == null);
+        
         updateDiseaseCaseReferences(this.diseaseCasesToSave);
 
         if (!diseaseCasesToSave.isEmpty()) {
@@ -142,6 +150,12 @@ public class CovidCompleteService extends AbstractCsvImportService<CovidComplete
         logger.debug("Updating references for {} disease cases.", diseaseCases.size());
         int updateErrors = 0;
         for (DiseaseCase dc : diseaseCases) {
+            // Vérifier si dc est null avant d'y accéder
+            if (dc == null) {
+                logger.warn("Encountered null DiseaseCase in the list, skipping");
+                continue;
+            }
+            
             if (dc.getDisease() != null) {
                 String diseaseName = dc.getDisease().getName();
                 Disease managedDisease = cacheHelper.getDiseases().get(diseaseName);
@@ -151,6 +165,8 @@ public class CovidCompleteService extends AbstractCsvImportService<CovidComplete
                     logger.warn("Could not find managed Disease entity in cache for name: {} during reference update.", diseaseName);
                     updateErrors++;
                 }
+            } else {
+                logger.warn("DiseaseCase has null Disease, skipping reference update");
             }
             // Location references should be handled by the mapper using CacheHelper
         }

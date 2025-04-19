@@ -4,12 +4,15 @@ import mspr.backend.BO.*;
 import mspr.backend.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class CacheHelper {
+    private static final Logger logger = LoggerFactory.getLogger(CacheHelper.class);
 
     @Autowired
     private DiseaseRepository diseaseRepository;
@@ -39,6 +42,81 @@ public class CacheHelper {
     }
 
     /**
+     * Déduit la région WHO à partir du continent
+     * @param continent Le continent
+     * @return La région WHO correspondante ou null si pas de correspondance
+     */
+    private Country.WHORegionEnum deduceWhoRegionFromContinent(Country.ContinentEnum continent) {
+        if (continent == null) {
+            return null;
+        }
+        
+        switch (continent) {
+            case NORTH_AMERICA:
+            case SOUTH_AMERICA:
+                return Country.WHORegionEnum.Americas;
+            case AFRICA:
+                return Country.WHORegionEnum.Africa;
+            case EUROPE:
+                return Country.WHORegionEnum.Europe;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Tente de convertir une chaîne en une valeur d'enum ContinentEnum
+     * 
+     * @param continentStr La chaîne à convertir
+     * @return La valeur d'enum ou null si la conversion échoue
+     */
+    private Country.ContinentEnum parseContinent(String continentStr) {
+        if (continentStr == null || continentStr.isEmpty()) {
+            return null;
+        }
+        
+        try {
+            // D'abord essayer de nettoyer avec le helper
+            Country.ContinentEnum continent = cleanerHelper.cleanContinent(continentStr);
+            if (continent != null) {
+                return continent;
+            }
+            
+            // Ensuite essayer de parser directement comme valeur d'enum
+            return Country.ContinentEnum.valueOf(continentStr);
+        } catch (IllegalArgumentException e) {
+            logger.warn("Invalid continent string: '{}'. Error: {}", continentStr, e.getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * Tente de convertir une chaîne en une valeur d'enum WHORegionEnum
+     * 
+     * @param whoRegionStr La chaîne à convertir
+     * @return La valeur d'enum ou null si la conversion échoue
+     */
+    private Country.WHORegionEnum parseWhoRegion(String whoRegionStr) {
+        if (whoRegionStr == null || whoRegionStr.isEmpty()) {
+            return null;
+        }
+        
+        try {
+            // D'abord essayer de nettoyer avec le helper
+            Country.WHORegionEnum whoRegion = cleanerHelper.cleanWhoRegion(whoRegionStr);
+            if (whoRegion != null) {
+                return whoRegion;
+            }
+            
+            // Ensuite essayer de parser directement comme valeur d'enum
+            return Country.WHORegionEnum.valueOf(whoRegionStr);
+        } catch (IllegalArgumentException e) {
+            logger.warn("Invalid WHO region string: '{}'. Error: {}", whoRegionStr, e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Gets or creates a Country entity with name, continent and WHO region
      * @param countryName The name of the country
      * @param continentStr The continent name (will be cleaned)
@@ -47,31 +125,93 @@ public class CacheHelper {
      */
     public Country getOrCreateCountry(String countryName, String continentStr, String whoRegionStr) {
         if (countryName == null || countryName.isEmpty()) {
+            logger.debug("Null or empty country name, returning null");
             return null;
         }
+        
         // Clé simple pour le pays (nom du pays)
         String countryKey = countryName;
         Country country = countries.get(countryKey);
+        
         if (country == null) {
             country = new Country();
             country.setName(countryName);
             
-            // Nettoyer et définir le continent si fourni
-            if (continentStr != null && !continentStr.isEmpty()) {
-                Country.ContinentEnum continent = cleanerHelper.cleanContinent(continentStr);
-                country.setContinent(continent);
+            // Check for special case continent first
+            Country.ContinentEnum specialContinent = cleanerHelper.getSpecialCaseContinent(countryName);
+            if (specialContinent != null) {
+                country.setContinent(specialContinent);
+                logger.debug("Set special case continent {} for country {}", specialContinent, countryName);
+            } else {
+                // Nettoyer et définir le continent si fourni
+                Country.ContinentEnum continent = parseContinent(continentStr);
+                if (continent != null) {
+                    country.setContinent(continent);
+                    logger.debug("Set continent {} for country {}", continent, countryName);
+                } else {
+                    logger.debug("No valid continent found for string: '{}'", continentStr);
+                }
             }
             
-            // Nettoyer et définir la région WHO si fournie
-            if (whoRegionStr != null && !whoRegionStr.isEmpty()) {
-                Country.WHORegionEnum whoRegion = cleanerHelper.cleanWhoRegion(whoRegionStr);
-                country.setWhoRegion(whoRegion);
+            // Check for special case WHO region first
+            Country.WHORegionEnum specialWhoRegion = cleanerHelper.getSpecialCaseWhoRegion(countryName);
+            if (specialWhoRegion != null) {
+                country.setWhoRegion(specialWhoRegion);
+                logger.debug("Set special case WHO region {} for country {}", specialWhoRegion, countryName);
+            } else {
+                // Nettoyer et définir la région WHO si fournie
+                Country.WHORegionEnum whoRegion = parseWhoRegion(whoRegionStr);
+                if (whoRegion != null) {
+                    country.setWhoRegion(whoRegion);
+                    logger.debug("Set WHO region {} for country {}", whoRegion, countryName);
+                } else {
+                    logger.debug("No valid WHO region found for string: '{}'", whoRegionStr);
+                }
+            }
+            
+            // Si la région WHO est null mais que le continent est défini, déduire la région WHO
+            if (country.getWhoRegion() == null && country.getContinent() != null) {
+                Country.WHORegionEnum whoRegion = deduceWhoRegionFromContinent(country.getContinent());
+                if (whoRegion != null) {
+                    country.setWhoRegion(whoRegion);
+                    logger.debug("Deduced WHO region {} from continent {} for country {}", 
+                                whoRegion, country.getContinent(), countryName);
+                }
             }
             
             countries.put(countryKey, country);
+            logger.debug("Created new country: {} with continent: {} and WHO region: {}", 
+                        countryName, country.getContinent(), country.getWhoRegion());
             
             // Créer automatiquement une région standard pour le nouveau pays
             getOrCreateRegion(country, countryName + " - " + STANDARD_REGION_SUFFIX);
+        } else {
+            // Check for special cases for existing countries that might be missing data
+            if (country.getContinent() == null) {
+                Country.ContinentEnum specialContinent = cleanerHelper.getSpecialCaseContinent(countryName);
+                if (specialContinent != null) {
+                    country.setContinent(specialContinent);
+                    logger.debug("Updated existing country {} with special case continent {}", 
+                               countryName, specialContinent);
+                }
+            }
+            
+            if (country.getWhoRegion() == null) {
+                Country.WHORegionEnum specialWhoRegion = cleanerHelper.getSpecialCaseWhoRegion(countryName);
+                if (specialWhoRegion != null) {
+                    country.setWhoRegion(specialWhoRegion);
+                    logger.debug("Updated existing country {} with special case WHO region {}", 
+                               countryName, specialWhoRegion);
+                } else if (country.getContinent() != null) {
+                    // Si le pays existe déjà mais que la région WHO est null, essayer de la déduire à partir du continent
+                    Country.WHORegionEnum whoRegion = deduceWhoRegionFromContinent(country.getContinent());
+                    if (whoRegion != null) {
+                        country.setWhoRegion(whoRegion);
+                        logger.debug("Updated existing country {} with deduced WHO region {} from continent {}", 
+                                   countryName, whoRegion, country.getContinent());
+                    }
+                }
+            }
         }
         return country;
     }

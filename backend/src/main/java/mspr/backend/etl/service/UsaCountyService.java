@@ -165,7 +165,7 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
             if (diseaseCase != null) {
                 diseaseCasesToSave.add(diseaseCase);
             } else {
-                logger.warn("Mapping DTO resulted in null entity for DTO: {}", dto);
+                logger.debug("Mapping DTO resulted in null entity for DTO: {}", dto);
             }
         } catch (IllegalStateException e) {
             logger.error("Mapping error (likely missing COVID-19 disease): {}", e.getMessage());
@@ -183,6 +183,15 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
     @Override
     protected void postProcessing() throws PersistenceException, EtlException {
         logger.debug("Starting post-processing for UsaCountyService...");
+        
+        // Filtrer les entrées null avant de mettre à jour les références
+        diseaseCasesToSave.removeIf(dc -> dc == null);
+        
+        if (diseaseCasesToSave.isEmpty()) {
+            logger.info("No DiseaseCase entities to process.");
+            return;
+        }
+        
         updateDiseaseCaseReferences(this.diseaseCasesToSave);
 
         if (!diseaseCasesToSave.isEmpty()) {
@@ -212,6 +221,12 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
         int updateErrors = 0;
 
         for (DiseaseCase dc : diseaseCases) {
+            // Vérifier si dc est null avant d'y accéder
+            if (dc == null) {
+                logger.warn("Encountered null DiseaseCase in the list, skipping");
+                continue;
+            }
+            
             try {
                 updateLocationReference(dc);
                 updateDiseaseReference(dc);

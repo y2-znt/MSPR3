@@ -38,8 +38,16 @@ public class WorldometerMapper {
     /**
      * Converts a WorldometerDto to a Country/Region/Location triple.
      * No database saving is performed here.
+     * 
+     * @param dto The DTO to convert
+     * @return The mapped entity triple or null if the country is in the skip list
      */
     public CountryRegionLocation toEntity(WorldometerDto dto) {
+        // Vérifier si le nom du pays est dans la liste à ignorer
+        if (cleanerHelper.isInSkipList(dto.getCountry())) {
+            return null; // Ignorer ce DTO
+        }
+        
         // Create country, region, and location entities
         Country country = createCountry(dto);
         Region region = createRegion(country);
