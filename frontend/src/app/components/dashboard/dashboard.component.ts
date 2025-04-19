@@ -23,11 +23,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Country } from '../../models/country.model';
+import { TotalKpiDto } from '../../models/diseaseCase.model';
 import { Page } from '../../models/pagination.model';
 import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
 import { CountryService } from '../../services/country.service';
-import { CovidDataService } from '../../services/covid-data.service';
-import { DiseaseCaseService, TotalKpiDto } from '../../services/disease-case.service';
+import { DiseaseCaseService } from '../../services/disease-case.service';
 import { OverviewComponent } from '../tabs/overview/overview.component';
 
 @Component({
@@ -55,7 +55,7 @@ import { OverviewComponent } from '../tabs/overview/overview.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  isLoading: boolean = false;
+  isLoading: boolean = true;
 
   // Form Controls
   dateRange = new FormGroup({
@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   countriesControl = new FormControl<Country[]>([]);
   countries: Country[] = [];
-  diseaseName: string = '';
+  diseaseName: string = 'COVID-19';
   currentPage = 0;
   pageSize = 250;
 
@@ -75,24 +75,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   mortalityRate: number = 0;
   totalRecoveries: number = 0;
   recoveryRate: number = 0;
-  totalTests: number = 0;
 
   constructor(
     private countryService: CountryService,
     private diseaseCaseService: DiseaseCaseService,
-    private covidDataService: CovidDataService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadCountries();
-    this.diseaseCaseService.getTotalKpi().subscribe((kpi: TotalKpiDto) => {
-      this.totalCases = kpi.totalCases;
-      this.totalDeaths = kpi.totalDeaths;
-      this.mortalityRate = kpi.mortalityRate;
-      this.totalRecoveries = kpi.totalRecovered;
-      this.recoveryRate = kpi.recoveryRate;
-    });
+    this.loadKpiData();
   }
 
   get kpiCards() {
@@ -100,83 +92,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       {
         label: 'Cas Totaux',
         icon: 'people',
-        subtitle: 'Cas confirmés de COVID-19 dans le monde',
+        subtitle: `Cas confirmés de ${this.diseaseName} dans le monde`,
         value: this.totalCases,
       },
       {
         label: 'Décès Totaux',
         icon: 'warning',
-        subtitle: `Taux de mortalité: ${this.mortalityRate}%`,
+        subtitle: `Taux de mortalité: ${this.mortalityRate.toFixed(2)}%`,
         value: this.totalDeaths,
       },
       {
         label: 'Guérisons',
         icon: 'health_and_safety',
-        subtitle: `Taux de guérison: ${this.recoveryRate}%`,
+        subtitle: `Taux de guérison: ${this.recoveryRate.toFixed(2)}%`,
         value: this.totalRecoveries,
       },
     ];
-  }
-
-  public getAllDiseasesCases(): void {
-    this.isLoading = true;
-    const allCases: any[] = [];
-    let page = 0;
-
-    const fetchPage = () => {
-      this.diseaseCaseService
-        .getAllDiseaseCases(page, this.pageSize)
-        .subscribe({
-          next: (res: any) => {
-            allCases.push(...res.content);
-            this.diseaseName = allCases[0].name || 'Inconnu';
-
-            if (!res.last) {
-              page++;
-              fetchPage();
-            } else {
-              this.totalCases = allCases.reduce(
-                (sum, item) => sum + item.confirmedCases,
-                0
-              );
-              this.totalDeaths = allCases.reduce(
-                (sum, item) => sum + item.deaths,
-                0
-              );
-              this.totalRecoveries = allCases.reduce(
-                (sum, item) => sum + item.recovered,
-                0
-              );
-
-              this.mortalityRate = this.totalCases
-                ? +((this.totalDeaths / this.totalCases) * 100).toFixed(2)
-                : 0;
-              this.recoveryRate = this.totalCases
-                ? +((this.totalRecoveries / this.totalCases) * 100).toFixed(2)
-                : 0;
-
-              console.log('Total Confirmés:', this.totalCases);
-              console.log('Total Décès:', this.totalDeaths);
-              console.log('Total Rétablis:', this.totalRecoveries);
-              console.log('Taux mortalité (%):', this.mortalityRate);
-              console.log('Taux guérison (%):', this.recoveryRate);
-
-              this.isLoading = false;
-              this.cdr.detectChanges();
-            }
-          },
-          error: (err) => {
-            console.error(
-              '❌ Erreur lors de la récupération des données:',
-              err
-            );
-            this.isLoading = false;
-            this.cdr.detectChanges();
-          },
-        });
-    };
-
-    fetchPage();
   }
 
   loadCountries(): void {
@@ -185,6 +116,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (page: Page<Country>) => {
           this.countries = page.content;
+          this.cdr.markForCheck();
         },
         (error) => {
           console.error('Error loading countries:', error);
@@ -192,7 +124,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
       );
   }
 
-  ngOnDestroy(): void {
-    this.countries = [];
+  loadKpiData(): void {
+    this.diseaseCaseService.getTotalKpi().subscribe(
+      (kpi: TotalKpiDto) => {
+        this.totalCases = kpi.totalCases;
+        this.totalDeaths = kpi.totalDeaths;
+        this.mortalityRate = kpi.mortalityRate;
+        this.totalRecoveries = kpi.totalRecovered;
+        this.recoveryRate = kpi.recoveryRate;
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error loading KPI data:', error);
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }
+    );
   }
+
+  ngOnDestroy(): void {}
 }

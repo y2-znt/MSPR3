@@ -7,3 +7,11 @@ export interface DiseaseCase {
   recovered: number;
   location: Location[];
 }
+
+export interface TotalKpiDto {
+  totalCases: number;
+  totalDeaths: number;
+  totalRecovered: number;
+  mortalityRate: number;
+  recoveryRate: number;
+}
