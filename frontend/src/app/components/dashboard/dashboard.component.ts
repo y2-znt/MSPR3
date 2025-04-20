@@ -23,6 +23,10 @@ import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
 import { CountryService } from '../../services/country.service';
 import { DiseaseCaseService } from '../../services/disease-case.service';
 import { OverviewComponent } from '../tabs/overview/overview.component';
+import { CountriesComponent } from '../tabs/countries/countries.component';
+import { CountryData } from '../../services/covid-data.service';
+import { ChangeDetectorRef } from '@angular/core';
+import { CovidDataService } from '../../services/covid-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -43,6 +47,7 @@ import { OverviewComponent } from '../tabs/overview/overview.component';
     MatTabsModule,
     OrderByAlphaPipe,
     OverviewComponent,
+    CountriesComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -71,12 +76,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private countryService: CountryService,
+    private covidDataService: CovidDataService,
+    private cdr: ChangeDetectorRef,
     private diseaseCaseService: DiseaseCaseService
   ) {}
 
   ngOnInit(): void {
-    this.loadCountries();
-    this.loadKpiData();
+    this.loadCountries(); 
+    this.loadKpiData(); 
   }
 
   ngOnDestroy(): void {}
@@ -105,16 +112,48 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadCountries(): void {
+    console.log('🌍 Début du chargement des pays...');
+    this.isLoading = true;
+    
     this.countryService
       .getAllCountries(this.currentPage, this.pageSize)
-      .subscribe(
-        (page: Page<Country>) => {
+      .subscribe({
+        next: (page: Page<Country>) => {
+          console.log('✅ Pays chargés avec succès:', {
+            totalElements: page.content.length,
+            firstCountry: page.content[0],
+            lastCountry: page.content[page.content.length - 1]
+          });
+          
           this.countries = page.content;
+          
+          // Ajout : Mettre à jour les données dans le service
+          const countryData: CountryData[] = this.countries.map(country => ({
+            country: country.name,
+            totalCases: 0,
+            deaths: 0,
+            recovered: 0,
+            mortalityRate: 0,
+            recoveryRate: 0
+          }));
+          
+          // Mettre à jour le service avec la liste initiale des pays
+          this.covidDataService.updateCountriesData(countryData);
+          console.log('📤 Données pays mises à jour dans le service:', countryData);
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
-        (error) => {
-          console.error('Error loading countries:', error);
+        error: (error) => {
+          console.error('❌ Erreur lors du chargement des pays:', error);
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        },
+        complete: () => {
+          console.log('🏁 Chargement des pays terminé');
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
-      );
+      });
   }
 
   loadKpiData(): void {
