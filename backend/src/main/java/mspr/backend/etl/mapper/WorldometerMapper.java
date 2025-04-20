@@ -1,6 +1,6 @@
 package mspr.backend.etl.mapper;
 
-import mspr.backend.BO.*;
+import mspr.backend.entity.*;
 import mspr.backend.etl.helpers.*;
 import mspr.backend.etl.helpers.cache.CacheManager;
 import mspr.backend.etl.dto.WorldometerDto;

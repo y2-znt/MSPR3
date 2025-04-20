@@ -1,4 +1,4 @@
-package mspr.backend.Service;
+package mspr.backend.service;
 
 import java.util.Optional;
 
@@ -7,8 +7,8 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 
-import mspr.backend.BO.Region;
-import mspr.backend.Repository.RegionRepository;
+import mspr.backend.entity.Region;
+import mspr.backend.repository.RegionRepository;
 
 @Service
 public class RegionService {

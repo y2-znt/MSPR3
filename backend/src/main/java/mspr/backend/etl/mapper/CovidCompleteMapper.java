@@ -3,7 +3,7 @@ package mspr.backend.etl.mapper;
 import mspr.backend.etl.dto.CovidCompleteDto;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import mspr.backend.BO.*;
+import mspr.backend.entity.*;
 import mspr.backend.etl.helpers.*;
 import mspr.backend.etl.helpers.cache.CacheManager;
 

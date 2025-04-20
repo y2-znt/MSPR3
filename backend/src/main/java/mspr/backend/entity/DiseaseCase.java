@@ -1,4 +1,4 @@
-package mspr.backend.BO;
+package mspr.backend.entity;
 
 
 import jakarta.persistence.*;
@@ -121,7 +121,7 @@ public class DiseaseCase {
     public String toString() {
         return "DiseaseCase{" +
                 "id=" + id +
-                ", disease=" + disease +   // 'disease' au lieu de 'diseases'
+                ", disease=" + disease +
                 ", location=" + location +
                 ", date=" + date +
                 ", confirmedCases=" + confirmedCases +

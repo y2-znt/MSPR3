@@ -1,7 +1,7 @@
-package mspr.backend.Controller;
+package mspr.backend.controller;
 
-import mspr.backend.BO.Country;
-import mspr.backend.Service.CountryService;
+import mspr.backend.entity.Country;
+import mspr.backend.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -24,24 +24,6 @@ public class CountryController {
     public Country getCountryById(@PathVariable Integer id) {
         return countryService.getCountryById(id).orElse(null);
     }
-
-    //
-    // TODO: fix this
-    //
-
-    
-    // @GetMapping("/name/{name}")
-    // public Country getCountryByName(@PathVariable String name) {
-    //     if (name == null || name.isEmpty()) {
-    //         return null;
-    //     }
-    //     // Validate the name format if necessary (e.g., regex for valid country names)
-    //     if (!name.matches("^[a-zA-Z\\s]+$")) {
-    //         return null;
-    //     }
-
-    //     return countryService.getCountryByName(name);
-    // }
 
     @PostMapping
     public Country createCountry(@RequestBody Country country) {

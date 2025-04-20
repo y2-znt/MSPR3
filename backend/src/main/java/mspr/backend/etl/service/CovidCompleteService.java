@@ -1,12 +1,12 @@
 package mspr.backend.etl.service;
 
 import jakarta.transaction.Transactional;
-import mspr.backend.BO.Disease;
-import mspr.backend.BO.DiseaseCase;
+import mspr.backend.entity.Disease;
+import mspr.backend.entity.DiseaseCase;
 import mspr.backend.etl.dto.CovidCompleteDto;
 import mspr.backend.etl.mapper.CovidCompleteMapper;
 import mspr.backend.etl.exceptions.*;
-import mspr.backend.Repository.DiseaseCaseRepository;
+import mspr.backend.repository.DiseaseCaseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

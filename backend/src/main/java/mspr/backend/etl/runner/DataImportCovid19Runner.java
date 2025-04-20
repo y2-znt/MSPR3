@@ -1,9 +1,9 @@
 package mspr.backend.etl.runner;
 
-import mspr.backend.BO.Disease;
+import mspr.backend.entity.Disease;
 import mspr.backend.etl.helpers.cache.CacheManager;
 import mspr.backend.etl.exceptions.*;
-import mspr.backend.Repository.*;
+import mspr.backend.repository.*;
 import mspr.backend.etl.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

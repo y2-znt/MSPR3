@@ -1,6 +1,6 @@
 package mspr.backend.etl.helpers.cache;
 
-import mspr.backend.BO.Country;
+import mspr.backend.entity.Country;
 import mspr.backend.etl.helpers.CleanerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

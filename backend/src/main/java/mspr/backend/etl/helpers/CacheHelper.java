@@ -1,7 +1,7 @@
 package mspr.backend.etl.helpers;
 
-import mspr.backend.BO.*;
-import mspr.backend.Repository.*;
+import mspr.backend.entity.*;
+import mspr.backend.repository.*;
 import mspr.backend.etl.helpers.cache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

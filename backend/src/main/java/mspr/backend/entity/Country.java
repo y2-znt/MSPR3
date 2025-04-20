@@ -1,4 +1,4 @@
-package mspr.backend.BO;
+package mspr.backend.entity;
 
 
 import jakarta.persistence.*;
@@ -79,17 +79,6 @@ public class Country {
         this.population = population;
     }
 
-    // public Integer getTotalTests() {
-    //     return totalTests;
-    // }
-
-    // public void setTotalTests(Integer totalTests) {
-    //     this.totalTests = totalTests;
-    // }
-
-    // @Column(name = "total_tests")
-    // private Integer totalTests;
-
     public enum ContinentEnum {
         AFRICA, ASIA, EUROPE, NORTH_AMERICA, SOUTH_AMERICA, OCEANIA, ANTARCTICA
     }
@@ -105,7 +94,6 @@ public class Country {
         this.continent = continent;
         this.whoRegion = whoRegion;
         this.population = population;
-        // this.totalTests = totalTests;
     }
 
     public Integer getId() {

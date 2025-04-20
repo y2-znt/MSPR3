@@ -1,4 +1,4 @@
-package mspr.backend.BO;
+package mspr.backend.entity;
 
 
 import jakarta.persistence.*;

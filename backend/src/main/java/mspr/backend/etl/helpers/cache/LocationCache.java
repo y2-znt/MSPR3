@@ -1,7 +1,7 @@
 package mspr.backend.etl.helpers.cache;
 
-import mspr.backend.BO.Location;
-import mspr.backend.BO.Region;
+import mspr.backend.entity.Location;
+import mspr.backend.entity.Region;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

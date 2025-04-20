@@ -1,10 +1,10 @@
 package mspr.backend.etl.helpers;
 
-import mspr.backend.BO.Country;
-import mspr.backend.BO.Disease;
-import mspr.backend.BO.Location;
-import mspr.backend.BO.Region;
-import mspr.backend.Repository.*;
+import mspr.backend.entity.Country;
+import mspr.backend.entity.Disease;
+import mspr.backend.entity.Location;
+import mspr.backend.entity.Region;
+import mspr.backend.repository.*;
 import mspr.backend.etl.exceptions.PersistenceException;
 import mspr.backend.etl.helpers.cache.CacheManager;
 import org.slf4j.Logger;

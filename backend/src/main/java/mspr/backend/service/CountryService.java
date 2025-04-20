@@ -1,9 +1,9 @@
-package mspr.backend.Service;
+package mspr.backend.service;
 
 import java.util.Optional;
 
-import mspr.backend.BO.Country;
-import mspr.backend.Repository.CountryRepository;
+import mspr.backend.entity.Country;
+import mspr.backend.repository.CountryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;

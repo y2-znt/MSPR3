@@ -1,6 +1,6 @@
 package mspr.backend.etl.helpers;
 
-import mspr.backend.BO.Country;
+import mspr.backend.entity.Country;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

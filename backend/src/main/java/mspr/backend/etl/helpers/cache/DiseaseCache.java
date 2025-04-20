@@ -1,6 +1,6 @@
 package mspr.backend.etl.helpers.cache;
 
-import mspr.backend.BO.Disease;
+import mspr.backend.entity.Disease;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,4 +1,4 @@
-package mspr.backend.Controller;
+package mspr.backend.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,9 +9,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import mspr.backend.BO.DiseaseCase;
-import mspr.backend.DTO.TotalKpiDto;
-import mspr.backend.Service.DiseaseCaseService;
+import mspr.backend.entity.DiseaseCase;
+import mspr.backend.dto.TotalKpiDto;
+import mspr.backend.service.DiseaseCaseService;
 
 import org.springframework.data.domain.Page;
 

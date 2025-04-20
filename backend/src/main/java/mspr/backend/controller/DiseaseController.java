@@ -1,7 +1,7 @@
-package mspr.backend.Controller;
+package mspr.backend.controller;
 
-import mspr.backend.BO.Disease;
-import mspr.backend.Service.DiseaseService;
+import mspr.backend.entity.Disease;
+import mspr.backend.service.DiseaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,9 +1,9 @@
 package mspr.backend.etl.helpers.cache;
 
-import mspr.backend.BO.Country;
-import mspr.backend.BO.Disease;
-import mspr.backend.BO.Location;
-import mspr.backend.BO.Region;
+import mspr.backend.entity.Country;
+import mspr.backend.entity.Disease;
+import mspr.backend.entity.Location;
+import mspr.backend.entity.Region;
 import mspr.backend.etl.helpers.CleanerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
-package mspr.backend.Service;
+package mspr.backend.service;
 
-import mspr.backend.BO.Disease;
-import mspr.backend.Repository.DiseaseRepository;
+import mspr.backend.entity.Disease;
+import mspr.backend.repository.DiseaseRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

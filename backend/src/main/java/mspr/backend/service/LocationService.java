@@ -1,4 +1,4 @@
-package mspr.backend.Service;
+package mspr.backend.service;
 
 
 
@@ -6,8 +6,8 @@ import org.springframework.data.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import mspr.backend.BO.Location;
-import mspr.backend.Repository.LocationRepository;
+import mspr.backend.entity.Location;
+import mspr.backend.repository.LocationRepository;
 
 @Service
 public class LocationService {

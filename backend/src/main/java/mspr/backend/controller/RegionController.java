@@ -1,4 +1,4 @@
-package mspr.backend.Controller;
+package mspr.backend.controller;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import mspr.backend.BO.Region;
-import mspr.backend.Service.RegionService;
+import mspr.backend.entity.Region;
+import mspr.backend.service.RegionService;
 
 @RestController
 @RequestMapping("/api/regions")

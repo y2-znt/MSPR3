@@ -1,4 +1,4 @@
-package mspr.backend.Service;
+package mspr.backend.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 
-import mspr.backend.BO.DiseaseCase;
-import mspr.backend.Repository.DiseaseCaseRepository;
+import mspr.backend.entity.DiseaseCase;
+import mspr.backend.repository.DiseaseCaseRepository;
 
 @Service
 public class DiseaseCaseService {
@@ -45,12 +45,6 @@ public class DiseaseCaseService {
     public long sumRecovered() {
         return diseaseCaseRepository.sumRecovered();
     }
-
-    // public Optional<DiseaseCase> getDiseaseCaseByName(String name) {
-    // return diseaseCaseRepository.findAll().stream()
-    // .filter(diseaseCase -> diseaseCase.getName().equalsIgnoreCase(name))
-    // .findFirst();
-    // }
 
     public Optional<DiseaseCase> getDiseaseCaseByName(String name) {
         return Optional.ofNullable(diseaseCaseRepository.findByName(name));

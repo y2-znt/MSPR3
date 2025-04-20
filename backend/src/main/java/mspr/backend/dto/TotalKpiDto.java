@@ -1,4 +1,4 @@
-package mspr.backend.DTO;
+package mspr.backend.dto;
 
 public class TotalKpiDto {
     private long totalCases;

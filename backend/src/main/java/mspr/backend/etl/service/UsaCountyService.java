@@ -1,11 +1,11 @@
 package mspr.backend.etl.service;
 
-import mspr.backend.BO.*;
+import mspr.backend.entity.*;
 import mspr.backend.etl.dto.UsaCountyDto;
 import mspr.backend.etl.mapper.UsaCountyMapper;
 import mspr.backend.etl.exceptions.*;
-import mspr.backend.Repository.DiseaseCaseRepository;
-import mspr.backend.Repository.DiseaseRepository;
+import mspr.backend.repository.DiseaseCaseRepository;
+import mspr.backend.repository.DiseaseRepository;
 import mspr.backend.etl.helpers.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
