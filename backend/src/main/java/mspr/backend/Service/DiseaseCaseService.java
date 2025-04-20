@@ -88,4 +88,21 @@ public class DiseaseCaseService {
         return filtered;
     }
 
+    public List<Object[]> getAggregatedCasesByDateAndCountries(LocalDate start, LocalDate end, List<String> countries) {
+        List<Object[]> all;
+        if (countries == null || countries.isEmpty()) {
+            all = diseaseCaseRepository.getAggregatedCasesByDateAllCountries();
+        } else {
+            all = diseaseCaseRepository.getAggregatedCasesByDateAndCountries(countries);
+        }
+        if (start == null && end == null) return all;
+        List<Object[]> filtered = new ArrayList<>();
+        for (Object[] row : all) {
+            LocalDate date = (LocalDate) row[0];
+            boolean afterStart = (start == null) || !date.isBefore(start);
+            boolean beforeEnd = (end == null) || !date.isAfter(end);
+            if (afterStart && beforeEnd) filtered.add(row);
+        }
+        return filtered;
+    }
 }
