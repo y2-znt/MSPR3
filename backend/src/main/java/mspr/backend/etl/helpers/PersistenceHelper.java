@@ -6,6 +6,7 @@ import mspr.backend.BO.Location;
 import mspr.backend.BO.Region;
 import mspr.backend.Repository.*;
 import mspr.backend.etl.exceptions.PersistenceException;
+import mspr.backend.etl.helpers.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,10 @@ public class PersistenceHelper {
     @Autowired
     private DiseaseRepository diseaseRepository;
     @Autowired
-    private CacheHelper cacheHelper;
+    private CacheManager cacheManager;
 
     /**
-     * Persists all entities currently held in the CacheHelper's maps.
+     * Persists all entities currently held in the CacheManager's maps.
      * Updates the cache with the managed entities returned by the repository.
      *
      * @throws PersistenceException if there is a database error during saving.
@@ -57,11 +58,11 @@ public class PersistenceHelper {
      * Saves countries from the cache and updates the cache with managed entities.
      */
     private void saveCountries() {
-        Map<String, Country> countriesToSave = cacheHelper.getCountries();
+        Map<String, Country> countriesToSave = cacheManager.getCountries();
         if (!countriesToSave.isEmpty()) {
             logger.debug("Saving {} countries", countriesToSave.size());
             List<Country> savedCountries = countryRepository.saveAll(countriesToSave.values());
-            cacheHelper.setCountries(savedCountries); // Update cache with managed entities
+            cacheManager.setCountries(savedCountries); // Update cache with managed entities
             logger.debug("Updated country cache with {} managed entities", savedCountries.size());
         } else {
             logger.debug("No new countries to save.");
@@ -72,11 +73,11 @@ public class PersistenceHelper {
      * Saves regions from the cache and updates the cache with managed entities.
      */
     private void saveRegions() {
-        Map<String, Region> regionsToSave = cacheHelper.getRegions();
+        Map<String, Region> regionsToSave = cacheManager.getRegions();
         if (!regionsToSave.isEmpty()) {
             logger.debug("Saving {} regions", regionsToSave.size());
             List<Region> savedRegions = regionRepository.saveAll(regionsToSave.values());
-            cacheHelper.setRegions(savedRegions); // Update cache with managed entities
+            cacheManager.setRegions(savedRegions); // Update cache with managed entities
             logger.debug("Updated region cache with {} managed entities", savedRegions.size());
         } else {
             logger.debug("No new regions to save.");
@@ -87,11 +88,11 @@ public class PersistenceHelper {
      * Saves locations from the cache and updates the cache with managed entities.
      */
     private void saveLocations() {
-        Map<String, Location> locationsToSave = cacheHelper.getLocations();
+        Map<String, Location> locationsToSave = cacheManager.getLocations();
         if (!locationsToSave.isEmpty()) {
             logger.debug("Saving {} locations", locationsToSave.size());
             List<Location> savedLocations = locationRepository.saveAll(locationsToSave.values());
-            cacheHelper.setLocations(savedLocations); // Update cache with managed entities
+            cacheManager.setLocations(savedLocations); // Update cache with managed entities
             logger.debug("Updated location cache with {} managed entities", savedLocations.size());
         } else {
             logger.debug("No new locations to save.");
@@ -102,11 +103,11 @@ public class PersistenceHelper {
      * Saves diseases from the cache and updates the cache with managed entities.
      */
     private void saveDiseases() {
-        Map<String, Disease> diseasesToSave = cacheHelper.getDiseases();
+        Map<String, Disease> diseasesToSave = cacheManager.getDiseases();
         if (!diseasesToSave.isEmpty()) {
             logger.debug("Saving {} diseases", diseasesToSave.size());
             List<Disease> savedDiseases = diseaseRepository.saveAll(diseasesToSave.values());
-            cacheHelper.setDiseases(savedDiseases); // Update cache with managed entities
+            cacheManager.setDiseases(savedDiseases); // Update cache with managed entities
             logger.debug("Updated disease cache with {} managed entities", savedDiseases.size());
         } else {
             logger.debug("No new diseases to save.");

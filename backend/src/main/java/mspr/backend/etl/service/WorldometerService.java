@@ -77,7 +77,7 @@ public class WorldometerService extends AbstractCsvImportService<WorldometerDto>
 
     /**
      * Processes the DTO by passing it to the mapper.
-     * The mapper is expected to interact with the CacheHelper to find/create/update
+     * The mapper is expected to interact with the CacheManager to find/create/update
      * Country, Region, Location entities based on the DTO data.
      *
      * @param dto The DTO created from a CSV line.
@@ -86,7 +86,7 @@ public class WorldometerService extends AbstractCsvImportService<WorldometerDto>
     @Override
     protected void processDto(WorldometerDto dto) throws MappingException {
         try {
-            // The mapper interacts with cacheHelper (injected in abstract class)
+            // The mapper interacts with cacheManager (injected in abstract class)
             // to get/create/update Country, Region, Location etc.
             mapper.toEntity(dto);
         } catch (Exception e) {

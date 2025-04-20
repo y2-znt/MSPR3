@@ -5,40 +5,49 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import mspr.backend.BO.*;
 import mspr.backend.etl.helpers.*;
+import mspr.backend.etl.helpers.cache.CacheManager;
 
 @Component
 public class FullGroupedMapper {
 
-    // Constants for standard names
-    public static final String STANDARD_REGION_NAME = "standard";
-    public static final String STANDARD_LOCATION_NAME = "standard";
     public static final String COVID_19_DISEASE_NAME = "COVID-19";
 
-    private final CacheHelper cacheHelper;
+    private final CacheManager cacheManager;
     private final CleanerHelper cleanerHelper;
     private final Disease disease;
 
     @Autowired
-    public FullGroupedMapper(CacheHelper cacheHelper, CleanerHelper cleanerHelper) {
-        this.cacheHelper = cacheHelper;
+    public FullGroupedMapper(CacheManager cacheManager, CleanerHelper cleanerHelper) {
+        this.cacheManager = cacheManager;
         this.cleanerHelper = cleanerHelper;
         // Preload COVID-19 disease
-        this.disease = cacheHelper.getOrCreateDisease(COVID_19_DISEASE_NAME);
+        this.disease = cacheManager.getOrCreateDisease(COVID_19_DISEASE_NAME);
     }
 
     /**
      * Converts a FullGroupedDto to a DiseaseCase entity without direct persistence.
-     * Builds the Country/Region/Location hierarchy via CacheHelper.
+     * Builds the Country/Region/Location hierarchy via CacheManager.
+     * 
+     * @param dto The DTO to convert
+     * @return The mapped DiseaseCase entity or null if the country is in the skip list
      */
     public DiseaseCase toEntity(FullGroupedDto dto) {
         // Clean country name
         String countryName = cleanerHelper.cleanCountryName(dto.getCountryRegion());
-        Country country = cacheHelper.getOrCreateCountry(countryName);
-
-        Region regionStandardFromCountry = cacheHelper.getOrCreateRegion(country, STANDARD_REGION_NAME);
-
-        // No province/state in this dataset, create location directly at country level
-        Location location = cacheHelper.getOrCreateLocation(regionStandardFromCountry, STANDARD_LOCATION_NAME);
+        
+        // Vérifier si le pays est dans la liste à ignorer
+        if (cleanerHelper.isInSkipList(countryName)) {
+            return null; // Ignorer ce DTO
+        }
+        
+        // Crée le pays (ou le récupère s'il existe déjà) avec la région WHO
+        Country country = cacheManager.getOrCreateCountry(countryName, null, dto.getWhoRegion());
+        
+        // Création automatique de la région standard pour ce pays
+        Region region = cacheManager.getOrCreateRegionWithEmptyHandling(country, null);
+        
+        // Création automatique de la location standard pour cette région
+        Location location = cacheManager.getOrCreateLocationWithEmptyHandling(region, null);
 
         DiseaseCase diseaseCase = new DiseaseCase();
         diseaseCase.setDisease(this.disease);

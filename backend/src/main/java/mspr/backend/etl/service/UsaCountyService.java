@@ -6,6 +6,7 @@ import mspr.backend.etl.mapper.UsaCountyMapper;
 import mspr.backend.etl.exceptions.*;
 import mspr.backend.Repository.DiseaseCaseRepository;
 import mspr.backend.Repository.DiseaseRepository;
+import mspr.backend.etl.helpers.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -26,6 +28,7 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
     private final Logger logger = LoggerFactory.getLogger(UsaCountyService.class);
     private static final String FILE_NAME = "usa_county_wise.csv";
     private static final String COVID_19_DISEASE_NAME = "COVID-19";
+    private static final int BATCH_SIZE = 25000; // Augmenté pour de meilleures performances
 
     // CSV field indices
     private static final int IDX_COUNTY = 5; // Admin2
@@ -46,9 +49,15 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
 
     @Autowired
     private DiseaseRepository diseaseRepository;
+    
+    @Autowired
+    private CacheManager cacheManager;
 
     private List<DiseaseCase> diseaseCasesToSave;
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("M/d/yy");
+    
+    // Stocker la référence COVID pour éviter des recherches répétées
+    private Disease covidDisease;
 
     @Override
     protected String getFileName() {
@@ -60,6 +69,8 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
         this.diseaseCasesToSave = new ArrayList<>();
         logger.debug("Initialized list for DiseaseCase entities.");
         ensureCovidDiseaseExists();
+        // Stocker la référence qui sera réutilisée
+        this.covidDisease = cacheManager.getDiseases().get(COVID_19_DISEASE_NAME);
     }
 
     /**
@@ -69,7 +80,7 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
      * @throws PersistenceException if there is an error persisting the disease entity
      */
     private void ensureCovidDiseaseExists() throws PersistenceException {
-        Disease covidDisease = cacheHelper.getDiseases().get(COVID_19_DISEASE_NAME);
+        Disease covidDisease = cacheManager.getDiseases().get(COVID_19_DISEASE_NAME);
         if (covidDisease == null) {
             logger.debug("COVID-19 disease not found in cache, checking database...");
             covidDisease = diseaseRepository.findByName(COVID_19_DISEASE_NAME);
@@ -85,7 +96,7 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
                     throw new PersistenceException("Failed to save essential COVID-19 disease entity", e);
                 }
             }
-            cacheHelper.addDiseaseToCache(COVID_19_DISEASE_NAME, covidDisease);
+            cacheManager.addDiseaseToCache(COVID_19_DISEASE_NAME, covidDisease);
             logger.debug("Ensured COVID-19 disease is in cache with ID: {}", covidDisease.getId());
         } else {
             logger.debug("COVID-19 disease already present in cache.");
@@ -161,11 +172,11 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
     @Override
     protected void processDto(UsaCountyDto dto) throws MappingException {
         try {
-            DiseaseCase diseaseCase = usaCountyMapper.fromDto(dto, cacheHelper);
+            DiseaseCase diseaseCase = usaCountyMapper.fromDto(dto, cacheManager);
             if (diseaseCase != null) {
                 diseaseCasesToSave.add(diseaseCase);
             } else {
-                logger.warn("Mapping DTO resulted in null entity for DTO: {}", dto);
+                logger.debug("Mapping DTO resulted in null entity for DTO: {}", dto);
             }
         } catch (IllegalStateException e) {
             logger.error("Mapping error (likely missing COVID-19 disease): {}", e.getMessage());
@@ -182,14 +193,37 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
      */
     @Override
     protected void postProcessing() throws PersistenceException, EtlException {
-        logger.debug("Starting post-processing for UsaCountyService...");
+        logger.info("Starting post-processing for UsaCountyService.");
+
+        logger.info("Filtering disease cases...");
+        // Filtrage plus direct et efficace des entrées null
+        diseaseCasesToSave.removeIf(Objects::isNull);
+        
+        if (diseaseCasesToSave.isEmpty()) {
+            logger.info("No DiseaseCase entities to process.");
+            return;
+        }
+
+        logger.info("Updating disease cases references...");
         updateDiseaseCaseReferences(this.diseaseCasesToSave);
 
         if (!diseaseCasesToSave.isEmpty()) {
-            logger.info("Saving {} disease cases to the database.", diseaseCasesToSave.size());
+            int totalSize = diseaseCasesToSave.size();
+            logger.info("Saving {} disease cases to the database in batches of {}", totalSize, BATCH_SIZE);
+            
             try {
-                diseaseCaseRepository.saveAll(diseaseCasesToSave);
-                logger.info("Successfully saved {} disease cases.", diseaseCasesToSave.size());
+                for (int i = 0; i < totalSize; i += BATCH_SIZE) {
+                    int endIndex = Math.min(i + BATCH_SIZE, totalSize);
+                    List<DiseaseCase> batch = diseaseCasesToSave.subList(i, endIndex);
+                    
+                    diseaseCaseRepository.saveAll(batch);
+                    logger.info("Saved batch {}/{} ({} records)", 
+                               (i/BATCH_SIZE)+1, 
+                               (int)Math.ceil((double)totalSize/BATCH_SIZE), 
+                               batch.size());
+                }
+                
+                logger.info("Successfully saved all {} disease cases.", totalSize);
             } catch (DataAccessException e) {
                 logger.error("Database error while saving DiseaseCase entities: {}", e.getMessage(), e);
                 throw new PersistenceException("Error saving DiseaseCase entities to database", e);
@@ -209,72 +243,55 @@ public class UsaCountyService extends AbstractCsvImportService<UsaCountyDto> {
      */
     private void updateDiseaseCaseReferences(List<DiseaseCase> diseaseCases) throws EtlException {
         logger.debug("Updating DiseaseCase references for {} cases...", diseaseCases.size());
-        int updateErrors = 0;
-
-        for (DiseaseCase dc : diseaseCases) {
-            try {
-                updateLocationReference(dc);
-                updateDiseaseReference(dc);
-            } catch (EtlException e) {
-                throw e;
-            } catch (Exception e) {
-                logger.error("Error updating references for a DiseaseCase with potential ID {}: {}", dc.getId(), e.getMessage(), e);
-                updateErrors++;
+        
+        // Vérifier que la référence COVID est disponible
+        if (covidDisease == null) {
+            covidDisease = cacheManager.getDiseases().get(COVID_19_DISEASE_NAME);
+            if (covidDisease == null) {
+                logger.error("CRITICAL: COVID-19 disease reference missing from cache during final update.");
+                throw new EtlException("COVID-19 disease reference missing unexpectedly during postProcessing");
             }
         }
-
-        if (updateErrors > 0) {
-            logger.warn("Encountered {} errors while updating DiseaseCase references.", updateErrors);
+        
+        for (DiseaseCase dc : diseaseCases) {
+            if (dc == null) continue;
+            
+            // Affecter directement la référence COVID
+            dc.setDisease(covidDisease);
+            
+            // Mise à jour optimisée de la référence de localisation
+            updateLocationReference(dc);
         }
+        
         logger.debug("Finished updating disease case references.");
     }
 
     /**
      * Updates the location reference using managed entities from the cache.
+     * Optimisé pour réduire les vérifications imbriquées.
      *
      * @param dc Disease case to update
      */
     private void updateLocationReference(DiseaseCase dc) {
         Location originalLocation = dc.getLocation();
-        if (originalLocation != null) {
-            Region originalRegion = originalLocation.getRegion();
-            if (originalRegion != null) {
-                Country originalCountry = originalRegion.getCountry();
-                if (originalCountry != null && originalCountry.getName() != null &&
-                    originalRegion.getName() != null && originalLocation.getName() != null) {
-
-                    String locationKey = cacheHelper.getLocationKey(originalCountry.getName(), originalRegion.getName(), originalLocation.getName());
-                    Location managedLocation = cacheHelper.getLocations().get(locationKey);
-
-                    if (managedLocation != null) {
-                        dc.setLocation(managedLocation);
-                    } else {
-                        logger.warn("Could not find managed Location in cache for key: {} during reference update.", locationKey);
-                    }
-                } else {
-                    logger.warn("Missing components (Country/Region/Location names) to build location key for DiseaseCase ID {}.", dc.getId());
-                }
-            } else {
-                logger.warn("DiseaseCase ID {} has Location with null Region.", dc.getId());
-            }
-        } else {
-            logger.warn("DiseaseCase ID {} has null Location.", dc.getId());
-        }
-    }
-
-    /**
-     * Updates the disease reference to the managed COVID-19 entity from the cache.
-     *
-     * @param dc Disease case to update
-     * @throws EtlException if COVID-19 disease is missing from cache (should not happen after preProcessing)
-     */
-    private void updateDiseaseReference(DiseaseCase dc) throws EtlException {
-        Disease managedDisease = cacheHelper.getDiseases().get(COVID_19_DISEASE_NAME);
-        if (managedDisease != null) {
-            dc.setDisease(managedDisease);
-        } else {
-            logger.error("CRITICAL: Managed COVID-19 disease missing from cache during final update. Aborting potentially inconsistent data save.");
-            throw new EtlException("COVID-19 disease reference missing unexpectedly during postProcessing");
+        if (originalLocation == null) return;
+        
+        Region originalRegion = originalLocation.getRegion();
+        if (originalRegion == null) return;
+        
+        Country originalCountry = originalRegion.getCountry();
+        if (originalCountry == null || originalCountry.getName() == null || 
+            originalRegion.getName() == null || originalLocation.getName() == null) return;
+        
+        String locationKey = cacheManager.getLocationKey(
+            originalCountry.getName(), 
+            originalRegion.getName(), 
+            originalLocation.getName()
+        );
+        
+        Location managedLocation = cacheManager.getLocations().get(locationKey);
+        if (managedLocation != null) {
+            dc.setLocation(managedLocation);
         }
     }
 }

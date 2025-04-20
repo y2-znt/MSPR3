@@ -2,6 +2,7 @@ package mspr.backend.etl.mapper;
 
 import mspr.backend.BO.*;
 import mspr.backend.etl.helpers.*;
+import mspr.backend.etl.helpers.cache.CacheManager;
 import mspr.backend.etl.dto.WorldometerDto;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Component
 public class WorldometerMapper {
 
-    // Constants for standard names
-    public static final String STANDARD_REGION_NAME = "standard";
-    public static final String STANDARD_LOCATION_NAME = "standard";
-
-    private final CacheHelper cacheHelper;
+    private final CacheManager cacheManager;
     private final CleanerHelper cleanerHelper;
 
     @Autowired
-    public WorldometerMapper(CacheHelper cacheHelper, CleanerHelper cleanerHelper) {
-        this.cacheHelper = cacheHelper;
+    public WorldometerMapper(CacheManager cacheManager, CleanerHelper cleanerHelper) {
+        this.cacheManager = cacheManager;
         this.cleanerHelper = cleanerHelper;
     }
 
@@ -42,8 +39,16 @@ public class WorldometerMapper {
     /**
      * Converts a WorldometerDto to a Country/Region/Location triple.
      * No database saving is performed here.
+     * 
+     * @param dto The DTO to convert
+     * @return The mapped entity triple or null if the country is in the skip list
      */
     public CountryRegionLocation toEntity(WorldometerDto dto) {
+        // Vérifier si le nom du pays est dans la liste à ignorer
+        if (cleanerHelper.isInSkipList(dto.getCountry())) {
+            return null; // Ignorer ce DTO
+        }
+        
         // Create country, region, and location entities
         Country country = createCountry(dto);
         Region region = createRegion(country);
@@ -63,7 +68,7 @@ public class WorldometerMapper {
      */
     private Country createCountry(WorldometerDto dto) {
         String countryName = cleanerHelper.cleanCountryName(dto.getCountry());
-        return cacheHelper.getOrCreateCountry(countryName);
+        return cacheManager.getOrCreateCountry(countryName, dto.getContinent(), dto.getWhoRegion());
     }
     
     /**
@@ -73,7 +78,8 @@ public class WorldometerMapper {
      * @return The Region entity
      */
     private Region createRegion(Country country) {
-        return cacheHelper.getOrCreateRegion(country, STANDARD_REGION_NAME);
+        // Utilisez la méthode qui gère les cas spéciaux pour les régions standard
+        return cacheManager.getOrCreateRegionWithEmptyHandling(country, null);
     }
     
     /**
@@ -83,7 +89,8 @@ public class WorldometerMapper {
      * @return The Location entity
      */
     private Location createLocation(Region region) {
-        return cacheHelper.getOrCreateLocation(region, STANDARD_LOCATION_NAME);
+        // Utilisez la méthode qui gère les cas spéciaux pour les locations standard
+        return cacheManager.getOrCreateLocationWithEmptyHandling(region, null);
     }
     
     /**
@@ -94,6 +101,7 @@ public class WorldometerMapper {
      */
     private void updateCountryAttributes(Country country, WorldometerDto dto) {
         country.setPopulation(dto.getPopulation());
-        // Other attributes can be updated here if needed
+        
+        // Note : La mise à jour du continent et de la région WHO est désormais gérée par getOrCreateCountry
     }
 }
