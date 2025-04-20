@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  DB_URL: jdbc:postgresql://db:5432/db_name
+  DB_USERNAME: db_username
+  DB_PASSWORD: db_password
+  DB_NAME: db_name
+  DB_PORT: "5432"
+
+jobs:
+  build-backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    container: maven:3.9.9-amazoncorretto-21-alpine
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build backend
+        run: |
+          cd backend
+          mvn clean package -DskipTests
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-jar
+          path: backend/target/*.jar
+          retention-days: 7
+
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    container: node:20-alpine
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install and build frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          retention-days: 7
+
+  test-backend:
+    name: Test Backend
+    runs-on: ubuntu-latest
+    container: maven:3.9.9-amazoncorretto-21-alpine
+    services:
+      db:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: db_name
+          POSTGRES_USER: db_username
+          POSTGRES_PASSWORD: db_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U db_username -d db_name"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run backend tests
+        run: |
+          cd backend
+          mvn test
