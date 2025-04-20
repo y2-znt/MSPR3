@@ -1,11 +1,24 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  Input,
+  SimpleChanges,
+} from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
-import { CountryData, CovidDataService, CovidStats } from '../../../services/covid-data.service';
+import {
+  CountryData,
+  CovidDataService,
+  CovidStats,
+} from '../../../services/covid-data.service';
 import { CountryService } from '../../../services/country.service';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -14,7 +27,14 @@ import { Country } from '../../../models/country.model';
 @Component({
   selector: 'app-countries',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './countries.component.html',
   styleUrl: './countries.component.scss',
 })
@@ -25,17 +45,25 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() totalDeaths = 0;
   @Input() totalRecoveries = 0;
 
-  displayedColumns: string[] = ['country', 'totalCases', 'deaths', 'recovered', 'mortalityRate', 'recoveryRate'];
-  dataSource: MatTableDataSource<CountryData> = new MatTableDataSource<CountryData>();
+  displayedColumns: string[] = [
+    'country',
+    'totalCases',
+    'deaths',
+    'recovered',
+    'mortalityRate',
+    'recoveryRate',
+  ];
+  dataSource: MatTableDataSource<CountryData> =
+    new MatTableDataSource<CountryData>();
   private destroy$ = new Subject<void>();
   private countriesData: CountryData[] = [];
   public error: string | null = null;
 
-  // Statistiques COVID de démonstration (en cas où les données réelles ne sont pas disponibles)
+  // Demonstration COVID statistics (in case real data is not available)
   diseaseName: string = 'COVID-19';
   mortalityRate: number = 5.24;
   recoveryRate: number = 46.88;
-  
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -44,10 +72,10 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     private countryService: CountryService,
     private cdr: ChangeDetectorRef
   ) {}
-  
+
   ngOnInit(): void {
     console.log('CountriesComponent: ngOnInit');
-    
+
     if (this.countries && this.countries.length > 0) {
       this.loadCountriesStats();
     }
@@ -55,23 +83,29 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     console.log('CountriesComponent: ngAfterViewInit');
-    
+
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
-    
+
     if (this.sort) {
       this.dataSource.sort = this.sort;
     }
-    
+
     this.dataSource.sortingDataAccessor = (item, property) => {
-      switch(property) {
-        case 'totalCases': return item.totalCases;
-        case 'deaths': return item.deaths;
-        case 'recovered': return item.recovered;
-        case 'mortalityRate': return item.mortalityRate;
-        case 'recoveryRate': return item.recoveryRate;
-        default: return item[property as keyof CountryData] as string;
+      switch (property) {
+        case 'totalCases':
+          return item.totalCases;
+        case 'deaths':
+          return item.deaths;
+        case 'recovered':
+          return item.recovered;
+        case 'mortalityRate':
+          return item.mortalityRate;
+        case 'recoveryRate':
+          return item.recoveryRate;
+        default:
+          return item[property as keyof CountryData] as string;
       }
     };
   }
@@ -92,48 +126,59 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private loadCountriesStats(): void {
     if (!this.countries || this.countries.length === 0) {
-      console.error('Aucun pays à charger');
+      console.error('No countries to load');
       return;
     }
-    
+
     this.isLoading = true;
-    console.log(`Chargement des stats pour ${this.countries.length} pays`);
-    
-    const requests = this.countries.map(country => {
+    console.log(`Loading stats for ${this.countries.length} countries`);
+
+    const requests = this.countries.map((country) => {
       if (this.countries.indexOf(country) < 3) {
-        console.log(`Requête pour ${country.name}`);
+        console.log(`Request for ${country.name}`);
       }
       return this.countryService.getCountriesStats(country.name);
     });
-    
+
     forkJoin(requests)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (results) => {
-          console.log(`Résultats reçus pour ${results.length} pays`);
-          
-          const countryData: CountryData[] = this.countries.map((country, index) => {
-            const countryResults = results[index];
-            
-            let latestStats = null;
-            if (countryResults && countryResults.length > 0) {
-              latestStats = countryResults[countryResults.length - 1];
-              if (index < 3) {
-                console.log(`Dernière stats pour ${country.name}:`, latestStats);
+          console.log(`Received results for ${results.length} countries`);
+
+          const countryData: CountryData[] = this.countries.map(
+            (country, index) => {
+              const countryResults = results[index];
+
+              let latestStats = null;
+              if (countryResults && countryResults.length > 0) {
+                latestStats = countryResults[countryResults.length - 1];
+                if (index < 3) {
+                  console.log(
+                    `Last stats for ${country.name}:`,
+                    latestStats
+                  );
+                }
               }
+
+              return {
+                country: country.name,
+                totalCases: latestStats?.confirmedCases || 0,
+                deaths: latestStats?.deaths || 0,
+                recovered: latestStats?.recovered || 0,
+                mortalityRate: this.calculateRate(
+                  latestStats?.deaths,
+                  latestStats?.confirmedCases
+                ),
+                recoveryRate: this.calculateRate(
+                  latestStats?.recovered,
+                  latestStats?.confirmedCases
+                ),
+              };
             }
-            
-            return {
-              country: country.name,
-              totalCases: latestStats?.confirmedCases || 0,
-              deaths: latestStats?.deaths || 0,
-              recovered: latestStats?.recovered || 0,
-              mortalityRate: this.calculateRate(latestStats?.deaths, latestStats?.confirmedCases),
-              recoveryRate: this.calculateRate(latestStats?.recovered, latestStats?.confirmedCases)
-            };
-          });
-          
-          console.log(`Données générées pour ${countryData.length} pays`);
+          );
+
+          console.log(`Generated data for ${countryData.length} countries`);
           this.dataSource.data = countryData;
           this.countriesData = countryData;
           this.isLoading = false;
@@ -141,11 +186,11 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('Erreur lors du chargement des stats:', error);
+          console.error('Error loading stats:', error);
           this.isLoading = false;
-          this.error = "Erreur lors du chargement des données";
+          this.error = 'Error loading data';
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 

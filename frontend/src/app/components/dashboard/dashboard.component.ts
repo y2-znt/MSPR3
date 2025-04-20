@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -21,12 +21,13 @@ import { TotalKpiDto } from '../../models/diseaseCase.model';
 import { Page } from '../../models/pagination.model';
 import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
 import { CountryService } from '../../services/country.service';
+import {
+  CountryData,
+  CovidDataService,
+} from '../../services/covid-data.service';
 import { DiseaseCaseService } from '../../services/disease-case.service';
-import { OverviewComponent } from '../tabs/overview/overview.component';
 import { CountriesComponent } from '../tabs/countries/countries.component';
-import { CountryData } from '../../services/covid-data.service';
-import { ChangeDetectorRef } from '@angular/core';
-import { CovidDataService } from '../../services/covid-data.service';
+import { OverviewComponent } from '../tabs/overview/overview.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -82,8 +83,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadCountries(); 
-    this.loadKpiData(); 
+    this.loadCountries();
+    this.loadKpiData();
   }
 
   ngOnDestroy(): void {}
@@ -91,68 +92,68 @@ export class DashboardComponent implements OnInit, OnDestroy {
   get kpiCards() {
     return [
       {
-        label: 'Cas Totaux',
+        label: 'Total Cases',
         icon: 'people',
-        subtitle: `Cas confirmés de ${this.diseaseName} dans le monde`,
+        subtitle: `Cases of ${this.diseaseName} in the world`,
         value: this.totalCases,
       },
       {
-        label: 'Décès Totaux',
+        label: 'Total Deaths',
         icon: 'warning',
-        subtitle: `Taux de mortalité: ${this.mortalityRate.toFixed(2)}%`,
+        subtitle: `Mortality rate: ${this.mortalityRate.toFixed(2)}%`,
         value: this.totalDeaths,
       },
       {
-        label: 'Guérisons',
+        label: 'Recoveries',
         icon: 'health_and_safety',
-        subtitle: `Taux de guérison: ${this.recoveryRate.toFixed(2)}%`,
+        subtitle: `Recovery rate: ${this.recoveryRate.toFixed(2)}%`,
         value: this.totalRecoveries,
       },
     ];
   }
 
   loadCountries(): void {
-    console.log('🌍 Début du chargement des pays...');
+    console.log('🌍 Start loading countries...');
     this.isLoading = true;
-    
+
     this.countryService
       .getAllCountries(this.currentPage, this.pageSize)
       .subscribe({
         next: (page: Page<Country>) => {
-          console.log('✅ Pays chargés avec succès:', {
+          console.log('✅ Countries loaded successfully:', {
             totalElements: page.content.length,
             firstCountry: page.content[0],
-            lastCountry: page.content[page.content.length - 1]
+            lastCountry: page.content[page.content.length - 1],
           });
-          
+
           this.countries = page.content;
-          
-          // Ajout : Mettre à jour les données dans le service
-          const countryData: CountryData[] = this.countries.map(country => ({
+
+          // Add: Update the data in the service
+          const countryData: CountryData[] = this.countries.map((country) => ({
             country: country.name,
             totalCases: 0,
             deaths: 0,
             recovered: 0,
             mortalityRate: 0,
-            recoveryRate: 0
+            recoveryRate: 0,
           }));
-          
-          // Mettre à jour le service avec la liste initiale des pays
+
+          // Update the service with the initial list of countries
           this.covidDataService.updateCountriesData(countryData);
-          console.log('📤 Données pays mises à jour dans le service:', countryData);
+          console.log('📤 Countries data updated in the service:', countryData);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('❌ Erreur lors du chargement des pays:', error);
+          console.error('❌ Error loading countries:', error);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
         complete: () => {
-          console.log('🏁 Chargement des pays terminé');
+          console.log('🏁 Countries loading completed');
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 
