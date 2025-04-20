@@ -2,10 +2,71 @@
 
 ## Structure des branches
 
-Notre workflow Git est basé sur une approche simple et efficace, centrée sur la branche principale :
+Nous adoptons un workflow Git simple et efficace, centré autour d’une branche principale :
 
-- `main` : Branche principale contenant le code de production
-- Branches de fonctionnalités : Créées directement depuis `main` pour chaque nouvelle fonctionnalité ou correction
+- `main` : la branche de référence contenant le code en production.
+- Branches de fonctionnalité : créées depuis `main` pour chaque nouvelle tâche ou correction.
+
+Cette approche garantit un historique propre et une gestion simplifiée des versions.
+
+---
+
+## Explication des Branches
+
+### `main`
+
+- **Rôle :**
+  - Branche principale, représentant le code actuellement en production.
+  - Toujours stable, aucun développement direct n'y est réalisé.
+- **Utilisation :**
+  - Les modifications proviennent exclusivement des branches de fonctionnalité via des Pull Requests.
+  - Toutes les livraisons (releases) sont générées à partir de cette branche.
+
+### Branches de fonctionnalité (`feature branches`)
+
+- **Rôle :** Développement des nouvelles fonctionnalités ou corrections.
+- **Convention de nommage :** `feature/nom-fonctionnalité`
+  - Exemple : `feature/authentification-google`
+- **Point de départ :** `main`
+- **Point de fin :** Merge dans `main` après validation.
+
+---
+
+## Conventions de Nommage
+
+### Branches
+
+- **Syntaxe générale :** `{type}/{description}`
+  - Types recommandés : `feature`, `fix`, `chore`, `refactor`, etc.
+- **Exemples :**
+  - `feature/authentification-google`
+  - `fix/correction-timeout-api`
+
+### Commits
+
+- Format recommandé :
+
+```php-template
+<type> : <description>
+```
+
+- Types courants :
+
+  - `feat` : nouvelle fonctionnalité
+  - `fix` : correction de bug
+  - `docs` : documentation
+  - `style` : mise en forme, indentation
+  - `refactor` : restructuration sans changement fonctionnel
+  - `test` : ajout ou modification de tests
+  - `chore` : maintenance, tâches annexes
+  - `release` : publication d’une version
+
+- Exemples :
+  - `feat: ajout de la connexion avec Google`
+  - `fix: correction du timeout sur les requêtes`
+  - `release: v1.0.2`
+
+---
 
 ## Workflow de développement
 
@@ -17,23 +78,13 @@ Notre workflow Git est basé sur une approche simple et efficace, centrée sur l
    git checkout -b auth-system
    ```
 
-2. **Conventions de commit**
+2. **Commits clairs et cohérents**
 
-   Les messages de commit doivent suivre strictement le format :
+   Respectez le format :
 
    ```
    <type> : <description>
    ```
-
-   Types de commit :
-
-   - `feat` : nouvelle fonctionnalité
-   - `fix` : correction de bug
-   - `docs` : modification de la documentation
-   - `style` : formatage, point-virgules manquants, etc.
-   - `refactor` : refactorisation du code
-   - `test` : ajout ou modification de tests
-   - `chore` : mise à jour des outils, scripts, etc.
 
    Exemples :
 
@@ -43,11 +94,13 @@ Notre workflow Git est basé sur une approche simple et efficace, centrée sur l
    docs : mise à jour du README
    ```
 
-3. **Mise à jour de la branche**
+3. **Mise à jour de la branche avant un merge**
    ```bash
    git checkout auth-system
    git pull origin main
    ```
+
+---
 
 ## Bonnes pratiques
 
@@ -56,7 +109,7 @@ Notre workflow Git est basé sur une approche simple et efficace, centrée sur l
 - **Atomicité** : Un commit = une fonctionnalité/correction
 - **Messages descriptifs** : Suivre les conventions de commit
 - **Fréquence** : Commiter régulièrement pour éviter les gros changements
-- **Vérification** : Tester les modifications avant chaque commit
+- **Qualité** : Tester les modifications avant chaque commit
 
 ### Gestion des branches
 
