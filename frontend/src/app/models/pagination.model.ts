@@ -1,31 +1,31 @@
 export interface Pageable {
-  pageNumber: number; // Numéro de la page demandée (commence souvent à 0)
-  pageSize: number; // Nombre d’éléments par page
-  offset: number; // Combien d’éléments on "saute" depuis le début (pageNumber * pageSize)
+  pageNumber: number; // Page number requested (often starts at 0)
+  pageSize: number; // Number of items per page
+  offset: number; // How many items are skipped from the start (pageNumber * pageSize)
 
   sort: {
-    empty: boolean; // Est-ce qu’on a un tri défini ?
-    unsorted: boolean; // Est-ce qu’on n’a PAS trié ?
-    sorted: boolean; // Est-ce qu’on a trié ? (opposé de unsorted)
+    empty: boolean; // Is a sort defined?
+    unsorted: boolean; // Is it not sorted?
+    sorted: boolean; // Is it sorted? (opposite of unsorted)
   };
 
-  unpaged: boolean; // Si `true`, alors pas de pagination (tout est retourné)
+  unpaged: boolean; // If `true`, then no pagination (everything is returned)
 }
 
 export interface Page<T> {
-  content: T[]; // Le tableau d’éléments qu’on a reçu pour cette page
+  content: T[]; // The array of items received for this page
 
-  pageable: Pageable; // Les infos sur comment la page a été générée (voir plus haut)
-  totalPages: number; // Combien de pages il y a au total
-  totalElements: number; // Nombre total d’éléments (toutes pages confondues)
+  pageable: Pageable; // Information on how the page was generated (see above)
+  totalPages: number; // Total number of pages
+  totalElements: number; // Total number of elements (across all pages)
 
-  last: boolean; // Est-ce que c’est la dernière page ?
-  first: boolean; // Est-ce que c’est la première page ?
-  empty: boolean; // Est-ce qu’il n’y a aucun élément sur cette page ?
+  last: boolean; // Is this the last page?
+  first: boolean; // Is this the first page?
+  empty: boolean; // Are there no elements on this page?
 
-  size: number; // Combien d’éléments *par page*
-  number: number; // Numéro de la page actuelle
-  numberOfElements: number; // Nombre d’éléments retournés dans cette page (parfois < size si t’es à la fin)
+  size: number; // Number of elements *per page*
+  number: number; // Current page number
+  numberOfElements: number; // Number of elements returned in this page (sometimes < size if at the end)
 
   sort: {
     empty: boolean;

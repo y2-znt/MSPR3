@@ -113,14 +113,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadCountries(): void {
-    console.log('🌍 Début du chargement des pays...');
+    console.log('🌍 Start loading countries...');
     this.isLoading = true;
 
     this.countryService
       .getAllCountries(this.currentPage, this.pageSize)
       .subscribe({
         next: (page: Page<Country>) => {
-          console.log('✅ Pays chargés avec succès:', {
+          console.log('✅ Countries loaded successfully:', {
             totalElements: page.content.length,
             firstCountry: page.content[0],
             lastCountry: page.content[page.content.length - 1],
@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
           this.countries = page.content;
 
-          // Ajout : Mettre à jour les données dans le service
+          // Add: Update the data in the service
           const countryData: CountryData[] = this.countries.map((country) => ({
             country: country.name,
             totalCases: 0,
@@ -138,22 +138,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
             recoveryRate: 0,
           }));
 
-          // Mettre à jour le service avec la liste initiale des pays
+          // Update the service with the initial list of countries
           this.covidDataService.updateCountriesData(countryData);
-          console.log(
-            '📤 Données pays mises à jour dans le service:',
-            countryData
-          );
+          console.log('📤 Countries data updated in the service:', countryData);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('❌ Erreur lors du chargement des pays:', error);
+          console.error('❌ Error loading countries:', error);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
         complete: () => {
-          console.log('🏁 Chargement des pays terminé');
+          console.log('🏁 Countries loading completed');
           this.isLoading = false;
           this.cdr.detectChanges();
         },
