@@ -2,7 +2,7 @@
 
 ## Frontend
 
-- **Framework** : Angular
+- **Framework** : Angular 18
 - **Language** : TypeScript
 - **Styling** : SCSS
 - **UI Framework** : Angular Material UI
@@ -13,7 +13,7 @@
 ## Backend
 
 - **Framework** : Spring Boot
-- **Language** : Java 17
+- **Language** : Java 21
 - **ORM** : Spring Data JPA
 - **Documentation API** : Swagger/OpenAPI
 - **Tests** : JUnit 5
@@ -27,7 +27,7 @@
 
 ## ETL & Data Processing
 
-- **Framework ETL** : Spring Batch (possibilité)
+- **Framework ETL** : Spring
 - **Formats de données supportés** : CSV
 
 ## DevOps & Infrastructure
