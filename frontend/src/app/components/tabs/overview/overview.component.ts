@@ -72,7 +72,7 @@ export class OverviewComponent {
 
       if (!weeklyMap.has(weekKey)) {
         weeklyMap.set(weekKey, {
-          weekLabel: `${firstDayOfWeek.toLocaleDateString('fr-FR', {
+          weekLabel: `${firstDayOfWeek.toLocaleDateString('en-US', {
             day: '2-digit',
             month: 'short',
           })}`,
@@ -99,7 +99,7 @@ export class OverviewComponent {
       labels: this.weeklyData.map((week) => week.weekLabel),
       datasets: [
         {
-          label: 'Cas Confirmés',
+          label: 'Confirmed Cases',
           data: this.weeklyData.map((week) => week.confirmedCases),
           fill: true,
           borderColor: 'rgba(75,192,192,1)',
@@ -107,7 +107,7 @@ export class OverviewComponent {
           tension: 0.3,
         },
         {
-          label: 'Décès',
+          label: 'Deaths',
           data: this.weeklyData.map((week) => week.deaths),
           fill: true,
           borderColor: 'rgb(192, 93, 75)',
@@ -115,7 +115,7 @@ export class OverviewComponent {
           tension: 0.3,
         },
         {
-          label: 'Rétablis',
+          label: 'Recovered',
           data: this.weeklyData.map((week) => week.recovered),
           fill: true,
           borderColor: 'rgb(75, 122, 192)',
