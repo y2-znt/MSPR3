@@ -15,9 +15,16 @@ backend/
 │   │   │       ├── repositories/ # Repositories JPA
 │   │   │       ├── models/       # Entités et modèles
 │   │   │       ├── config/       # Configuration Spring
-│   │   │       └── dto/          # Objets de transfert de données
+│   │   │       ├── dto/          # Objets de transfert de données
+│   │   │       └── etl/          # Module ETL
+│   │   │           ├── service/  # Services de traitement ETL
+│   │   │           ├── runner/   # Exécuteurs des tâches ETL
+│   │   │           ├── mapper/   # Mappeurs de données
+│   │   │           ├── helpers/  # Utilitaires ETL
+│   │   │           ├── dto/      # DTOs spécifiques à l'ETL
+│   │   │           └── exceptions/ # Gestion des erreurs ETL
 │   │   └── resources/       # Ressources et configuration
-│   │       ├── application.properties  # Configuration principale
+│   │       └── application.properties  # Configuration principale
 │   └── test/                # Tests unitaires et d'intégration
 ├── target/                  # Build de production
 ├── .mvn/                    # Configuration Maven Wrapper
@@ -87,6 +94,27 @@ Entités JPA représentant la structure des données :
 Configuration de l'application :
 
 - CORS
+
+## ETL (Extract, Transform, Load)
+
+L'application intègre un système ETL pour le traitement des données :
+
+```
+etl/
+├── service/     # Services de traitement ETL
+├── runner/      # Exécuteurs des tâches ETL
+├── mapper/      # Mappeurs de données
+├── helpers/     # Utilitaires ETL
+├── dto/         # Objets de transfert spécifiques à l'ETL
+└── exceptions/  # Gestion des erreurs ETL
+```
+
+Le module ETL est responsable de :
+
+- L'extraction des données depuis diverses sources
+- La transformation et le nettoyage des données
+- Le chargement des données dans la base de données
+- La synchronisation périodique des données
 
 ## Configuration et Environnement
 
