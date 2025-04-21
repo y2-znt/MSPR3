@@ -8,6 +8,7 @@ import {
   TotalKpiDto,
 } from '../models/diseaseCase.model';
 import { Country } from '../models/country.model';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -38,23 +39,56 @@ export class DiseaseCaseService {
     return this.http.get<TotalKpiDto>(`${this.url}disease-cases/kpi`);
   }
 
-  getAggregatedCasesByDate(): Observable<AggregatedDiseaseCase[]> {
+  /**
+   * Get aggregated cases by date with optional filtering
+   */
+  getAggregatedCasesByDate(startDate?: string, endDate?: string): Observable<AggregatedDiseaseCase[]> {
+    let params = new HttpParams();
+    
+    if (startDate) {
+      params = params.set('start', startDate);
+    }
+    
+    if (endDate) {
+      params = params.set('end', endDate);
+    }
+    
     return this.http.get<AggregatedDiseaseCase[]>(
-      `${this.url}disease-cases/aggregated-by-date`
+      `${this.url}disease-cases/aggregated-by-date`,
+      { params }
     );
   }
 
-  getAggregatedCasesByDateAndCountries(countries: Country[]): Observable<AggregatedDiseaseCase[]> {
+  /**
+   * Get aggregated cases by date for specific countries with optional date filtering
+   */
+  getAggregatedCasesByDateAndCountries(
+    countries: Country[], 
+    startDate?: string, 
+    endDate?: string
+  ): Observable<AggregatedDiseaseCase[]> {
     if (!countries || countries.length === 0) {
-      return this.getAggregatedCasesByDate();
+      return this.getAggregatedCasesByDate(startDate, endDate);
     }
     
     // Extraire les noms des pays
     const countryNames = countries.map(country => country.name).join(',');
-    console.log('Fetching data for countries:', countryNames);
+    console.log(`Fetching data for countries: ${countryNames}, period: ${startDate || 'all'} to ${endDate || 'now'}`);
     
-    const params = new HttpParams().set('countries', countryNames);
+    let params = new HttpParams().set('countries', countryNames);
     
-    return this.http.get<any[]>(`${this.url}disease-cases/aggregated-by-date`, { params });
+    if (startDate) {
+      params = params.set('start', startDate);
+    }
+    
+    if (endDate) {
+      params = params.set('end', endDate);
+    }
+    
+    return this.http.get<any[]>(`${this.url}disease-cases/aggregated-by-date`, { params })
+      .pipe(
+        tap(response => console.log('API response for filtered data:', response)),
+        map(data => data as AggregatedDiseaseCase[])
+      );
   }
 }

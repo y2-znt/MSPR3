@@ -26,6 +26,8 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   @Input() totalRecoveries!: number;
   @Input() diseaseName!: string;
   @Input() selectedCountries: Country[] = [];
+  @Input() dateStart: string | null = null;
+  @Input() dateEnd: string | null = null;
 
   timeSeriesData: AggregatedDiseaseCase[] = [];
   weeklyData: WeeklyData[] = [];
@@ -41,9 +43,13 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     console.log('OverviewComponent changes:', changes);
     
-    // Recharger les données si les pays sélectionnés changent
-    if (changes['selectedCountries']) {
-      console.log('Selected countries changed:', this.selectedCountries);
+    // Recharger les données si les pays sélectionnés ou les dates changent
+    if (changes['selectedCountries'] || changes['dateStart'] || changes['dateEnd']) {
+      console.log('Filter criteria changed, reloading data:', {
+        countries: this.selectedCountries,
+        dateStart: this.dateStart,
+        dateEnd: this.dateEnd
+      });
       this.loadTimeSeriesData();
     }
     
@@ -57,17 +63,30 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
 
   public getSelectedCountriesText(): string {
     if (!this.selectedCountries || this.selectedCountries.length === 0) {
-      return 'Global';
+      return 'Worldwide';
     }
-    return this.selectedCountries.map((country) => country.name).join(', ');
+    
+    try {
+      return this.selectedCountries
+        .filter(country => country && country.name) // Filtrer les pays valides
+        .map(country => country.name)
+        .join(', ');
+    } catch (error) {
+      console.error('Error formatting country names:', error);
+      return 'Worldwide';
+    }
   }
 
   loadTimeSeriesData() {
-    console.log('Loading time series data, selected countries:', this.selectedCountries);
+    console.log('Loading time series data with filters:', {
+      countries: this.selectedCountries,
+      dateStart: this.dateStart,
+      dateEnd: this.dateEnd
+    });
     
     if (!this.selectedCountries || this.selectedCountries.length === 0) {
-      console.log('No countries selected, fetching global data');
-      this.diseaseCaseService.getAggregatedCasesByDate().subscribe({
+      console.log('No countries selected, fetching global data with date filter');
+      this.diseaseCaseService.getAggregatedCasesByDate(this.dateStart || undefined, this.dateEnd || undefined).subscribe({
         next: (data: AggregatedDiseaseCase[]) => {
           console.log('Global data received:', data);
           this.timeSeriesData = data;
@@ -79,14 +98,18 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         },
       });
     } else {
-      console.log('Fetching data for selected countries:', this.selectedCountries);
+      console.log('Fetching data for selected countries with date filter');
       
-      this.diseaseCaseService.getAggregatedCasesByDateAndCountries(this.selectedCountries).subscribe({
+      this.diseaseCaseService.getAggregatedCasesByDateAndCountries(
+        this.selectedCountries,
+        this.dateStart || undefined,
+        this.dateEnd || undefined
+      ).subscribe({
         next: (data: AggregatedDiseaseCase[]) => {
           console.log('Country data received:', data);
           
           if (!data || data.length === 0) {
-            console.warn('No data received for selected countries');
+            console.warn('No data received for selected filters');
             // Fallback to global data if no country data
             this.loadGlobalData();
             return;
@@ -97,7 +120,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
           this.updateChart();
         },
         error: (error: any) => {
-          console.error('Error retrieving country data:', error);
+          console.error('Error retrieving filtered data:', error);
           // Fallback to global data on error
           this.loadGlobalData();
         },
@@ -106,7 +129,11 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   }
   
   private loadGlobalData() {
-    this.diseaseCaseService.getAggregatedCasesByDate().subscribe({
+    // Charger les données globales en conservant le filtre de date
+    this.diseaseCaseService.getAggregatedCasesByDate(
+      this.dateStart || undefined, 
+      this.dateEnd || undefined
+    ).subscribe({
       next: (data) => {
         this.timeSeriesData = data;
         this.processWeeklyData();
@@ -174,18 +201,28 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   updateChart() {
-    // Générer un titre basé sur les pays sélectionnés
+    // Générer le titre en incluant les dates si disponibles
     let chartTitle = 'Global';
     if (this.selectedCountries && this.selectedCountries.length > 0) {
       const countryNames = this.selectedCountries.map(c => c.name).join(', ');
       chartTitle = countryNames;
     }
     
+    // Ajouter la plage de dates au titre si disponible
+    let dateRange = '';
+    if (this.dateStart && this.dateEnd) {
+      dateRange = ` (${this.dateStart} to ${this.dateEnd})`;
+    } else if (this.dateStart) {
+      dateRange = ` (from ${this.dateStart})`;
+    } else if (this.dateEnd) {
+      dateRange = ` (until ${this.dateEnd})`;
+    }
+    
     this.areaChartData = {
       labels: this.weeklyData.map((week) => week.weekLabel),
       datasets: [
         {
-          label: `Confirmed Cases (${chartTitle})`,
+          label: `Confirmed Cases (${chartTitle}${dateRange})`,
           data: this.weeklyData.map((week) => week.confirmedCases),
           fill: true,
           borderColor: 'rgba(75,192,192,1)',
@@ -193,7 +230,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
           tension: 0.3,
         },
         {
-          label: `Deaths (${chartTitle})`,
+          label: `Deaths (${chartTitle}${dateRange})`,
           data: this.weeklyData.map((week) => week.deaths),
           fill: true,
           borderColor: 'rgb(192, 93, 75)',
@@ -201,7 +238,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
           tension: 0.3,
         },
         {
-          label: `Recovered (${chartTitle})`,
+          label: `Recovered (${chartTitle}${dateRange})`,
           data: this.weeklyData.map((week) => week.recovered),
           fill: true,
           borderColor: 'rgb(75, 122, 192)',
