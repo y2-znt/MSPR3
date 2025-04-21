@@ -1,9 +1,10 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { AggregatedDiseaseCase } from '../../../models/diseaseCase.model';
 import { DiseaseCaseService } from '../../../services/disease-case.service';
+import { Country } from '../../../models/country.model';
 
 interface WeeklyData {
   weekLabel: string;
@@ -19,11 +20,12 @@ interface WeeklyData {
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
 })
-export class OverviewComponent {
+export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   @Input() totalCases!: number;
   @Input() totalDeaths!: number;
   @Input() totalRecoveries!: number;
   @Input() diseaseName!: string;
+  @Input() selectedCountries: Country[] = [];
 
   timeSeriesData: AggregatedDiseaseCase[] = [];
   weeklyData: WeeklyData[] = [];
@@ -37,6 +39,15 @@ export class OverviewComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('OverviewComponent changes:', changes);
+    
+    // Recharger les données si les pays sélectionnés changent
+    if (changes['selectedCountries']) {
+      console.log('Selected countries changed:', this.selectedCountries);
+      this.loadTimeSeriesData();
+    }
+    
+    // Mettre à jour le graphique si on a des données
     if (this.weeklyData && this.weeklyData.length > 0) {
       this.updateChart();
     }
@@ -44,20 +55,76 @@ export class OverviewComponent {
 
   ngOnDestroy(): void {}
 
+  public getSelectedCountriesText(): string {
+    if (!this.selectedCountries || this.selectedCountries.length === 0) {
+      return 'Global';
+    }
+    return this.selectedCountries.map((country) => country.name).join(', ');
+  }
+
   loadTimeSeriesData() {
+    console.log('Loading time series data, selected countries:', this.selectedCountries);
+    
+    if (!this.selectedCountries || this.selectedCountries.length === 0) {
+      console.log('No countries selected, fetching global data');
+      this.diseaseCaseService.getAggregatedCasesByDate().subscribe({
+        next: (data: AggregatedDiseaseCase[]) => {
+          console.log('Global data received:', data);
+          this.timeSeriesData = data;
+          this.processWeeklyData();
+          this.updateChart();
+        },
+        error: (error: any) => {
+          console.error('Error retrieving global data:', error);
+        },
+      });
+    } else {
+      console.log('Fetching data for selected countries:', this.selectedCountries);
+      
+      this.diseaseCaseService.getAggregatedCasesByDateAndCountries(this.selectedCountries).subscribe({
+        next: (data: AggregatedDiseaseCase[]) => {
+          console.log('Country data received:', data);
+          
+          if (!data || data.length === 0) {
+            console.warn('No data received for selected countries');
+            // Fallback to global data if no country data
+            this.loadGlobalData();
+            return;
+          }
+          
+          this.timeSeriesData = data;
+          this.processWeeklyData();
+          this.updateChart();
+        },
+        error: (error: any) => {
+          console.error('Error retrieving country data:', error);
+          // Fallback to global data on error
+          this.loadGlobalData();
+        },
+      });
+    }
+  }
+  
+  private loadGlobalData() {
     this.diseaseCaseService.getAggregatedCasesByDate().subscribe({
-      next: (data: AggregatedDiseaseCase[]) => {
+      next: (data) => {
         this.timeSeriesData = data;
         this.processWeeklyData();
         this.updateChart();
       },
-      error: (error: any) => {
-        console.error('Erreur lors de la récupération des données:', error);
-      },
+      error: (error) => console.error('Error loading global fallback data:', error)
     });
   }
 
   processWeeklyData() {
+    if (!this.timeSeriesData || this.timeSeriesData.length === 0) {
+      console.warn('No time series data available to process');
+      this.weeklyData = [];
+      return;
+    }
+
+    console.log('Processing weekly data, sample:', this.timeSeriesData[0]);
+    
     const sortedData = [...this.timeSeriesData].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
@@ -65,7 +132,18 @@ export class OverviewComponent {
     const weeklyMap = new Map<string, WeeklyData>();
 
     sortedData.forEach((dayData) => {
+      // Validation de la date
+      if (!dayData.date) {
+        console.warn('Skipping data point with missing date:', dayData);
+        return;
+      }
+
       const date = new Date(dayData.date);
+      if (isNaN(date.getTime())) {
+        console.warn('Invalid date format:', dayData.date);
+        return;
+      }
+
       const firstDayOfWeek = new Date(date);
       firstDayOfWeek.setDate(date.getDate() - date.getDay() + 1);
       const weekKey = firstDayOfWeek.toISOString().split('T')[0];
@@ -85,21 +163,29 @@ export class OverviewComponent {
       const weekData = weeklyMap.get(weekKey)!;
       weekData.confirmedCases = Math.max(
         weekData.confirmedCases,
-        dayData.confirmedCases
+        dayData.confirmedCases || 0
       );
-      weekData.deaths = Math.max(weekData.deaths, dayData.deaths);
-      weekData.recovered = Math.max(weekData.recovered, dayData.recovered);
+      weekData.deaths = Math.max(weekData.deaths, dayData.deaths || 0);
+      weekData.recovered = Math.max(weekData.recovered, dayData.recovered || 0);
     });
 
     this.weeklyData = Array.from(weeklyMap.values());
+    console.log('Processed weekly data points:', this.weeklyData.length);
   }
 
   updateChart() {
+    // Générer un titre basé sur les pays sélectionnés
+    let chartTitle = 'Global';
+    if (this.selectedCountries && this.selectedCountries.length > 0) {
+      const countryNames = this.selectedCountries.map(c => c.name).join(', ');
+      chartTitle = countryNames;
+    }
+    
     this.areaChartData = {
       labels: this.weeklyData.map((week) => week.weekLabel),
       datasets: [
         {
-          label: 'Confirmed Cases',
+          label: `Confirmed Cases (${chartTitle})`,
           data: this.weeklyData.map((week) => week.confirmedCases),
           fill: true,
           borderColor: 'rgba(75,192,192,1)',
@@ -107,7 +193,7 @@ export class OverviewComponent {
           tension: 0.3,
         },
         {
-          label: 'Deaths',
+          label: `Deaths (${chartTitle})`,
           data: this.weeklyData.map((week) => week.deaths),
           fill: true,
           borderColor: 'rgb(192, 93, 75)',
@@ -115,7 +201,7 @@ export class OverviewComponent {
           tension: 0.3,
         },
         {
-          label: 'Recovered',
+          label: `Recovered (${chartTitle})`,
           data: this.weeklyData.map((week) => week.recovered),
           fill: true,
           borderColor: 'rgb(75, 122, 192)',

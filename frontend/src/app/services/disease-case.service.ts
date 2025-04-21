@@ -7,6 +7,7 @@ import {
   DiseaseCase,
   TotalKpiDto,
 } from '../models/diseaseCase.model';
+import { Country } from '../models/country.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,5 +42,19 @@ export class DiseaseCaseService {
     return this.http.get<AggregatedDiseaseCase[]>(
       `${this.url}disease-cases/aggregated-by-date`
     );
+  }
+
+  getAggregatedCasesByDateAndCountries(countries: Country[]): Observable<AggregatedDiseaseCase[]> {
+    if (!countries || countries.length === 0) {
+      return this.getAggregatedCasesByDate();
+    }
+    
+    // Extraire les noms des pays
+    const countryNames = countries.map(country => country.name).join(',');
+    console.log('Fetching data for countries:', countryNames);
+    
+    const params = new HttpParams().set('countries', countryNames);
+    
+    return this.http.get<any[]>(`${this.url}disease-cases/aggregated-by-date`, { params });
   }
 }
