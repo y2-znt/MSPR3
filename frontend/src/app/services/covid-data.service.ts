@@ -11,12 +11,14 @@ export interface CovidStats {
 }
 
 export interface CountryData {
+  id?: number;
   country: string;
   totalCases: number;
   deaths: number;
   recovered: number;
   mortalityRate: number;
   recoveryRate: number;
+  date?: string;
 }
 
 @Injectable({

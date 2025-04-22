@@ -180,4 +180,77 @@ public class DiseaseCaseService {
         // Sauvegarder et retourner le cas
         return diseaseCaseRepository.save(newCase);
     }
+
+    /**
+     * Met à jour un cas de maladie existant avec de nouvelles valeurs
+     * 
+     * @param id ID du cas à mettre à jour
+     * @param countryName Nom du pays (peut être différent de l'original)
+     * @param date Nouvelle date
+     * @param confirmedCases Nouveau nombre de cas confirmés
+     * @param deaths Nouveau nombre de décès
+     * @param recovered Nouveau nombre de guérisons
+     * @return Le cas de maladie mis à jour
+     * @throws RuntimeException si le cas n'existe pas ou si le pays n'est pas trouvé
+     */
+    public DiseaseCase updateDiseaseCaseWithDetails(
+            Integer id,
+            String countryName,
+            LocalDate date,
+            Integer confirmedCases,
+            Integer deaths,
+            Integer recovered) {
+        
+        // Vérifier si le cas existe
+        Optional<DiseaseCase> existingCaseOpt = diseaseCaseRepository.findById(id);
+        if (existingCaseOpt.isEmpty()) {
+            throw new RuntimeException("Cas non trouvé avec l'ID: " + id);
+        }
+        
+        DiseaseCase existingCase = existingCaseOpt.get();
+        
+        // Si le pays a changé, trouver le nouveau pays
+        if (!existingCase.getLocation().getName().equals(countryName)) {
+            // Utiliser la même logique que pour l'ajout pour trouver/créer le pays
+            List<Location> allLocations = locationRepository.findAll();
+            
+            // Debug log
+            System.out.println("Mise à jour - Recherche du pays: " + countryName);
+            
+            // Tenter de trouver une correspondance exacte
+            Location location = locationRepository.findByName(countryName);
+            
+            // Si aucune correspondance exacte, essayer de trouver une correspondance partielle
+            if (location == null) {
+                System.out.println("Mise à jour - Aucune correspondance exacte pour: " + countryName);
+                for (Location loc : allLocations) {
+                    if (loc.getName().toLowerCase().contains(countryName.toLowerCase()) || 
+                        countryName.toLowerCase().contains(loc.getName().toLowerCase())) {
+                        location = loc;
+                        System.out.println("Mise à jour - Correspondance partielle trouvée: " + loc.getName());
+                        break;
+                    }
+                }
+            }
+            
+            // Si toujours aucune correspondance, créer le pays
+            if (location == null) {
+                System.out.println("Mise à jour - Création d'un nouveau pays: " + countryName);
+                location = new Location();
+                location.setName(countryName);
+                location = locationRepository.save(location);
+            }
+            
+            existingCase.setLocation(location);
+        }
+        
+        // Mettre à jour les autres champs
+        existingCase.setDate(date);
+        existingCase.setConfirmedCases(confirmedCases);
+        existingCase.setDeaths(deaths);
+        existingCase.setRecovered(recovered);
+        
+        // Sauvegarder et retourner le cas mis à jour
+        return diseaseCaseRepository.save(existingCase);
+    }
 }

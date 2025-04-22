@@ -137,6 +137,16 @@
         </td>
       </ng-container>
 
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button color="primary" (click)="openEditDialog(row)" matTooltip="Modifier">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
       <!-- Header row -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
 

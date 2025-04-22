@@ -102,4 +102,42 @@ public class DiseaseCaseController {
             return errorResponse;
         }
     }
+
+    @PutMapping("/aggregated-by-date/{id}")
+    public Map<String, Object> updateDiseaseCase(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> caseData) {
+        try {
+            // Extraire les données de la requête
+            String dateStr = (String) caseData.get("date");
+            String countryName = (String) caseData.get("country");
+            Integer confirmedCases = Integer.valueOf(caseData.get("confirmedCases").toString());
+            Integer deaths = Integer.valueOf(caseData.get("deaths").toString());
+            Integer recovered = Integer.valueOf(caseData.get("recovered").toString());
+            
+            // Convertir la date
+            LocalDate date = LocalDate.parse(dateStr);
+            
+            // Mettre à jour et récupérer le cas
+            DiseaseCase updatedCase = diseaseCaseService.updateDiseaseCaseWithDetails(
+                id, countryName, date, confirmedCases, deaths, recovered);
+            
+            // Préparer la réponse
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("id", updatedCase.getId());
+            response.put("date", updatedCase.getDate());
+            response.put("country", countryName);
+            response.put("confirmedCases", updatedCase.getConfirmedCases());
+            response.put("deaths", updatedCase.getDeaths());
+            response.put("recovered", updatedCase.getRecovered());
+            
+            return response;
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("error", e.getMessage());
+            return errorResponse;
+        }
+    }
 }

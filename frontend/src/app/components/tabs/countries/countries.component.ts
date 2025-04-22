@@ -13,6 +13,9 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import {
   CountryData,
@@ -23,6 +26,7 @@ import { CountryService } from '../../../services/country.service';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Country } from '../../../models/country.model';
+import { EditDialogComponent } from '../../edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-countries',
@@ -34,6 +38,8 @@ import { Country } from '../../../models/country.model';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   templateUrl: './countries.component.html',
   styleUrl: './countries.component.scss',
@@ -52,6 +58,7 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     'recovered',
     'mortalityRate',
     'recoveryRate',
+    'actions',
   ];
   dataSource: MatTableDataSource<CountryData> =
     new MatTableDataSource<CountryData>();
@@ -70,7 +77,8 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private covidDataService: CovidDataService,
     private countryService: CountryService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -174,6 +182,9 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
                   latestStats?.recovered,
                   latestStats?.confirmedCases
                 ),
+                // Ajouter l'ID et la date à partir des statistiques, ou utiliser des valeurs par défaut
+                id: latestStats?.id || this.generateTempId(country.name),
+                date: latestStats?.date || this.formatDate(new Date())
               };
             }
           );
@@ -199,6 +210,14 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     return parseFloat(rate.toFixed(2));
   }
 
+  private generateTempId(countryName: string): string {
+    return `temp-${countryName}-${Date.now()}`;
+  }
+
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -206,6 +225,34 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  openEditDialog(element: CountryData): void {
+    const dialogRef = this.dialog.open(EditDialogComponent, {
+      width: '500px',
+      data: {
+        id: element.id,
+        country: element.country,
+        date: element.date,
+        confirmedCases: element.totalCases,
+        deaths: element.deaths,
+        recovered: element.recovered,
+        countries: this.countries,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.success) {
+        // Refresh data after update
+        this.refreshData();
+      }
+    });
+  }
+
+  refreshData(): void {
+    // You will need to implement this method to reload data from your service
+    console.log('Data updated, reloading required');
+    // Example: this.loadCountryData();
   }
 
   ngOnDestroy(): void {

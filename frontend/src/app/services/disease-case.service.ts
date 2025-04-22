@@ -91,4 +91,38 @@ export class DiseaseCaseService {
         map(data => data as AggregatedDiseaseCase[])
       );
   }
+
+  /**
+   * Met à jour un cas COVID existant par son ID
+   */
+  updateDiseaseCase(
+    id: number | string,
+    updateData: {
+      country: string,
+      date: string,
+      confirmedCases: number,
+      deaths: number,
+      recovered: number
+    }
+  ): Observable<any> {
+    // Si l'ID est de type chaîne et commence par "temp-", c'est un ID temporaire
+    // Dans ce cas, nous devons créer un nouveau cas au lieu de mettre à jour
+    if (typeof id === 'string' && id.startsWith('temp-')) {
+      console.log('ID temporaire détecté, création d\'un nouveau cas au lieu de mise à jour');
+      return this.http.post(
+        `${this.url}disease-cases/aggregated-by-date`,
+        updateData
+      ).pipe(
+        tap(response => console.log('Create response:', response))
+      );
+    }
+    
+    // Sinon, procéder à la mise à jour normalement
+    return this.http.put(
+      `${this.url}disease-cases/aggregated-by-date/${id}`,
+      updateData
+    ).pipe(
+      tap(response => console.log('Update response:', response))
+    );
+  }
 }
