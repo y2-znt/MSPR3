@@ -67,4 +67,39 @@ public class DiseaseCaseController {
         }
         return response;
     }
+
+    @PostMapping("/aggregated-by-date")
+    public Map<String, Object> addDiseaseCase(@RequestBody Map<String, Object> caseData) {
+        try {
+            // Extraire les données de la requête
+            String dateStr = (String) caseData.get("date");
+            String countryName = (String) caseData.get("country");
+            Integer confirmedCases = Integer.valueOf(caseData.get("confirmedCases").toString());
+            Integer deaths = Integer.valueOf(caseData.get("deaths").toString());
+            Integer recovered = Integer.valueOf(caseData.get("recovered").toString());
+            
+            // Convertir la date
+            LocalDate date = LocalDate.parse(dateStr);
+            
+            // Créer et enregistrer le cas
+            DiseaseCase newCase = diseaseCaseService.addDiseaseCaseForCountry(
+                countryName, date, confirmedCases, deaths, recovered);
+            
+            // Préparer la réponse
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("date", newCase.getDate());
+            response.put("country", countryName);
+            response.put("confirmedCases", newCase.getConfirmedCases());
+            response.put("deaths", newCase.getDeaths());
+            response.put("recovered", newCase.getRecovered());
+            
+            return response;
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("error", e.getMessage());
+            return errorResponse;
+        }
+    }
 }

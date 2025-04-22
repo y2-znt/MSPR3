@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>Add New Disease Case</h2>
+
+<form [formGroup]="caseForm" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content>
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Country</mat-label>
+        <mat-select formControlName="country">
+            <mat-option *ngFor="let country of data.countries" [value]="country.name">
+            {{country.name}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="caseForm.get('country')?.hasError('required')">
+            Country is required
+        </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="datePicker" formControlName="date">
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+        <mat-error *ngIf="caseForm.get('date')?.hasError('required')">
+            Date is required
+        </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirmed Cases</mat-label>
+        <input matInput type="number" formControlName="confirmedCases">
+        <mat-error *ngIf="caseForm.get('confirmedCases')?.hasError('required')">
+            Confirmed cases is required
+        </mat-error>
+        <mat-error *ngIf="caseForm.get('confirmedCases')?.hasError('min')">
+            Value must be 0 or greater
+        </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Deaths</mat-label>
+        <input matInput type="number" formControlName="deaths">
+        <mat-error *ngIf="caseForm.get('deaths')?.hasError('required')">
+            Deaths is required
+        </mat-error>
+        <mat-error *ngIf="caseForm.get('deaths')?.hasError('min')">
+            Value must be 0 or greater
+        </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Recovered</mat-label>
+        <input matInput type="number" formControlName="recovered">
+        <mat-error *ngIf="caseForm.get('recovered')?.hasError('required')">
+            Recovered is required
+        </mat-error>
+        <mat-error *ngIf="caseForm.get('recovered')?.hasError('min')">
+            Value must be 0 or greater
+        </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div mat-dialog-actions align="end">
+        <button mat-button type="button" (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="caseForm.invalid || isSubmitting">
+        <mat-spinner diameter="20" *ngIf="isSubmitting"></mat-spinner>
+        <span *ngIf="!isSubmitting">Submit</span>
+        </button>
+    </div>
+</form>

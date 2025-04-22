@@ -6,6 +6,7 @@ import { AggregatedDiseaseCase } from '../../../models/diseaseCase.model';
 import { DiseaseCaseService } from '../../../services/disease-case.service';
 import { Country } from '../../../models/country.model';
 
+
 interface WeeklyData {
   weekLabel: string;
   confirmedCases: number;
@@ -272,4 +273,5 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
       },
     };
   }
+
 }
