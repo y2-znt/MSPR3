@@ -96,7 +96,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   
 
     this.dateRange.valueChanges.subscribe(dateRange => {
-      console.log('Date range changed:', dateRange);
       this.cdr.detectChanges();
     });
   }
@@ -127,14 +126,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadCountries(): void {
-    console.log('🌍 Start loading countries...');
     this.isLoading = true;
 
     this.countryService
       .getAllCountries(this.currentPage, this.pageSize)
       .subscribe({
         next: (page: Page<Country>) => {
-          console.log('✅ Countries loaded successfully:', {
+          console.log('Countries loaded successfully:', {
             totalElements: page.content.length,
             firstCountry: page.content[0],
             lastCountry: page.content[page.content.length - 1],
@@ -154,17 +152,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
           // Update the service with the initial list of countries
           this.covidDataService.updateCountriesData(countryData);
-          console.log('📤 Countries data updated in the service:', countryData);
+          console.log('Countries data updated in the service:', countryData);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('❌ Error loading countries:', error);
+          console.error('Error loading countries:', error);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
         complete: () => {
-          console.log('🏁 Countries loading completed');
           this.isLoading = false;
           this.cdr.detectChanges();
         },
@@ -199,7 +196,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return { start, end };
   }
   
-  // Formatter la date au format YYYY-MM-DD
+  // Formated date YYYY-MM-DD
   private formatDate(date: Date | null): string | null {
     if (!date) return null;
     const year = date.getFullYear();
@@ -208,7 +205,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return `${year}-${month}-${day}`;
   }
 
-  // Méthode pour ouvrir le dialog d'ajout de cas
   openAddCaseDialog(): void {
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '500px',
@@ -217,7 +213,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Rafraîchir les données après l'ajout d'un cas
         this.loadCountries();
         this.loadKpiData();
       }

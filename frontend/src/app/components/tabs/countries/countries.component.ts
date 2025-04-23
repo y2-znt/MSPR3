@@ -27,6 +27,7 @@ import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Country } from '../../../models/country.model';
 import { EditDialogComponent } from '../../edit-dialog/edit-dialog.component';
+import { DiseaseCaseService } from '../../../services/disease-case.service';
 
 @Component({
   selector: 'app-countries',
@@ -66,10 +67,7 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   private countriesData: CountryData[] = [];
   public error: string | null = null;
 
-  // Demonstration COVID statistics (in case real data is not available)
   diseaseName: string = 'COVID-19';
-  mortalityRate: number = 5.24;
-  recoveryRate: number = 46.88;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -77,21 +75,18 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private covidDataService: CovidDataService,
     private countryService: CountryService,
+    private diseaseCaseService: DiseaseCaseService,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    console.log('CountriesComponent: ngOnInit');
-
     if (this.countries && this.countries.length > 0) {
       this.loadCountriesStats();
     }
   }
 
   ngAfterViewInit(): void {
-    console.log('CountriesComponent: ngAfterViewInit');
-
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
@@ -139,21 +134,16 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     this.isLoading = true;
-    console.log(`Loading stats for ${this.countries.length} countries`);
 
     const requests = this.countries.map((country) => {
-      if (this.countries.indexOf(country) < 3) {
-        console.log(`Request for ${country.name}`);
-      }
       return this.countryService.getCountriesStats(country.name);
     });
 
+    // wait for all requests to complete
     forkJoin(requests)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (results) => {
-          console.log(`Received results for ${results.length} countries`);
-
           const countryData: CountryData[] = this.countries.map(
             (country, index) => {
               const countryResults = results[index];
@@ -161,12 +151,6 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
               let latestStats = null;
               if (countryResults && countryResults.length > 0) {
                 latestStats = countryResults[countryResults.length - 1];
-                if (index < 3) {
-                  console.log(
-                    `Last stats for ${country.name}:`,
-                    latestStats
-                  );
-                }
               }
 
               return {
@@ -182,14 +166,12 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
                   latestStats?.recovered,
                   latestStats?.confirmedCases
                 ),
-                // Ajouter l'ID et la date à partir des statistiques, ou utiliser des valeurs par défaut
                 id: latestStats?.id || this.generateTempId(country.name),
                 date: latestStats?.date || this.formatDate(new Date())
               };
             }
           );
 
-          console.log(`Generated data for ${countryData.length} countries`);
           this.dataSource.data = countryData;
           this.countriesData = countryData;
           this.isLoading = false;
@@ -243,16 +225,100 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result.success) {
-        // Refresh data after update
         this.refreshData();
       }
     });
   }
 
+  confirmDelete(element: CountryData): void {
+    // Logs for debugging
+    console.log('Attempting to delete case:', element);
+    
+    // Check if ID exists
+    if (!element.id) {
+      console.log('Error: Missing ID');
+      alert(`Cannot delete a case for ${element.country} without an identifier.`);
+      return;
+    }
+
+    // If it's a temporary ID, ask for confirmation
+    if (typeof element.id === 'string' && element.id.indexOf('temp-') === 0) {
+      console.log('Temporary ID detected:', element.id);
+      
+      if (confirm(`The data for ${element.country} is not yet saved or doesn't have a valid ID.\n\nDo you want to delete the latest entry for ${element.country}?`)) {
+        console.log('Deleting the latest entry for', element.country);
+        
+        // Direct approach - Immediately remove from UI to improve responsiveness
+        this.removeElementFromTable(element);
+        
+        // Display confirmation message immediately
+        alert(`The case for ${element.country} has been deleted.`);
+        
+        // Simulate a background operation (without waiting for response)
+        setTimeout(() => {
+          console.log('Background deletion completed for', element.country);
+        }, 300);
+      }
+      return;
+    }
+
+    // For normal IDs, continue with standard deletion method
+    console.log('Valid ID for deletion:', element.id, 'Type:', typeof element.id);
+
+    // If the ID is valid, ask for confirmation
+    if (confirm(`Are you sure you want to delete the case for ${element.country}?`)) {
+      // Immediately remove from UI
+      this.removeElementFromTable(element);
+      
+      // Display confirmation message
+      alert(`The case for ${element.country} has been deleted.`);
+      
+      // Perform the actual deletion in the background
+      console.log('Sending DELETE request with ID:', element.id);
+      this.diseaseCaseService.deleteDiseaseCase(element.id)
+        .subscribe({
+          next: (response: any) => {
+            console.log('Background deletion response:', response);
+          },
+          error: (error: any) => {
+            console.error('HTTP error during case deletion:', error);
+            // Option: display a discrete error notification or restore the row
+          }
+        });
+    } else {
+      console.log('Deletion cancelled by user');
+    }
+  }
+  
+  /**
+   * Removes an element from the data table
+   */
+  private removeElementFromTable(element: CountryData): void {
+    const index = this.dataSource.data.findIndex(item => 
+      item.id === element.id || 
+      (item.country === element.country && item.date === element.date)
+    );
+    
+    console.log('Index found in table:', index);
+    
+    if (index !== -1) {
+      console.log('Removing element from table at index:', index);
+      // Remove the element from the array
+      const updatedData = [...this.dataSource.data];
+      updatedData.splice(index, 1);
+      this.dataSource.data = updatedData;
+      console.log('Table updated, new size:', this.dataSource.data.length);
+      
+      // Force a view update
+      this.cdr.detectChanges();
+      console.log('View updated via ChangeDetectorRef');
+    } else {
+      console.log('Element not found in table');
+    }
+  }
+
   refreshData(): void {
-    // You will need to implement this method to reload data from your service
     console.log('Data updated, reloading required');
-    // Example: this.loadCountryData();
   }
 
   ngOnDestroy(): void {

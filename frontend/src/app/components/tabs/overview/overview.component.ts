@@ -42,15 +42,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('OverviewComponent changes:', changes);
-    
-    // Recharger les données si les pays sélectionnés ou les dates changent
     if (changes['selectedCountries'] || changes['dateStart'] || changes['dateEnd']) {
-      console.log('Filter criteria changed, reloading data:', {
-        countries: this.selectedCountries,
-        dateStart: this.dateStart,
-        dateEnd: this.dateEnd
-      });
       this.loadTimeSeriesData();
     }
     
@@ -79,17 +71,9 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   loadTimeSeriesData() {
-    console.log('Loading time series data with filters:', {
-      countries: this.selectedCountries,
-      dateStart: this.dateStart,
-      dateEnd: this.dateEnd
-    });
-    
     if (!this.selectedCountries || this.selectedCountries.length === 0) {
-      console.log('No countries selected, fetching global data with date filter');
       this.diseaseCaseService.getAggregatedCasesByDate(this.dateStart || undefined, this.dateEnd || undefined).subscribe({
         next: (data: AggregatedDiseaseCase[]) => {
-          console.log('Global data received:', data);
           this.timeSeriesData = data;
           this.processWeeklyData();
           this.updateChart();
@@ -99,16 +83,12 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         },
       });
     } else {
-      console.log('Fetching data for selected countries with date filter');
-      
       this.diseaseCaseService.getAggregatedCasesByDateAndCountries(
         this.selectedCountries,
         this.dateStart || undefined,
         this.dateEnd || undefined
       ).subscribe({
         next: (data: AggregatedDiseaseCase[]) => {
-          console.log('Country data received:', data);
-          
           if (!data || data.length === 0) {
             console.warn('No data received for selected filters');
             // Fallback to global data if no country data
@@ -130,7 +110,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   }
   
   private loadGlobalData() {
-    // Charger les données globales en conservant le filtre de date
+    // load data with date filters
     this.diseaseCaseService.getAggregatedCasesByDate(
       this.dateStart || undefined, 
       this.dateEnd || undefined
@@ -151,8 +131,6 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    console.log('Processing weekly data, sample:', this.timeSeriesData[0]);
-    
     const sortedData = [...this.timeSeriesData].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
@@ -160,7 +138,6 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     const weeklyMap = new Map<string, WeeklyData>();
 
     sortedData.forEach((dayData) => {
-      // Validation de la date
       if (!dayData.date) {
         console.warn('Skipping data point with missing date:', dayData);
         return;
@@ -198,18 +175,17 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this.weeklyData = Array.from(weeklyMap.values());
-    console.log('Processed weekly data points:', this.weeklyData.length);
   }
 
   updateChart() {
-    // Générer le titre en incluant les dates si disponibles
+    // create chart title based on selected countries
     let chartTitle = 'Global';
     if (this.selectedCountries && this.selectedCountries.length > 0) {
       const countryNames = this.selectedCountries.map(c => c.name).join(', ');
       chartTitle = countryNames;
     }
     
-    // Ajouter la plage de dates au titre si disponible
+    // add date range to the chart title
     let dateRange = '';
     if (this.dateStart && this.dateEnd) {
       dateRange = ` (${this.dateStart} to ${this.dateEnd})`;

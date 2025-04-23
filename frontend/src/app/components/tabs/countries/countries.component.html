@@ -6,30 +6,6 @@
     {{ diseaseName }} Statistics by Country
   </h2>
 
-  <!-- Global statistics -->
-  <!-- <div class="global-stats" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
-        <div class="stat-card" style="flex: 1; min-width: 150px; padding: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
-            <div class="stat-title">Total Confirmés</div>
-            <div class="stat-value" style="font-size: 24px; font-weight: bold;">{{totalCases | number}}</div>
-        </div>
-        <div class="stat-card" style="flex: 1; min-width: 150px; padding: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
-            <div class="stat-title">Total Décès</div>
-            <div class="stat-value" style="font-size: 24px; font-weight: bold; color: #d32f2f;">{{totalDeaths | number}}</div>
-        </div>
-        <div class="stat-card" style="flex: 1; min-width: 150px; padding: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
-            <div class="stat-title">Total Rétablis</div>
-            <div class="stat-value" style="font-size: 24px; font-weight: bold; color: #2e7d32;">{{totalRecoveries | number}}</div>
-        </div>
-        <div class="stat-card" style="flex: 1; min-width: 150px; padding: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
-            <div class="stat-title">Taux de Mortalité</div>
-            <div class="stat-value" style="font-size: 24px; font-weight: bold; color: #d32f2f;">{{mortalityRate}}%</div>
-        </div>
-        <div class="stat-card" style="flex: 1; min-width: 150px; padding: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
-            <div class="stat-title">Taux de Guérison</div>
-            <div class="stat-value" style="font-size: 24px; font-weight: bold; color: #2e7d32;">{{recoveryRate}}%</div>
-        </div>
-    </div> -->
-
   <!-- Country filter -->
   <div style="margin: 20px 0">
     <mat-form-field style="width: 100%">
@@ -143,6 +119,9 @@
         <td mat-cell *matCellDef="let row">
           <button mat-icon-button color="primary" (click)="openEditDialog(row)" matTooltip="Modifier">
             <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="confirmDelete(row)" matTooltip="Supprimer">
+            <mat-icon>delete</mat-icon>
           </button>
         </td>
       </ng-container>

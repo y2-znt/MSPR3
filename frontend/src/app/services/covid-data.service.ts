@@ -11,7 +11,7 @@ export interface CovidStats {
 }
 
 export interface CountryData {
-  id?: number;
+  id?: number | string; // Permettre à la fois number et string
   country: string;
   totalCases: number;
   deaths: number;

@@ -56,7 +56,6 @@ export class EditDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Convertir la date de string à Date
     const caseDate = this.data.date ? new Date(this.data.date) : new Date();
     
     // Pré-remplir le formulaire avec les données existantes

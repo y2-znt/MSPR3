@@ -76,6 +76,7 @@ public class DiseaseCaseService {
     public void deleteDiseaseCase(Integer id) {
         diseaseCaseRepository.deleteById(id);
     }
+    
 
     public List<Object[]> getAggregatedCasesByDateBetween(LocalDate start, LocalDate end) {
         List<Object[]> all = diseaseCaseRepository.getAggregatedCasesByDate();
@@ -110,17 +111,6 @@ public class DiseaseCaseService {
         return filtered;
     }
 
-    /**
-     * Ajoute un nouveau cas de maladie pour un pays spécifique
-     * 
-     * @param countryName Nom du pays
-     * @param date Date du cas
-     * @param confirmedCases Nombre de cas confirmés
-     * @param deaths Nombre de décès
-     * @param recovered Nombre de guérisons
-     * @return Le cas de maladie créé
-     * @throws RuntimeException si le pays ou la maladie n'existe pas
-     */
     public DiseaseCase addDiseaseCaseForCountry(
             String countryName, 
             LocalDate date, 
@@ -128,20 +118,13 @@ public class DiseaseCaseService {
             Integer deaths, 
             Integer recovered) {
         
-        // Trouver la location (pays) par son nom
+        // Find location by name
         List<Location> allLocations = locationRepository.findAll();
         
-        // Déboguer: Afficher tous les pays pour voir comment ils sont enregistrés
-        System.out.println("Recherche du pays: " + countryName);
-        System.out.println("Pays disponibles dans la base de données:");
-        for (Location loc : allLocations) {
-            System.out.println(" - " + loc.getName());
-        }
-        
-        // Tenter de trouver une correspondance exacte
+        // Find exact match first
         Location location = locationRepository.findByName(countryName);
         
-        // Si aucune correspondance exacte, essayer de trouver une correspondance partielle
+        // if not found, try to find a partial match
         if (location == null) {
             System.out.println("Aucune correspondance exacte pour: " + countryName);
             for (Location loc : allLocations) {
@@ -154,7 +137,7 @@ public class DiseaseCaseService {
             }
         }
         
-        // Si toujours aucune correspondance, créer le pays
+        // create
         if (location == null) {
             System.out.println("Création d'un nouveau pays: " + countryName);
             location = new Location();
@@ -162,13 +145,13 @@ public class DiseaseCaseService {
             location = locationRepository.save(location);
         }
         
-        // Obtenir la maladie (COVID-19 par défaut)
+        // get disease by name
         Disease disease = diseaseRepository.findByName("COVID-19");
         if (disease == null) {
             throw new RuntimeException("Maladie 'COVID-19' non trouvée dans la base de données");
         }
         
-        // Créer le nouveau cas
+        // create new case
         DiseaseCase newCase = new DiseaseCase();
         newCase.setLocation(location);
         newCase.setDisease(disease);
@@ -177,22 +160,11 @@ public class DiseaseCaseService {
         newCase.setDeaths(deaths);
         newCase.setRecovered(recovered);
         
-        // Sauvegarder et retourner le cas
         return diseaseCaseRepository.save(newCase);
     }
 
-    /**
-     * Met à jour un cas de maladie existant avec de nouvelles valeurs
-     * 
-     * @param id ID du cas à mettre à jour
-     * @param countryName Nom du pays (peut être différent de l'original)
-     * @param date Nouvelle date
-     * @param confirmedCases Nouveau nombre de cas confirmés
-     * @param deaths Nouveau nombre de décès
-     * @param recovered Nouveau nombre de guérisons
-     * @return Le cas de maladie mis à jour
-     * @throws RuntimeException si le cas n'existe pas ou si le pays n'est pas trouvé
-     */
+    /* update  */
+    
     public DiseaseCase updateDiseaseCaseWithDetails(
             Integer id,
             String countryName,
@@ -201,7 +173,7 @@ public class DiseaseCaseService {
             Integer deaths,
             Integer recovered) {
         
-        // Vérifier si le cas existe
+        // check if case exists
         Optional<DiseaseCase> existingCaseOpt = diseaseCaseRepository.findById(id);
         if (existingCaseOpt.isEmpty()) {
             throw new RuntimeException("Cas non trouvé avec l'ID: " + id);
@@ -252,5 +224,20 @@ public class DiseaseCaseService {
         
         // Sauvegarder et retourner le cas mis à jour
         return diseaseCaseRepository.save(existingCase);
+    }
+
+    /* delete last */
+    public boolean deleteLatestCaseForCountry(String countryName) {
+        // find the latest case for the country
+        List<DiseaseCase> cases = diseaseCaseRepository.findByLocationNameOrderByDateDesc(countryName);
+        
+        // if no cases found, return false
+        if (cases == null || cases.isEmpty()) {
+            return false;
+        }
+        
+        // delete the latest case
+        diseaseCaseRepository.delete(cases.get(0));
+        return true;
     }
 }
