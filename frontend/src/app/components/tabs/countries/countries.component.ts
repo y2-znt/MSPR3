@@ -139,7 +139,6 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
       return this.countryService.getCountriesStats(country.name);
     });
 
-    // wait for all requests to complete
     forkJoin(requests)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -166,7 +165,7 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
                   latestStats?.recovered,
                   latestStats?.confirmedCases
                 ),
-                id: latestStats?.id || this.generateTempId(country.name),
+                id: latestStats?.id || country.id,
                 date: latestStats?.date || this.formatDate(new Date())
               };
             }
@@ -190,10 +189,6 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   private calculateRate(numerator: number, denominator: number): number {
     const rate = denominator > 0 ? (numerator / denominator) * 100 : 0;
     return parseFloat(rate.toFixed(2));
-  }
-
-  private generateTempId(countryName: string): string {
-    return `temp-${countryName}-${Date.now()}`;
   }
 
   private formatDate(date: Date): string {
@@ -225,68 +220,41 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result.success) {
-        this.refreshData();
+        const index = this.dataSource.data.findIndex(item => item.id === result.id);
+        if (index !== -1) {
+          const updatedData = [...this.dataSource.data];
+          updatedData[index] = {
+            ...updatedData[index],
+            totalCases: result.confirmedCases,
+            deaths: result.deaths,
+            recovered: result.recovered,
+            mortalityRate: this.calculateRate(result.deaths, result.confirmedCases),
+            recoveryRate: this.calculateRate(result.recovered, result.confirmedCases)
+          };
+          this.dataSource.data = updatedData;
+          this.cdr.detectChanges();
+        }
       }
     });
   }
 
   confirmDelete(element: CountryData): void {
-    // Logs for debugging
-    console.log('Attempting to delete case:', element);
-    
-    // Check if ID exists
     if (!element.id) {
-      console.log('Error: Missing ID');
       alert(`Cannot delete a case for ${element.country} without an identifier.`);
       return;
     }
 
-    // If it's a temporary ID, ask for confirmation
-    if (typeof element.id === 'string' && element.id.indexOf('temp-') === 0) {
-      console.log('Temporary ID detected:', element.id);
-      
-      if (confirm(`The data for ${element.country} is not yet saved or doesn't have a valid ID.\n\nDo you want to delete the latest entry for ${element.country}?`)) {
-        console.log('Deleting the latest entry for', element.country);
-        
-        // Direct approach - Immediately remove from UI to improve responsiveness
-        this.removeElementFromTable(element);
-        
-        // Display confirmation message immediately
-        alert(`The case for ${element.country} has been deleted.`);
-        
-        // Simulate a background operation (without waiting for response)
-        setTimeout(() => {
-          console.log('Background deletion completed for', element.country);
-        }, 300);
-      }
-      return;
-    }
-
-    // For normal IDs, continue with standard deletion method
-    console.log('Valid ID for deletion:', element.id, 'Type:', typeof element.id);
-
-    // If the ID is valid, ask for confirmation
     if (confirm(`Are you sure you want to delete the case for ${element.country}?`)) {
-      // Immediately remove from UI
       this.removeElementFromTable(element);
-      
-      // Display confirmation message
-      alert(`The case for ${element.country} has been deleted.`);
-      
-      // Perform the actual deletion in the background
-      console.log('Sending DELETE request with ID:', element.id);
       this.diseaseCaseService.deleteDiseaseCase(element.id)
         .subscribe({
           next: (response: any) => {
-            console.log('Background deletion response:', response);
+            console.log('Case deleted successfully:', response);
           },
           error: (error: any) => {
-            console.error('HTTP error during case deletion:', error);
-            // Option: display a discrete error notification or restore the row
+            console.error('Error deleting case:', error);
           }
         });
-    } else {
-      console.log('Deletion cancelled by user');
     }
   }
   
