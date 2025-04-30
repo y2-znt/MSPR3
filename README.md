@@ -31,8 +31,8 @@ Solution de surveillance et d'analyse épidémiologique développée pour l'Orga
 
 ```bash
 # Cloner le repository
-git clone https://github.com/y2-znt/MSPR1.git
-cd MSPR1
+git clone https://github.com/y2-znt/MSPR2.git
+cd MSPR2
 
 # Lancer l'application avec Docker
 docker-compose up -d
