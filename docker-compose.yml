@@ -12,6 +12,9 @@ services:
     restart: always
     depends_on:
       - backend
+    networks:
+      - mspr2-network
+
   backend:
     container_name: mspr2-backend
     build:
@@ -30,6 +33,9 @@ services:
     restart: always
     depends_on:
       - db
+    networks:
+      - mspr2-network
+
   db:
     container_name: mspr2-db
     image: postgres:latest
@@ -41,6 +47,13 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - mspr2-network
 
 volumes:
-  pgdata: {}
+  pgdata:
+    name: mspr2-pgdata
+
+networks:
+  mspr2-network:
+    driver: bridge
