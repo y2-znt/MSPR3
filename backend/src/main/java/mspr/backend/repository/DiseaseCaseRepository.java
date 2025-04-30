@@ -11,7 +11,7 @@ import mspr.backend.entity.DiseaseCase;
 
 @Repository
 public interface DiseaseCaseRepository extends JpaRepository<DiseaseCase, Integer> {
-    // DiseaseCase findByName(String name);
+
     @Query("SELECT dc FROM DiseaseCase dc JOIN dc.disease d WHERE d.name = :name")
     DiseaseCase findByName(@Param("name") String name);
 
@@ -28,18 +28,18 @@ public interface DiseaseCaseRepository extends JpaRepository<DiseaseCase, Intege
             "FROM DiseaseCase dc GROUP BY dc.date ORDER BY dc.date")
     List<Object[]> getAggregatedCasesByDate();
 
-    // Avec filtre pays
-    @Query("SELECT dc.date, c.name, SUM(dc.confirmedCases), SUM(dc.deaths), SUM(dc.recovered) " +
+    @Query("SELECT dc.date, c.name, SUM(dc.confirmedCases), SUM(dc.deaths), SUM(dc.recovered), MAX(dc.id) " +
             "FROM DiseaseCase dc JOIN dc.location l JOIN l.region r JOIN r.country c " +
             "WHERE c.name IN :countries " +
             "GROUP BY dc.date, c.name ORDER BY dc.date, c.name")
     List<Object[]> getAggregatedCasesByDateAndCountries(
             @Param("countries") List<String> countries);
 
-    // Sans filtre pays
-    @Query("SELECT dc.date, c.name, SUM(dc.confirmedCases), SUM(dc.deaths), SUM(dc.recovered) " +
+    @Query("SELECT dc.date, c.name, SUM(dc.confirmedCases), SUM(dc.deaths), SUM(dc.recovered), MAX(dc.id) " +
             "FROM DiseaseCase dc JOIN dc.location l JOIN l.region r JOIN r.country c " +
             "GROUP BY dc.date, c.name ORDER BY dc.date, c.name")
     List<Object[]> getAggregatedCasesByDateAllCountries();
 
+    @Query("SELECT dc FROM DiseaseCase dc JOIN dc.location l WHERE l.name = :countryName ORDER BY dc.date DESC")
+    List<DiseaseCase> findByLocationNameOrderByDateDesc(@Param("countryName") String countryName);
 }

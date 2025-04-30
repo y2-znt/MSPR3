@@ -13,6 +13,9 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import {
   CountryData,
@@ -23,6 +26,8 @@ import { CountryService } from '../../../services/country.service';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Country } from '../../../models/country.model';
+import { EditDialogComponent } from '../../edit-dialog/edit-dialog.component';
+import { DiseaseCaseService } from '../../../services/disease-case.service';
 
 @Component({
   selector: 'app-countries',
@@ -34,6 +39,8 @@ import { Country } from '../../../models/country.model';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   templateUrl: './countries.component.html',
   styleUrl: './countries.component.scss',
@@ -52,6 +59,7 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     'recovered',
     'mortalityRate',
     'recoveryRate',
+    'actions',
   ];
   dataSource: MatTableDataSource<CountryData> =
     new MatTableDataSource<CountryData>();
@@ -59,10 +67,7 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   private countriesData: CountryData[] = [];
   public error: string | null = null;
 
-  // Demonstration COVID statistics (in case real data is not available)
   diseaseName: string = 'COVID-19';
-  mortalityRate: number = 5.24;
-  recoveryRate: number = 46.88;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -70,20 +75,18 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private covidDataService: CovidDataService,
     private countryService: CountryService,
-    private cdr: ChangeDetectorRef
+    private diseaseCaseService: DiseaseCaseService,
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    console.log('CountriesComponent: ngOnInit');
-
     if (this.countries && this.countries.length > 0) {
       this.loadCountriesStats();
     }
   }
 
   ngAfterViewInit(): void {
-    console.log('CountriesComponent: ngAfterViewInit');
-
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
@@ -131,12 +134,8 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     this.isLoading = true;
-    console.log(`Loading stats for ${this.countries.length} countries`);
 
     const requests = this.countries.map((country) => {
-      if (this.countries.indexOf(country) < 3) {
-        console.log(`Request for ${country.name}`);
-      }
       return this.countryService.getCountriesStats(country.name);
     });
 
@@ -144,8 +143,6 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (results) => {
-          console.log(`Received results for ${results.length} countries`);
-
           const countryData: CountryData[] = this.countries.map(
             (country, index) => {
               const countryResults = results[index];
@@ -153,12 +150,6 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
               let latestStats = null;
               if (countryResults && countryResults.length > 0) {
                 latestStats = countryResults[countryResults.length - 1];
-                if (index < 3) {
-                  console.log(
-                    `Last stats for ${country.name}:`,
-                    latestStats
-                  );
-                }
               }
 
               return {
@@ -174,11 +165,12 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
                   latestStats?.recovered,
                   latestStats?.confirmedCases
                 ),
+                id: latestStats?.id || country.id,
+                date: latestStats?.date || this.formatDate(new Date())
               };
             }
           );
 
-          console.log(`Generated data for ${countryData.length} countries`);
           this.dataSource.data = countryData;
           this.countriesData = countryData;
           this.isLoading = false;
@@ -199,6 +191,10 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     return parseFloat(rate.toFixed(2));
   }
 
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -206,6 +202,91 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  openEditDialog(element: CountryData): void {
+    const dialogRef = this.dialog.open(EditDialogComponent, {
+      width: '500px',
+      data: {
+        id: element.id,
+        country: element.country,
+        date: element.date,
+        confirmedCases: element.totalCases,
+        deaths: element.deaths,
+        recovered: element.recovered,
+        countries: this.countries,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.success) {
+        const index = this.dataSource.data.findIndex(item => item.id === result.id);
+        if (index !== -1) {
+          const updatedData = [...this.dataSource.data];
+          updatedData[index] = {
+            ...updatedData[index],
+            totalCases: result.confirmedCases,
+            deaths: result.deaths,
+            recovered: result.recovered,
+            mortalityRate: this.calculateRate(result.deaths, result.confirmedCases),
+            recoveryRate: this.calculateRate(result.recovered, result.confirmedCases)
+          };
+          this.dataSource.data = updatedData;
+          this.cdr.detectChanges();
+        }
+      }
+    });
+  }
+
+  confirmDelete(element: CountryData): void {
+    if (!element.id) {
+      alert(`Cannot delete a case for ${element.country} without an identifier.`);
+      return;
+    }
+
+    if (confirm(`Are you sure you want to delete the case for ${element.country}?`)) {
+      this.removeElementFromTable(element);
+      this.diseaseCaseService.deleteDiseaseCase(element.id)
+        .subscribe({
+          next: (response: any) => {
+            console.log('Case deleted successfully:', response);
+          },
+          error: (error: any) => {
+            console.error('Error deleting case:', error);
+          }
+        });
+    }
+  }
+  
+  /**
+   * Removes an element from the data table
+   */
+  private removeElementFromTable(element: CountryData): void {
+    const index = this.dataSource.data.findIndex(item => 
+      item.id === element.id || 
+      (item.country === element.country && item.date === element.date)
+    );
+    
+    console.log('Index found in table:', index);
+    
+    if (index !== -1) {
+      console.log('Removing element from table at index:', index);
+      // Remove the element from the array
+      const updatedData = [...this.dataSource.data];
+      updatedData.splice(index, 1);
+      this.dataSource.data = updatedData;
+      console.log('Table updated, new size:', this.dataSource.data.length);
+      
+      // Force a view update
+      this.cdr.detectChanges();
+      console.log('View updated via ChangeDetectorRef');
+    } else {
+      console.log('Element not found in table');
+    }
+  }
+
+  refreshData(): void {
+    console.log('Data updated, reloading required');
   }
 
   ngOnDestroy(): void {

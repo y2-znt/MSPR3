@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -16,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Country } from '../../models/country.model';
 import { TotalKpiDto } from '../../models/diseaseCase.model';
 import { Page } from '../../models/pagination.model';
@@ -28,11 +30,12 @@ import {
 import { DiseaseCaseService } from '../../services/disease-case.service';
 import { CountriesComponent } from '../tabs/countries/countries.component';
 import { OverviewComponent } from '../tabs/overview/overview.component';
+import { DialogComponent } from '../../components/dialog/dialog.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  providers: [provideNativeDateAdapter(), CountryService, DiseaseCaseService],
+  providers: [provideNativeDateAdapter(), CountryService, DiseaseCaseService, DialogComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -46,9 +49,12 @@ import { OverviewComponent } from '../tabs/overview/overview.component';
     MatButtonToggleModule,
     MatSelectModule,
     MatTabsModule,
+    MatButtonModule,
+    MatDialogModule,
     OrderByAlphaPipe,
     OverviewComponent,
     CountriesComponent,
+    DialogComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -74,17 +80,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
   mortalityRate: number = 0;
   totalRecoveries: number = 0;
   recoveryRate: number = 0;
+  
 
   constructor(
     private countryService: CountryService,
     private covidDataService: CovidDataService,
     private cdr: ChangeDetectorRef,
-    private diseaseCaseService: DiseaseCaseService
+    private diseaseCaseService: DiseaseCaseService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.loadCountries();
     this.loadKpiData();
+  
+
+    this.dateRange.valueChanges.subscribe(dateRange => {
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {}
@@ -113,14 +126,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadCountries(): void {
-    console.log('🌍 Start loading countries...');
     this.isLoading = true;
 
     this.countryService
       .getAllCountries(this.currentPage, this.pageSize)
       .subscribe({
         next: (page: Page<Country>) => {
-          console.log('✅ Countries loaded successfully:', {
+          console.log('Countries loaded successfully:', {
             totalElements: page.content.length,
             firstCountry: page.content[0],
             lastCountry: page.content[page.content.length - 1],
@@ -140,17 +152,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
           // Update the service with the initial list of countries
           this.covidDataService.updateCountriesData(countryData);
-          console.log('📤 Countries data updated in the service:', countryData);
+          console.log('Countries data updated in the service:', countryData);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('❌ Error loading countries:', error);
+          console.error('Error loading countries:', error);
           this.isLoading = false;
           this.cdr.detectChanges();
         },
         complete: () => {
-          console.log('🏁 Countries loading completed');
           this.isLoading = false;
           this.cdr.detectChanges();
         },
@@ -172,5 +183,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     );
+  }
+
+  
+  get formattedDateRange(): { start: string | null, end: string | null } {
+    const startValue = this.dateRange.get('start')?.value || null;
+    const endValue = this.dateRange.get('end')?.value || null;
+    
+    const start = startValue ? this.formatDate(startValue) : null;
+    const end = endValue ? this.formatDate(endValue) : null;
+    
+    return { start, end };
+  }
+  
+  // Formated date YYYY-MM-DD
+  private formatDate(date: Date | null): string | null {
+    if (!date) return null;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  openAddCaseDialog(): void {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '500px',
+      data: { countries: this.countries }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadCountries();
+        this.loadKpiData();
+      }
+    });
   }
 }

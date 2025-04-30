@@ -31,6 +31,10 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="openAddCaseDialog()">
+        <mat-icon>add</mat-icon> Add New Case
+      </button>
     </div>
   </div>
 
@@ -78,6 +82,9 @@
         [totalDeaths]="totalDeaths"
         [totalRecoveries]="totalRecoveries"
         [diseaseName]="diseaseName"
+        [selectedCountries]="countriesControl.value || []"
+        [dateStart]="formattedDateRange.start"
+        [dateEnd]="formattedDateRange.end"
       />
     </mat-tab>
     <mat-tab label="Countries">
@@ -90,6 +97,6 @@
       >
       </app-countries>
     </mat-tab>
-    <mat-tab label="Regional Data"></mat-tab>
+    <!-- <mat-tab label="Regional Data"></mat-tab> -->
   </mat-tab-group>
 </div>

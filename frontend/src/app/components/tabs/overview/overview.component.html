@@ -1,7 +1,14 @@
 <div class="chart-container">
   <mat-card class="chart-card">
     <mat-card-header>
-      <mat-card-title>Cases {{ diseaseName }} worldwide</mat-card-title>
+      <mat-card-title>
+        {{ getSelectedCountriesText() }} {{ diseaseName }} Cases
+        <span *ngIf="dateStart || dateEnd" class="period-subtitle">
+          {{ dateStart ? 'From ' + dateStart : '' }}
+          {{ dateStart && dateEnd ? ' to ' : '' }}
+          {{ dateEnd ? 'To ' + dateEnd : '' }}
+        </span>
+      </mat-card-title>
       <mat-card-subtitle
         >Evolution of confirmed cases, recoveries and deaths</mat-card-subtitle
       >
