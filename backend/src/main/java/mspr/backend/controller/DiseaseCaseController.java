@@ -8,13 +8,20 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import mspr.backend.entity.DiseaseCase;
-import mspr.backend.dto.TotalKpiDto;
-import mspr.backend.service.DiseaseCaseService;
-
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import mspr.backend.dto.TotalKpiDto;
+import mspr.backend.entity.DiseaseCase;
+import mspr.backend.service.DiseaseCaseService;
 
 @RestController
 @RequestMapping("/api/disease-cases")
@@ -64,7 +71,7 @@ public class DiseaseCaseController {
             map.put("confirmedCases", row[2]);
             map.put("deaths", row[3]);
             map.put("recovered", row[4]);
-            map.put("id", row[5]); // Ajout de l'ID à la réponse
+            map.put("id", row[5]);
             response.add(map);
         }
         return response;
@@ -73,21 +80,17 @@ public class DiseaseCaseController {
     @PostMapping("/aggregated-by-date")
     public Map<String, Object> addDiseaseCase(@RequestBody Map<String, Object> caseData) {
         try {
-            // Extraire les données de la requête
             String dateStr = (String) caseData.get("date");
             String countryName = (String) caseData.get("country");
             Integer confirmedCases = Integer.valueOf(caseData.get("confirmedCases").toString());
             Integer deaths = Integer.valueOf(caseData.get("deaths").toString());
             Integer recovered = Integer.valueOf(caseData.get("recovered").toString());
             
-            // Convertir la date
             LocalDate date = LocalDate.parse(dateStr);
             
-            // Créer et enregistrer le cas
             DiseaseCase newCase = diseaseCaseService.addDiseaseCaseForCountry(
                 countryName, date, confirmedCases, deaths, recovered);
             
-            // Préparer la réponse
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("date", newCase.getDate());
@@ -110,21 +113,17 @@ public class DiseaseCaseController {
             @PathVariable Integer id,
             @RequestBody Map<String, Object> caseData) {
         try {
-            // extract data from request
             String dateStr = (String) caseData.get("date");
             String countryName = (String) caseData.get("country");
             Integer confirmedCases = Integer.valueOf(caseData.get("confirmedCases").toString());
             Integer deaths = Integer.valueOf(caseData.get("deaths").toString());
             Integer recovered = Integer.valueOf(caseData.get("recovered").toString());
             
-            // parse date
             LocalDate date = LocalDate.parse(dateStr);
             
-            // update case & get the updated case
             DiseaseCase updatedCase = diseaseCaseService.updateDiseaseCaseWithDetails(
                 id, countryName, date, confirmedCases, deaths, recovered);
             
-            // prepare response
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("id", updatedCase.getId());
@@ -171,7 +170,6 @@ public class DiseaseCaseController {
         try {
             System.out.println("Backend - Requête de suppression reçue pour l'ID: " + id);
             
-            // Vérifier si le cas existe en utilisant getDiseaseCaseById au lieu de existsById
             Optional<DiseaseCase> existingCase = diseaseCaseService.getDiseaseCaseById(id);
             boolean exists = existingCase.isPresent();
             System.out.println("Backend - Le cas existe-t-il? " + exists);
@@ -184,11 +182,9 @@ public class DiseaseCaseController {
                 return errorResponse;
             }
             
-            // Supprimer le cas
             System.out.println("Backend - Suppression du cas avec l'ID: " + id);
             diseaseCaseService.deleteDiseaseCase(id);
             
-            // Préparer la réponse
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Le cas a été supprimé avec succès");

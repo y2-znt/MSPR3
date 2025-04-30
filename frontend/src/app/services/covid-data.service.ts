@@ -11,7 +11,7 @@ export interface CovidStats {
 }
 
 export interface CountryData {
-  id?: number | string; // Permettre à la fois number et string
+  id?: number | string;
   country: string;
   totalCases: number;
   deaths: number;
@@ -22,16 +22,16 @@ export interface CountryData {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CovidDataService {
   private covidStatsSubject = new BehaviorSubject<CovidStats | null>(null);
   covidStats$ = this.covidStatsSubject.asObservable();
-  
+
   private countriesDataSubject = new BehaviorSubject<CountryData[]>([]);
   countriesData$ = this.countriesDataSubject.asObservable();
 
-  constructor() { }
+  constructor() {}
 
   updateCovidStats(stats: CovidStats): void {
     this.covidStatsSubject.next(stats);
@@ -40,11 +40,11 @@ export class CovidDataService {
   getCovidStats(): CovidStats | null {
     return this.covidStatsSubject.value;
   }
-  
+
   updateCountriesData(data: CountryData[]): void {
     this.countriesDataSubject.next(data);
   }
-  
+
   getCountriesData(): CountryData[] {
     return this.countriesDataSubject.value;
   }

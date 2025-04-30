@@ -1,6 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,27 +32,28 @@ import { DiseaseCaseService } from '../../services/disease-case.service';
     MatSelectModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   templateUrl: './edit-dialog.component.html',
-  styleUrl: './edit-dialog.component.scss'
+  styleUrl: './edit-dialog.component.scss',
 })
 export class EditDialogComponent implements OnInit {
   caseForm: FormGroup;
   isSubmitting = false;
-  
+
   constructor(
     private fb: FormBuilder,
     private diseaseCaseService: DiseaseCaseService,
     public dialogRef: MatDialogRef<EditDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { 
-      id: number | string,
-      country: string,
-      date: string,
-      confirmedCases: number,
-      deaths: number, 
-      recovered: number,
-      countries: any[]
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      id: number | string;
+      country: string;
+      date: string;
+      confirmedCases: number;
+      deaths: number;
+      recovered: number;
+      countries: any[];
     }
   ) {
     this.caseForm = this.fb.group({
@@ -51,20 +61,19 @@ export class EditDialogComponent implements OnInit {
       date: [new Date(), Validators.required],
       confirmedCases: [0, [Validators.required, Validators.min(0)]],
       deaths: [0, [Validators.required, Validators.min(0)]],
-      recovered: [0, [Validators.required, Validators.min(0)]]
+      recovered: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
   ngOnInit(): void {
     const caseDate = this.data.date ? new Date(this.data.date) : new Date();
-    
-    // Pré-remplir le formulaire avec les données existantes
+
     this.caseForm.setValue({
       country: this.data.country,
       date: caseDate,
       confirmedCases: this.data.confirmedCases,
       deaths: this.data.deaths,
-      recovered: this.data.recovered
+      recovered: this.data.recovered,
     });
   }
 
@@ -75,20 +84,20 @@ export class EditDialogComponent implements OnInit {
   onSubmit(): void {
     if (this.caseForm.valid) {
       this.isSubmitting = true;
-      
+
       const formValue = this.caseForm.value;
       const formattedDate = this.formatDate(formValue.date);
-      
+
       const payload = {
         country: formValue.country,
         date: formattedDate,
         confirmedCases: formValue.confirmedCases,
         deaths: formValue.deaths,
-        recovered: formValue.recovered
+        recovered: formValue.recovered,
       };
-      
-      // Utiliser la méthode de mise à jour avec l'ID
-      this.diseaseCaseService.updateDiseaseCase(this.data.id, payload)
+
+      this.diseaseCaseService
+        .updateDiseaseCase(this.data.id, payload)
         .subscribe({
           next: (response) => {
             this.dialogRef.close(response);
@@ -96,11 +105,11 @@ export class EditDialogComponent implements OnInit {
           error: (error) => {
             console.error('Error updating case:', error);
             this.isSubmitting = false;
-          }
+          },
         });
     }
   }
-  
+
   private formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');

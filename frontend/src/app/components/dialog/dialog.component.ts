@@ -1,6 +1,15 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,15 +31,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSelectModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   templateUrl: './dialog.component.html',
-  styleUrl: './dialog.component.scss'
+  styleUrl: './dialog.component.scss',
 })
 export class DialogComponent {
   caseForm: FormGroup;
   isSubmitting = false;
-  
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -42,7 +51,7 @@ export class DialogComponent {
       date: [new Date(), Validators.required],
       confirmedCases: [0, [Validators.required, Validators.min(0)]],
       deaths: [0, [Validators.required, Validators.min(0)]],
-      recovered: [0, [Validators.required, Validators.min(0)]]
+      recovered: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
@@ -53,20 +62,23 @@ export class DialogComponent {
   onSubmit(): void {
     if (this.caseForm.valid) {
       this.isSubmitting = true;
-      
+
       const formValue = this.caseForm.value;
       const formattedDate = this.formatDate(formValue.date);
-      
+
       const payload = {
         country: formValue.country,
         date: formattedDate,
         confirmedCases: formValue.confirmedCases,
         deaths: formValue.deaths,
-        recovered: formValue.recovered
+        recovered: formValue.recovered,
       };
-      
-      // Utiliser une URL sans paramètre de requête - les données sont dans le corps de la requête
-      this.http.post('http://localhost:8080/api/disease-cases/aggregated-by-date', payload)
+
+      this.http
+        .post(
+          'http://localhost:8080/api/disease-cases/aggregated-by-date',
+          payload
+        )
         .subscribe({
           next: (response) => {
             this.dialogRef.close(response);
@@ -74,11 +86,11 @@ export class DialogComponent {
           error: (error) => {
             console.error('Error adding case:', error);
             this.isSubmitting = false;
-          }
+          },
         });
     }
   }
-  
+
   private formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
