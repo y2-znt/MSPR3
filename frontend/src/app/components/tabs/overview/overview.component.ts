@@ -290,11 +290,17 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
       .map((e) => e.join(','))
       .join('\n');
   
+    let fileName = 'global_weekly_data.csv';
+    
+    if (this.selectedCountries && this.selectedCountries.length === 1) {
+      fileName = `${this.selectedCountries[0].name}_weekly_data.csv`;
+    }
+    
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.setAttribute('download', 'weekly_data.csv');
+    a.setAttribute('download', fileName);
     a.click();
     window.URL.revokeObjectURL(url);
   }
