@@ -12,6 +12,8 @@ import { BaseChartDirective } from 'ng2-charts';
 import { AggregatedDiseaseCase } from '../../../models/diseaseCase.model';
 import { DiseaseCaseService } from '../../../services/disease-case.service';
 import { Country } from '../../../models/country.model';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 interface WeeklyData {
   weekLabel: string;
@@ -23,7 +25,7 @@ interface WeeklyData {
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [MatCardModule, BaseChartDirective],
+  imports: [MatCardModule, BaseChartDirective, MatButton, MatIcon],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
 })
@@ -269,4 +271,32 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
       },
     };
   }
+
+  public exportToCSV(): void {
+    if (!this.weeklyData || this.weeklyData.length === 0) {
+      console.warn('No weekly data to export.');
+      return;
+    }
+  
+    const headers = ['Week', 'Confirmed Cases', 'Deaths', 'Recovered'];
+    const rows = this.weeklyData.map((data) => [
+      data.weekLabel,
+      data.confirmedCases,
+      data.deaths,
+      data.recovered
+    ]);
+  
+    const csvContent = [headers, ...rows]
+      .map((e) => e.join(','))
+      .join('\n');
+  
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.setAttribute('download', 'weekly_data.csv');
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+  
 }
