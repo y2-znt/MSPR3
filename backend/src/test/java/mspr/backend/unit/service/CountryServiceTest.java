@@ -1,4 +1,4 @@
-package mspr.backend.service;
+package mspr.backend.unit.service;
 
 public class CountryServiceTest {
 
