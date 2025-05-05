@@ -1,55 +1,54 @@
 <div
   class="covid-data-container"
   style="padding: 20px; min-height: 600px; width: 100%; border: 1px solid #eee"
+  role="region" aria-labelledby="statistics-heading"
 >
-  <h2 style="color: #333; margin-bottom: 20px">
+  <h2 id="statistics-heading" style="color: #333; margin-bottom: 20px">
     {{ diseaseName }} Statistics by Country
   </h2>
 
   <!-- Country filter -->
   <div style="margin: 20px 0">
     <mat-form-field style="width: 100%">
-      <mat-label>Filter countries</mat-label>
+      <mat-label for="country-filter">Filter countries</mat-label>
       <input
         matInput
+        id="country-filter"
         (keyup)="applyFilter($event)"
         placeholder="Ex. France"
         #input
+        aria-describedby="country-filter-desc"
       />
+      <div id="country-filter-desc" style="font-size: 12px; color: gray;">
+        Type a country name to filter the data.
+      </div>
     </mat-form-field>
   </div>
 
   <!-- Data table -->
   <div
-    style="
-      background: white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 20px;
-      min-height: 400px;
-    "
+    style="background: white; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border-radius: 4px; overflow: hidden; margin-top: 20px; min-height: 400px"
+    aria-live="polite" 
+    role="table"
+    aria-labelledby="statistics-heading"
   >
     <!-- Loading indicator -->
     <div
       *ngIf="isLoading"
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100px;
-      "
+      style="display: flex; justify-content: center; align-items: center; height: 100px"
+      role="status"
+      aria-live="assertive"
     >
       Loading data...
     </div>
 
     <!-- Debug info -->
-    <div style="padding: 10px; color: blue; font-size: 12px">
+    <div style="padding: 10px; color: blue; font-size: 12px" aria-hidden="true">
       Number of countries: {{ dataSource.data.length }}
     </div>
 
     <!-- Table -->
-    <table mat-table [dataSource]="dataSource" matSort style="width: 100%">
+    <table mat-table [dataSource]="dataSource" matSort style="width: 100%" aria-labelledby="statistics-heading">
       <!-- Country Column -->
       <ng-container matColumnDef="country">
         <th
@@ -57,6 +56,8 @@
           *matHeaderCellDef
           mat-sort-header
           style="min-width: 150px"
+          role="columnheader"
+          aria-sort="none"
         >
           Country
         </th>
@@ -65,7 +66,7 @@
 
       <!-- Total Cases Column -->
       <ng-container matColumnDef="totalCases">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
           Confirmed Cases
         </th>
         <td mat-cell *matCellDef="let row">{{ row.totalCases | number }}</td>
@@ -73,7 +74,9 @@
 
       <!-- Deaths Column -->
       <ng-container matColumnDef="deaths">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Deaths</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
+          Deaths
+        </th>
         <td mat-cell *matCellDef="let row" style="color: #d32f2f">
           {{ row.deaths | number }}
         </td>
@@ -81,7 +84,9 @@
 
       <!-- Recovered Column -->
       <ng-container matColumnDef="recovered">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Recovered</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
+          Recovered
+        </th>
         <td mat-cell *matCellDef="let row" style="color: #2e7d32">
           {{ row.recovered | number }}
         </td>
@@ -89,26 +94,20 @@
 
       <!-- Mortality Rate Column -->
       <ng-container matColumnDef="mortalityRate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
           Mortality Rate
         </th>
-        <td
-          mat-cell
-          *matCellDef="let row"
-          style="font-weight: 500; color: #d32f2f"
-        >
+        <td mat-cell *matCellDef="let row" style="font-weight: 500; color: #d32f2f">
           {{ row.mortalityRate }}%
         </td>
       </ng-container>
 
       <!-- Recovery Rate Column -->
       <ng-container matColumnDef="recoveryRate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Recovery Rate</th>
-        <td
-          mat-cell
-          *matCellDef="let row"
-          style="font-weight: 500; color: #2e7d32"
-        >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
+          Recovery Rate
+        </th>
+        <td mat-cell *matCellDef="let row" style="font-weight: 500; color: #2e7d32">
           {{ row.recoveryRate }}%
         </td>
       </ng-container>
@@ -117,10 +116,22 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button color="primary" (click)="openEditDialog(row)" matTooltip="Modifier">
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="openEditDialog(row)"
+            matTooltip="Modify"
+            aria-label="Edit country data"
+          >
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="confirmDelete(row)" matTooltip="Supprimer">
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="confirmDelete(row)"
+            matTooltip="Delete"
+            aria-label="Delete country data"
+          >
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -132,12 +143,13 @@
       <!-- Data rows -->
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-      <!-- Row shown when there is no matching data. -->
+      <!-- Row shown when there is no matching data -->
       <tr class="mat-row" *matNoDataRow>
         <td
           class="mat-cell"
           colspan="6"
           style="text-align: center; padding: 20px"
+          role="row"
         >
           <div *ngIf="dataSource.data.length === 0">Loading data...</div>
           <div *ngIf="dataSource.data.length > 0">

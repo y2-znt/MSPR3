@@ -1,39 +1,56 @@
-<div class="dashboard-container">
+<div class="dashboard-container" role="main" aria-labelledby="dashboardTitle">
   <!-- Header -->
-  <div class="dashboard-header">
-    <h1 class="mat-headline-4">Dashboard {{ diseaseName }}</h1>
+  <div class="dashboard-header" role="region" aria-labelledby="filtersTitle">
+    <h1 id="dashboardTitle" class="mat-headline-4">Dashboard {{ diseaseName }}</h1>
+    <div id="filtersTitle" class="visually-hidden">Filter options</div>
+
     <div class="header-actions">
       <mat-form-field appearance="outline">
-        <mat-label>Period</mat-label>
-        <mat-date-range-input [formGroup]="dateRange" [rangePicker]="picker">
+        <mat-label id="periodLabel">Period</mat-label>
+        <mat-date-range-input [formGroup]="dateRange" [rangePicker]="picker" aria-labelledby="periodLabel">
           <input
             matStartDate
             placeholder="Start Date"
             formControlName="start"
+            aria-label="Start date of the period"
           />
-          <input matEndDate placeholder="End Date" formControlName="end" />
+          <input
+            matEndDate
+            placeholder="End Date"
+            formControlName="end"
+            aria-label="End date of the period"
+          />
         </mat-date-range-input>
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker"
-        ></mat-datepicker-toggle>
+        <mat-datepicker-toggle matIconSuffix [for]="picker" aria-label="Open calendar for date range"></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Select countries</mat-label>
-        <mat-select [formControl]="countriesControl" multiple>
+        <mat-label id="countryLabel">Select countries</mat-label>
+        <mat-select
+          [formControl]="countriesControl"
+          multiple
+          aria-labelledby="countryLabel"
+          aria-label="Select one or more countries"
+        >
           <mat-option
             *ngFor="let country of countries | orderByAlpha"
             [value]="country"
+            [attr.aria-label]="'Select ' + country.name"
           >
             {{ country.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" (click)="openAddCaseDialog()">
-        <mat-icon>add</mat-icon> Add New Case
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openAddCaseDialog()"
+        aria-label="Add a new case"
+      >
+        <mat-icon aria-hidden="true">add</mat-icon>
+        Add New Case
       </button>
     </div>
   </div>
@@ -43,21 +60,22 @@
   </p>
 
   <!-- KPI Cards -->
-  <div class="kpi-grid">
+  <div class="kpi-grid" role="region" aria-label="Key Performance Indicators">
     <mat-card class="kpi-card" *ngFor="let card of kpiCards">
       <mat-card-content>
         <ng-container *ngIf="!isLoading; else skeletonLoader">
           <div class="kpi-header">
             <h2>{{ card.label }}</h2>
-            <mat-icon>{{ card.icon }}</mat-icon>
+            <mat-icon aria-hidden="true">{{ card.icon }}</mat-icon>
           </div>
-
-          <div class="kpi-value">{{ card.value | number }}</div>
+          <div class="kpi-value" [attr.aria-label]="'Some label'">
+            {{ card.value | number }}
+          </div>
           <div class="kpi-subtitle">{{ card.subtitle }}</div>
         </ng-container>
 
         <ng-template #skeletonLoader>
-          <div class="kpi-skeleton">
+          <div class="kpi-skeleton" aria-hidden="true">
             <div class="kpi-header">
               <div class="skeleton-title"></div>
               <div class="skeleton-icon"></div>
@@ -75,6 +93,7 @@
     mat-stretch-tabs="false"
     mat-align-tabs="start"
     class="dashboard-tabs"
+    aria-label="Dashboard sections"
   >
     <mat-tab label="Overview">
       <app-overview
@@ -87,6 +106,7 @@
         [dateEnd]="formattedDateRange.end"
       />
     </mat-tab>
+
     <mat-tab label="Countries">
       <app-countries
         [countries]="countries"
@@ -94,9 +114,7 @@
         [totalCases]="totalCases"
         [totalDeaths]="totalDeaths"
         [totalRecoveries]="totalRecoveries"
-      >
-      </app-countries>
+      ></app-countries>
     </mat-tab>
-    <!-- <mat-tab label="Regional Data"></mat-tab> -->
   </mat-tab-group>
 </div>
