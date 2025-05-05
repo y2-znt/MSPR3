@@ -87,12 +87,7 @@ export class DiseaseCaseService {
 
     return this.http
       .get<any[]>(`${this.url}disease-cases/aggregated-by-date`, { params })
-      .pipe(
-        tap((response) =>
-          console.log('API response for filtered data:', response)
-        ),
-        map((data) => data as AggregatedDiseaseCase[])
-      );
+      .pipe(map((data) => data as AggregatedDiseaseCase[]));
   }
 
   updateDiseaseCase(

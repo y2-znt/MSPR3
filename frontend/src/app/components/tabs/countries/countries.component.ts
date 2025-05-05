@@ -1,33 +1,33 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
+  Input,
   OnDestroy,
   OnInit,
-  ViewChild,
-  ChangeDetectorRef,
-  Input,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
+import { Subject, forkJoin } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Country } from '../../../models/country.model';
+import { CountryService } from '../../../services/country.service';
 import {
   CountryData,
   CovidDataService,
   CovidStats,
 } from '../../../services/covid-data.service';
-import { CountryService } from '../../../services/country.service';
-import { Subject, forkJoin } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Country } from '../../../models/country.model';
-import { EditDialogComponent } from '../../edit-dialog/edit-dialog.component';
 import { DiseaseCaseService } from '../../../services/disease-case.service';
+import { EditDialogComponent } from '../../edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-countries',
@@ -115,7 +115,6 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['countries'] && changes['countries'].currentValue) {
-      console.log('Countries changed:', this.countries);
       this.loadCountriesStats();
     }
   }
@@ -166,7 +165,7 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
                   latestStats?.confirmedCases
                 ),
                 id: latestStats?.id || country.id,
-                date: latestStats?.date || this.formatDate(new Date())
+                date: latestStats?.date || this.formatDate(new Date()),
               };
             }
           );
@@ -220,7 +219,9 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result.success) {
-        const index = this.dataSource.data.findIndex(item => item.id === result.id);
+        const index = this.dataSource.data.findIndex(
+          (item) => item.id === result.id
+        );
         if (index !== -1) {
           const updatedData = [...this.dataSource.data];
           updatedData[index] = {
@@ -228,8 +229,14 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
             totalCases: result.confirmedCases,
             deaths: result.deaths,
             recovered: result.recovered,
-            mortalityRate: this.calculateRate(result.deaths, result.confirmedCases),
-            recoveryRate: this.calculateRate(result.recovered, result.confirmedCases)
+            mortalityRate: this.calculateRate(
+              result.deaths,
+              result.confirmedCases
+            ),
+            recoveryRate: this.calculateRate(
+              result.recovered,
+              result.confirmedCases
+            ),
           };
           this.dataSource.data = updatedData;
           this.cdr.detectChanges();
@@ -240,35 +247,41 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
 
   confirmDelete(element: CountryData): void {
     if (!element.id) {
-      alert(`Cannot delete a case for ${element.country} without an identifier.`);
+      alert(
+        `Cannot delete a case for ${element.country} without an identifier.`
+      );
       return;
     }
 
-    if (confirm(`Are you sure you want to delete the case for ${element.country}?`)) {
+    if (
+      confirm(
+        `Are you sure you want to delete the case for ${element.country}?`
+      )
+    ) {
       this.removeElementFromTable(element);
-      this.diseaseCaseService.deleteDiseaseCase(element.id)
-        .subscribe({
-          next: (response: any) => {
-            console.log('Case deleted successfully:', response);
-          },
-          error: (error: any) => {
-            console.error('Error deleting case:', error);
-          }
-        });
+      this.diseaseCaseService.deleteDiseaseCase(element.id).subscribe({
+        next: (response: any) => {
+          console.log('Case deleted successfully:', response);
+        },
+        error: (error: any) => {
+          console.error('Error deleting case:', error);
+        },
+      });
     }
   }
-  
+
   /**
    * Removes an element from the data table
    */
   private removeElementFromTable(element: CountryData): void {
-    const index = this.dataSource.data.findIndex(item => 
-      item.id === element.id || 
-      (item.country === element.country && item.date === element.date)
+    const index = this.dataSource.data.findIndex(
+      (item) =>
+        item.id === element.id ||
+        (item.country === element.country && item.date === element.date)
     );
-    
+
     console.log('Index found in table:', index);
-    
+
     if (index !== -1) {
       console.log('Removing element from table at index:', index);
       // Remove the element from the array
@@ -276,7 +289,7 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
       updatedData.splice(index, 1);
       this.dataSource.data = updatedData;
       console.log('Table updated, new size:', this.dataSource.data.length);
-      
+
       // Force a view update
       this.cdr.detectChanges();
       console.log('View updated via ChangeDetectorRef');

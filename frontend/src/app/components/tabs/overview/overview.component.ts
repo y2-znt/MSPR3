@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   Input,
@@ -6,14 +7,14 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { Country } from '../../../models/country.model';
 import { AggregatedDiseaseCase } from '../../../models/diseaseCase.model';
 import { DiseaseCaseService } from '../../../services/disease-case.service';
-import { Country } from '../../../models/country.model';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 
 interface WeeklyData {
   weekLabel: string;
@@ -25,7 +26,13 @@ interface WeeklyData {
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [MatCardModule, BaseChartDirective, MatButton, MatIcon],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    BaseChartDirective,
+    MatButton,
+    MatIcon,
+  ],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
 })
@@ -277,25 +284,23 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
       console.warn('No weekly data to export.');
       return;
     }
-  
+
     const headers = ['Week', 'Confirmed Cases', 'Deaths', 'Recovered'];
     const rows = this.weeklyData.map((data) => [
       data.weekLabel,
       data.confirmedCases,
       data.deaths,
-      data.recovered
+      data.recovered,
     ]);
-  
-    const csvContent = [headers, ...rows]
-      .map((e) => e.join(','))
-      .join('\n');
-  
+
+    const csvContent = [headers, ...rows].map((e) => e.join(',')).join('\n');
+
     let fileName = 'global_weekly_data.csv';
-    
+
     if (this.selectedCountries && this.selectedCountries.length === 1) {
       fileName = `${this.selectedCountries[0].name}_weekly_data.csv`;
     }
-    
+
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -304,5 +309,4 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     a.click();
     window.URL.revokeObjectURL(url);
   }
-  
 }
