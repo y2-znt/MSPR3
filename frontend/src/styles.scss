@@ -9,3 +9,13 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: rgb(223, 223, 223);
 }
+
+.visually-hidden {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}

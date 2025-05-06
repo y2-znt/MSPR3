@@ -1,67 +1,141 @@
-<h2 mat-dialog-title>Add New Disease Case</h2>
+<h2 mat-dialog-title id="dialog-title">Add New Disease Case</h2>
 
-<form [formGroup]="caseForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="caseForm" (ngSubmit)="onSubmit()" aria-labelledby="dialog-title">
     <div mat-dialog-content>
+
+        <!-- Country -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Country</mat-label>
-        <mat-select formControlName="country">
+        <mat-label id="country-label">Country</mat-label>
+        <mat-select
+            formControlName="country"
+            aria-labelledby="country-label"
+            aria-describedby="country-error">
             <mat-option *ngFor="let country of data.countries" [value]="country.name">
-            {{country.name}}
+            {{ country.name }}
             </mat-option>
         </mat-select>
-        <mat-error *ngIf="caseForm.get('country')?.hasError('required')">
+        <mat-error
+            *ngIf="caseForm.get('country')?.hasError('required')"
+            id="country-error"
+            role="alert"
+            aria-live="polite">
             Country is required
         </mat-error>
         </mat-form-field>
 
+        <!-- Date -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Date</mat-label>
-        <input matInput [matDatepicker]="datePicker" formControlName="date">
+        <mat-label id="date-label">Date</mat-label>
+        <input
+            matInput
+            [matDatepicker]="datePicker"
+            formControlName="date"
+            aria-labelledby="date-label"
+            aria-describedby="date-error">
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker></mat-datepicker>
-        <mat-error *ngIf="caseForm.get('date')?.hasError('required')">
+        <mat-error
+            *ngIf="caseForm.get('date')?.hasError('required')"
+            id="date-error"
+            role="alert"
+            aria-live="polite">
             Date is required
         </mat-error>
         </mat-form-field>
 
+        <!-- Confirmed Cases -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Confirmed Cases</mat-label>
-        <input matInput type="number" formControlName="confirmedCases">
-        <mat-error *ngIf="caseForm.get('confirmedCases')?.hasError('required')">
+        <mat-label id="confirmed-label">Confirmed Cases</mat-label>
+        <input
+            matInput
+            type="number"
+            formControlName="confirmedCases"
+            aria-labelledby="confirmed-label"
+            aria-describedby="confirmed-required-error confirmed-min-error">
+        <mat-error
+            *ngIf="caseForm.get('confirmedCases')?.hasError('required')"
+            id="confirmed-required-error"
+            role="alert"
+            aria-live="polite">
             Confirmed cases is required
         </mat-error>
-        <mat-error *ngIf="caseForm.get('confirmedCases')?.hasError('min')">
+        <mat-error
+            *ngIf="caseForm.get('confirmedCases')?.hasError('min')"
+            id="confirmed-min-error"
+            role="alert"
+            aria-live="polite">
             Value must be 0 or greater
         </mat-error>
         </mat-form-field>
 
+        <!-- Deaths -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Deaths</mat-label>
-        <input matInput type="number" formControlName="deaths">
-        <mat-error *ngIf="caseForm.get('deaths')?.hasError('required')">
+        <mat-label id="deaths-label">Deaths</mat-label>
+        <input
+            matInput
+            type="number"
+            formControlName="deaths"
+            aria-labelledby="deaths-label"
+            aria-describedby="deaths-required-error deaths-min-error">
+        <mat-error
+            *ngIf="caseForm.get('deaths')?.hasError('required')"
+            id="deaths-required-error"
+            role="alert"
+            aria-live="polite">
             Deaths is required
         </mat-error>
-        <mat-error *ngIf="caseForm.get('deaths')?.hasError('min')">
+        <mat-error
+            *ngIf="caseForm.get('deaths')?.hasError('min')"
+            id="deaths-min-error"
+            role="alert"
+            aria-live="polite">
             Value must be 0 or greater
         </mat-error>
         </mat-form-field>
 
+        <!-- Recovered -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Recovered</mat-label>
-        <input matInput type="number" formControlName="recovered">
-        <mat-error *ngIf="caseForm.get('recovered')?.hasError('required')">
+        <mat-label id="recovered-label">Recovered</mat-label>
+        <input
+            matInput
+            type="number"
+            formControlName="recovered"
+            aria-labelledby="recovered-label"
+            aria-describedby="recovered-required-error recovered-min-error">
+        <mat-error
+            *ngIf="caseForm.get('recovered')?.hasError('required')"
+            id="recovered-required-error"
+            role="alert"
+            aria-live="polite">
             Recovered is required
         </mat-error>
-        <mat-error *ngIf="caseForm.get('recovered')?.hasError('min')">
+        <mat-error
+            *ngIf="caseForm.get('recovered')?.hasError('min')"
+            id="recovered-min-error"
+            role="alert"
+            aria-live="polite">
             Value must be 0 or greater
         </mat-error>
         </mat-form-field>
+
     </div>
 
     <div mat-dialog-actions align="end">
-        <button mat-button type="button" (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="caseForm.invalid || isSubmitting">
-        <mat-spinner diameter="20" *ngIf="isSubmitting"></mat-spinner>
+        <button
+        mat-button
+        type="button"
+        (click)="onCancel()"
+        [disabled]="isSubmitting"
+        aria-label="Cancel form">
+        Cancel
+        </button>
+        <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="caseForm.invalid || isSubmitting"
+        aria-label="Submit form">
+        <mat-spinner diameter="20" *ngIf="isSubmitting" role="progressbar" aria-label="Loading"></mat-spinner>
         <span *ngIf="!isSubmitting">Submit</span>
         </button>
     </div>

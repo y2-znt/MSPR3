@@ -6,6 +6,9 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+
+import { A11yModule } from '@angular/cdk/a11y';
+
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
