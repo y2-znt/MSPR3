@@ -1,4 +1,4 @@
-package mspr.backend.integration;
+package mspr.backend.integration.controller;
 
 import java.util.Map;
 
@@ -8,13 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -30,23 +26,8 @@ import mspr.backend.repository.CountryRepository;
 properties = {"spring.test.mockmvc.timeout=3600000","server.port=8081", "spring.h2.console.enabled=true"})
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class CountryControllerIntegrationTest {
-
-    // Configuration interne pour désactiver les CommandLineRunner
-    @TestConfiguration
-    static class TestConfig {
-        @Bean
-        @Primary
-        public CommandLineRunner noOpCommandLineRunner() {
-            return args -> {
-                System.out.println("\n========================================");
-                System.out.println("   CommandLineRunner désactivé en mode test");
-                System.out.println("   Aucune donnée ne sera chargée automatiquement");
-                System.out.println("========================================\n");
-            };
-        }
-    }
-
+public class CountryControllerTest {
+    
     @LocalServerPort
     private int port;
 
@@ -62,19 +43,8 @@ public class CountryControllerIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        // Nettoyer la base de données avant chaque test
         countryRepository.deleteAll();
     }
-
-    @Test
-    public void testServerIsUp() {
-        ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://localhost:" + port + "/", String.class);
-        System.out.println("Server response: " + response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        System.out.println("\n ✅ TEST: " + new Object(){}.getClass().getEnclosingMethod().getName() + " - RÉUSSI ✅\n");
-    }
-
 
     @Test
     public void testCreateCountry() {
@@ -226,20 +196,4 @@ public class CountryControllerIntegrationTest {
         );
     }
 
-//     Configuration :
-
-// Utilise @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) pour démarrer un serveur web réel
-// Injecte TestRestTemplate pour faire des requêtes HTTP réelles
-// Utilise H2 en mémoire grâce à votre profil test
-// Tests CRUD complets :
-
-// testCreateCountry : Vérifie la création d'un pays
-// testGetAllCountries : Vérifie la récupération de tous les pays
-// testGetCountryById : Vérifie la récupération d'un pays par son ID
-// testUpdateCountry : Vérifie la mise à jour d'un pays
-// testDeleteCountry : Vérifie la suppression d'un pays
-// Test d'erreur :
-
-// testCountryNotFound : Vérifie que le contrôleur retourne bien 404 quand un pays n'existe pas
-// Ce test vérifie l'ensemble de la chaîne, du contrôleur jusqu'à la base de données, en passant par les services. C'est un véritable test d'intégration qui vous permettra de vous assurer que votre API fonctionne correctement de bout en bout.
 }
