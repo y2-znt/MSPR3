@@ -14,15 +14,24 @@ Les tests d'intégration utilisent le profil Spring `test`, qui est activé via 
 ### Fichiers de Configuration
 
 - `application-test.properties` : Configuration spécifique pour les tests H2
-- `bootstrap.properties` : Variables d'environnement pour les tests
 
 ### Adaptation des Tests aux Comportements de l'API
 
 Les tests d'intégration ont été adaptés pour refléter le comportement réel de l'API :
 
 1. **Pagination** : Utilisation de `ParameterizedTypeReference<Map<String, Object>>` pour récupérer les données paginées
-2. **Gestion des Null** : Vérification que les méthodes retournent `null` (et non 404) pour les ressources non trouvées
+2. **Gestion des ressources non trouvées** : Vérification que les endpoints API retournent un code HTTP 404 (NOT_FOUND) pour les ressources qui n'existent pas
 3. **Endpoints** : Tests de disponibilité des endpoints racine (`/`) pour vérifier que le serveur est opérationnel
+
+### Bonnes Pratiques REST Implémentées
+
+Le contrôleur API suit les bonnes pratiques REST :
+
+1. **Codes de statut appropriés** :
+   - 200 OK pour les requêtes réussies
+   - 404 NOT_FOUND pour les ressources inexistantes
+2. **Format de réponse cohérent** : Utilisation de `ResponseEntity<T>` pour contrôler précisément les codes de statut et les corps de réponse
+3. **Pagination** : Implémentation de la pagination pour les listes de ressources
 
 ## Exécution des Tests
 
@@ -35,47 +44,48 @@ mvn test
 Pour un test spécifique :
 
 ```bash
-mvn test -Dtest=CountryControllerIntegrationTest
+mvn test -Dtest=CountryControllerTest
 ```
 
 Pour exécuter une méthode de test spécifique :
 
 ```bash
-mvn test -Dtest=CountryControllerIntegrationTest#testCreateCountry
+mvn test -Dtest=CountryControllerTest#testCreateCountry
 ```
 
 ## Création de Données de Test
 
 Au lieu de dépendre de l'ETL pour charger les données, vous devez créer vos propres données de test dans chaque test. Vous pouvez le faire de plusieurs façons :
 
-1. **En ligne dans chaque test** (comme dans `CountryControllerIntegrationTest`)
+1. **En ligne dans chaque test** (comme dans `CountryControllerTest`)
 2. **Utiliser des fixtures** : créer des méthodes utilitaires qui génèrent des jeux de données de test
 3. **Scripts SQL** : utiliser des scripts SQL pour initialiser la base de données
 
-### Exemple Avec des Fixtures
+## Structure des Tests
+
+Les tests suivent le pattern AAA (Arrange-Act-Assert) :
 
 ```java
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestWithFixtures {
+@Test
+@DisplayName("should update a country when called PUT /api/countries/{id}")
+public void testUpdateCountry() {
+    // Arrange
+    Country country = createTestCountry("France");
+    country.setName("France Updated");
 
-    @Autowired
-    private CountryRepository countryRepository;
+    // Action
+    HttpEntity<Country> requestEntity = new HttpEntity<>(country);
+    ResponseEntity<Country> response = restTemplate.exchange(
+            getRootUrl() + "/" + country.getId(),
+            HttpMethod.PUT,
+            requestEntity,
+            Country.class);
 
-    @BeforeAll
-    public void setupTestData() {
-        // Créer vos données de test ici
-        createTestCountries();
-    }
-
-    private void createTestCountries() {
-        Country france = new Country();
-        france.setName("France");
-        france.setContinent(Country.ContinentEnum.EUROPE);
-        france.setWhoRegion(Country.WHORegionEnum.Europe);
-        countryRepository.save(france);
-
-        // Autres pays...
-    }
+    // Assertion
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    Country updatedCountry = response.getBody();
+    assertNotNull(updatedCountry);
+    assertEquals("France Updated", updatedCountry.getName());
 }
 ```
 
@@ -103,3 +113,4 @@ static class TestConfig {
 - **Fiabilité** : Contrôle précis des données de test
 - **Indépendance** : Tests des fonctionnalités sans dépendre de la qualité/disponibilité des données externes
 - **Reproductibilité** : Les tests peuvent être exécutés sans configuration externe
+- **Conformité** : Respect des bonnes pratiques REST

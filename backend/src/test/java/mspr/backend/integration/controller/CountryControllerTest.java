@@ -61,15 +61,15 @@ public class CountryControllerTest {
     @Test
     @DisplayName("should create a country when valid data is provided")
     public void testCreateCountry() {
-        // Preparation
+        // Arrange
         Country countryToCreate = new Country();
         countryToCreate.setName("France");
 
-        // Execution
+        // Action
         ResponseEntity<Country> response = restTemplate.postForEntity(
                 getRootUrl(), countryToCreate, Country.class);
         
-        // Verification
+        // Assertion
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Country createdCountry = response.getBody();
         assertNotNull(createdCountry);
@@ -80,11 +80,11 @@ public class CountryControllerTest {
     @Test
     @DisplayName("should retrieve paginated list of countries when called GET /api/countries")
     public void testGetAllCountries() {
-        // Preparation
+        // Arrange
         createTestCountry("France");
         createTestCountry("Germany");
 
-        // Execution
+        // Action
         ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
                 getRootUrl(),
                 HttpMethod.GET,
@@ -92,7 +92,7 @@ public class CountryControllerTest {
                 new ParameterizedTypeReference<Map<String, Object>>() {}
         );
 
-        // Verification
+        // Assertion
         assertEquals(HttpStatus.OK, response.getStatusCode());
         
         Map<String, Object> page = response.getBody();
@@ -104,14 +104,14 @@ public class CountryControllerTest {
     @Test
     @DisplayName("should retrieve a country by ID when called GET /api/countries/{id}")
     public void testGetCountryById() {
-        // Preparation
+        // Arrange
         Country country = createTestCountry("France");
 
-        // Execution
+        // Action
         ResponseEntity<Country> response = restTemplate.getForEntity(
                 getRootUrl() + "/" + country.getId(), Country.class);
 
-        // Verification
+        // Assertion
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Country retrievedCountry = response.getBody();
         assertNotNull(retrievedCountry);
@@ -121,11 +121,11 @@ public class CountryControllerTest {
     @Test
     @DisplayName("should update a country when called PUT /api/countries/{id}")
     public void testUpdateCountry() {
-        // Preparation
+        // Arrange
         Country country = createTestCountry("France");
         country.setName("France Updated");
         
-        // Execution
+        // Action
         HttpEntity<Country> requestEntity = new HttpEntity<>(country);
         ResponseEntity<Country> response = restTemplate.exchange(
                 getRootUrl() + "/" + country.getId(), 
@@ -133,7 +133,7 @@ public class CountryControllerTest {
                 requestEntity, 
                 Country.class);
 
-        // Verification
+        // Assertion
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Country updatedCountry = response.getBody();
         assertNotNull(updatedCountry);
@@ -143,14 +143,14 @@ public class CountryControllerTest {
     @Test
     @DisplayName("should delete a country when called DELETE /api/countries/{id}")
     public void testDeleteCountry() {
-        // Preparation
+        // Arrange
         Country country = createTestCountry("France");
         Integer countryId = country.getId();
 
-        // Execution
+        // Action
         restTemplate.delete(getRootUrl() + "/" + countryId);
 
-        // Verification
+        // Assertion
         ResponseEntity<Country> response = restTemplate.getForEntity(
                 getRootUrl() + "/" + countryId, Country.class);
 
@@ -161,11 +161,11 @@ public class CountryControllerTest {
     @Test
     @DisplayName("should return 404 when trying to retrieve a non-existent country")
     public void testCountryNotFound() {
-        // Execution
+        // Action
         ResponseEntity<Country> response = restTemplate.getForEntity(
                 getRootUrl() + "/9999", Country.class);
 
-        // Verification
+        // Assertion
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNull(response.getBody());
     }
