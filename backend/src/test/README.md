@@ -89,23 +89,6 @@ public void testUpdateCountry() {
 }
 ```
 
-## Configuration interne de CommandLineRunner
-
-Les tests utilisent une configuration interne pour désactiver tous les CommandLineRunner :
-
-```java
-@TestConfiguration
-static class TestConfig {
-    @Bean
-    @Primary
-    public CommandLineRunner noOpCommandLineRunner() {
-        return args -> {
-            // Message indiquant que l'ETL est désactivé
-        };
-    }
-}
-```
-
 ## Avantages
 
 - **Performances** : Tests plus rapides (pas de chargement ETL)
