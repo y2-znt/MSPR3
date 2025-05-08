@@ -1,12 +1,13 @@
 package mspr.backend.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,11 +40,11 @@ public class LocationController {
     }
 
     @PostMapping
-    public Location createLocation(Location location) {
+    public Location createLocation(@RequestBody Location location) {
         return locationService.createLocation(location);
     }
     @PutMapping("/{id}")
-    public Location updateLocation(@PathVariable Integer id, Location location) {
+    public Location updateLocation(@PathVariable Integer id, @RequestBody Location location) {
         return locationService.updateLocation(id, location);
     }
 
