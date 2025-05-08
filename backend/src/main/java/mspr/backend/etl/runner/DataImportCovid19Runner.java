@@ -1,19 +1,31 @@
 package mspr.backend.etl.runner;
 
-import mspr.backend.entity.Disease;
-import mspr.backend.etl.helpers.cache.CacheManager;
-import mspr.backend.etl.exceptions.*;
-import mspr.backend.repository.*;
-import mspr.backend.etl.service.*;
+import java.io.IOException;
+import java.util.function.Supplier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.function.Supplier;
+import mspr.backend.entity.Disease;
+import mspr.backend.etl.exceptions.DataFileNotFoundException;
+import mspr.backend.etl.exceptions.EtlException;
+import mspr.backend.etl.exceptions.PersistenceException;
+import mspr.backend.etl.helpers.cache.CacheManager;
+import mspr.backend.etl.service.CovidCompleteService;
+import mspr.backend.etl.service.FullGroupedService;
+import mspr.backend.etl.service.UsaCountyService;
+import mspr.backend.etl.service.WorldometerService;
+import mspr.backend.repository.CountryRepository;
+import mspr.backend.repository.DiseaseCaseRepository;
+import mspr.backend.repository.DiseaseRepository;
+import mspr.backend.repository.LocationRepository;
+import mspr.backend.repository.RegionRepository;
 
+@Profile("!test")
 @Component
 public class DataImportCovid19Runner implements CommandLineRunner {
 
