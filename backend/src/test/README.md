@@ -76,7 +76,7 @@ public void testUpdateCountry() {
     // Action
     HttpEntity<Country> requestEntity = new HttpEntity<>(country);
     ResponseEntity<Country> response = restTemplate.exchange(
-            getRootUrl() + "/" + country.getId(),
+            baseUrl + "/" + country.getId(),
             HttpMethod.PUT,
             requestEntity,
             Country.class);

@@ -40,13 +40,12 @@ public class CountryControllerTest {
     @Autowired
     private CountryRepository countryRepository;
 
-    private String getRootUrl() {
-        return "http://localhost:" + port + "/api/countries";
-    }
+    private String baseUrl;
 
     @BeforeEach
     public void setup() {
         countryRepository.deleteAll();
+        baseUrl = "http://localhost:" + port + "/api/countries";
     }
 
     /**
@@ -67,7 +66,7 @@ public class CountryControllerTest {
 
         // Action
         ResponseEntity<Country> response = restTemplate.postForEntity(
-                getRootUrl(), countryToCreate, Country.class);
+                baseUrl, countryToCreate, Country.class);
         
         // Assertion
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -86,7 +85,7 @@ public class CountryControllerTest {
 
         // Action
         ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                getRootUrl(),
+                baseUrl,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<Map<String, Object>>() {}
@@ -109,7 +108,7 @@ public class CountryControllerTest {
 
         // Action
         ResponseEntity<Country> response = restTemplate.getForEntity(
-                getRootUrl() + "/" + country.getId(), Country.class);
+                baseUrl + "/" + country.getId(), Country.class);
 
         // Assertion
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -128,7 +127,7 @@ public class CountryControllerTest {
         // Action
         HttpEntity<Country> requestEntity = new HttpEntity<>(country);
         ResponseEntity<Country> response = restTemplate.exchange(
-                getRootUrl() + "/" + country.getId(), 
+                baseUrl + "/" + country.getId(), 
                 HttpMethod.PUT, 
                 requestEntity, 
                 Country.class);
@@ -148,11 +147,11 @@ public class CountryControllerTest {
         Integer countryId = country.getId();
 
         // Action
-        restTemplate.delete(getRootUrl() + "/" + countryId);
+        restTemplate.delete(baseUrl + "/" + countryId);
 
         // Assertion
         ResponseEntity<Country> response = restTemplate.getForEntity(
-                getRootUrl() + "/" + countryId, Country.class);
+                baseUrl + "/" + countryId, Country.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNull(response.getBody());
@@ -163,7 +162,7 @@ public class CountryControllerTest {
     public void testCountryNotFound() {
         // Action
         ResponseEntity<Country> response = restTemplate.getForEntity(
-                getRootUrl() + "/9999", Country.class);
+                baseUrl + "/9999", Country.class);
 
         // Assertion
         assertEquals(HttpStatus.OK, response.getStatusCode());
