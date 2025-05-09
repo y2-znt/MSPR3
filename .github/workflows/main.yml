@@ -92,11 +92,11 @@ jobs:
       - name: Install Playwright Browsers
         run: |
           cd frontend
-          npx playwright install --with-deps
+          npm run install:browsers
       - name: Run Playwright tests
         run: |
           cd frontend
-          npx playwright test
+          npm run test:e2e:ci
       - name: Upload frontend test results
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
