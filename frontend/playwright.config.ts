@@ -33,7 +33,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     ignoreHTTPSErrors: true,
     launchOptions: {
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: []
     }
   },
 
