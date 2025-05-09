@@ -24,12 +24,17 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  timeout: 60000,
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    baseURL: 'http://localhost:4200',
+    actionTimeout: 30000,
+    navigationTimeout: 30000,
     trace: 'on-first-retry',
+    ignoreHTTPSErrors: true,
+    launchOptions: {
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
   },
 
   /* Configure projects for major browsers */
@@ -41,7 +46,16 @@ export default defineConfig({
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { 
+        ...devices['Desktop Firefox'],
+        launchOptions: {
+          firefoxUserPrefs: {
+            'network.http.connection-timeout': 30000,
+            'network.http.max-connections-per-server': 10,
+            'network.http.max-persistent-connections-per-server': 10
+          }
+        }
+      },
     },
 
     {
