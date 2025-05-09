@@ -24,7 +24,12 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  timeout: 60000,
+  webServer: {
+    command: 'npm run start', // ou 'ng serve' si tu n'as pas de script custom
+    port: 4200,
+    timeout: 60000,
+    reuseExistingServer: !process.env['CI'], // réutiliser le serveur local hors CI
+  },
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'http://localhost:4200',
