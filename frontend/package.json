@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "install:browsers": "npx playwright install",
     "test:e2e": "playwright test"
   },
   "private": true,
