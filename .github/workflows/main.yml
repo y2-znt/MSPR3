@@ -101,7 +101,7 @@ jobs:
       - name: Run Playwright tests
         run: |
           cd frontend
-          nnpm run test:e2e:ci -- --no-sandbox
+          npm run test:e2e:ci -- --no-sandbox
       - name: Upload frontend test results
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
