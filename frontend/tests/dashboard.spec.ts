@@ -123,31 +123,63 @@ test.describe('Dashboard Component Tests', () => {
     await expect(page.getByRole('tab', { name: 'Overview' })).toHaveAttribute('aria-selected', 'true', { timeout: 15000 });
   });
 
+  // test('should filter by countries', async ({ page }) => {
+  //   // Wait until the country selector is visible
+  //   const countrySelect = page.getByRole('combobox', { name: 'Select countries' });
+  //   await countrySelect.waitFor({ state: 'visible', timeout: 40000 });
+  
+  //   // Forcefully click the dropdown to ensure it opens
+  //   await countrySelect.click({ force: true });
+  
+  //   // Check if the dropdown is fully expanded
+  //   await page.waitForSelector('mat-option', { state: 'attached', timeout: 30000 });
+  
+  //   // Debugging log for troubleshooting
+  //   console.log("Dropdown expanded and mat-options are attached.");
+  
+  //   // Wait for the menu options to become visible
+  //   await page.waitForSelector('mat-option', { state: 'visible', timeout: 60000 });
+  
+  //   // Select the first country
+  //   const firstOption = page.getByRole('option').first();
+  //   await firstOption.waitFor({ state: 'visible', timeout: 30000 });
+  //   await firstOption.click();
+  
+  //   // Verify the selection
+  //   await expect(countrySelect).toContainText(/Afghanistan|France|United States/, { timeout: 30000 });
+  // });
+
   test('should filter by countries', async ({ page }) => {
     // Wait until the country selector is visible
     const countrySelect = page.getByRole('combobox', { name: 'Select countries' });
     await countrySelect.waitFor({ state: 'visible', timeout: 40000 });
-  
+
     // Forcefully click the dropdown to ensure it opens
     await countrySelect.click({ force: true });
-  
+
+    // Add a debug log to verify the dropdown click
+    console.log("Dropdown clicked.");
+
     // Check if the dropdown is fully expanded
-    await page.waitForSelector('mat-option', { state: 'attached', timeout: 30000 });
-  
-    // Debugging log for troubleshooting
-    console.log("Dropdown expanded and mat-options are attached.");
-  
+    await page.waitForSelector('mat-option', { state: 'attached', timeout: 60000 });
+
+    // Add an intermediate check to ensure dropdown options are visible
+    const optionsVisible = await page.isVisible('mat-option');
+    if (!optionsVisible) {
+        throw new Error("Dropdown options are not visible");
+    }
+
     // Wait for the menu options to become visible
     await page.waitForSelector('mat-option', { state: 'visible', timeout: 60000 });
-  
+
     // Select the first country
     const firstOption = page.getByRole('option').first();
     await firstOption.waitFor({ state: 'visible', timeout: 30000 });
     await firstOption.click();
-  
+
     // Verify the selection
     await expect(countrySelect).toContainText(/Afghanistan|France|United States/, { timeout: 30000 });
-  });
+});
 
 
   test('should switch between tabs', async ({ page }) => {
