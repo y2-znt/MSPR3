@@ -114,29 +114,6 @@ test.describe('Dashboard Component Tests', () => {
   await expect(countrySelect).toContainText(/Afghanistan|France|United States/, { timeout: 30000 });
 });
 
-  test('should filter by countries', async ({ page }) => {
-    // Attendre que le sélecteur de pays soit visible
-    const countrySelect = page.getByRole('combobox', { name: 'Select countries' });
-    await countrySelect.waitFor({ state: 'visible', timeout: 30000 });
-
-    // Contourner le problème d'interception de clic en utilisant force: true
-    await countrySelect.click({ force: true });
-
-    // Attendre que le menu soit visible
-    await page.waitForSelector('mat-option', { 
-      state: 'visible', 
-      timeout: 30000 
-    });
-
-    // Sélectionner le premier pays
-    const firstOption = page.getByRole('option').first();
-    await firstOption.waitFor({ state: 'visible', timeout: 30000 });
-    await firstOption.click();
-
-    // Vérifier que le pays est sélectionné
-    await expect(countrySelect).toContainText(/Afghanistan|France|United States/, { timeout: 30000 });
-  });
-
   test('should display tabs correctly', async ({ page }) => {
     // Vérifier la présence des onglets
     await expect(page.getByRole('tab', { name: 'Overview' })).toBeVisible({ timeout: 15000 });
