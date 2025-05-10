@@ -73,3 +73,65 @@ jobs:
         run: |
           cd backend
           mvn test
+
+  performance-test:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    container: maven:3.9.9-amazoncorretto-21-alpine
+    needs: [build-backend, test-backend]
+    services:
+      db:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: db_name
+          POSTGRES_USER: db_username
+          POSTGRES_PASSWORD: db_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U db_username -d db_name"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download backend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/target/
+      
+      - name: Create JMeter resources directory
+        run: |
+          mkdir -p backend/src/test/resources/jmeter/bin
+          
+      - name: Create JMeter properties file
+        run: |
+          cat > backend/src/test/resources/jmeter/bin/jmeter.properties << 'EOF'
+          jmeter.save.saveservice.output_format=xml
+          jmeter.save.saveservice.data_type=true
+          jmeter.save.saveservice.label=true
+          jmeter.save.saveservice.response_code=true
+          jmeter.save.saveservice.response_data=true
+          log_level.jmeter=INFO
+          EOF
+      
+      - name: Start the backend service
+        run: |
+          nohup java -jar backend/target/backend-0.0.1-SNAPSHOT.jar > backend.log 2>&1 &
+          echo "Waiting for backend to start..."
+          sleep 30
+          
+      - name: Run JMeter Performance Tests
+        run: |
+          cd backend
+          mvn test -Dtest=KPIChargeTest
+          
+      - name: Upload JMeter Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-results
+          path: backend/target/jmeter-results/
+          retention-days: 7
