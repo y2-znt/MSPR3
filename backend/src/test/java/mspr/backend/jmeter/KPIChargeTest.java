@@ -15,6 +15,7 @@ import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
 import org.apache.jorphan.collections.ListedHashTree;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -70,6 +71,7 @@ public class KPIChargeTest {
     }
 
     @Test
+    @Tag("performance")  // Ajout d'un tag pour exclure ce test des tests normaux
     public void testKPIGetEndpoint() throws Exception {
         // Créer le moteur JMeter
         StandardJMeterEngine jmeter = new StandardJMeterEngine();

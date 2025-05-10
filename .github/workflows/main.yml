@@ -72,6 +72,7 @@ jobs:
       - name: Run backend tests
         run: |
           cd backend
+          # Exécuter les tests normaux, exclut les tests de performance
           mvn test
 
   performance-test:
@@ -132,7 +133,8 @@ jobs:
       - name: Run JMeter Performance Tests
         run: |
           cd backend
-          mvn test -Dtest=KPIChargeTest
+          # Utiliser le profil performance-tests pour exécuter uniquement les tests de performance
+          mvn test -P performance-tests
           
       - name: Upload JMeter Results
         if: always()
