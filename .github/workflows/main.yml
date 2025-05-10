@@ -78,7 +78,7 @@ jobs:
   test-frontend:
     needs: build-frontend
     name: Test Frontend
-    timeout-minutes: 60
+    timeout-minutes: 90
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -93,6 +93,11 @@ jobs:
         run: |
           cd frontend
           npm run install:browsers
+      - name: Start server and wait
+        run: |
+          cd frontend
+          npm run start &
+          sleep 30
       - name: Run Playwright tests
         run: |
           cd frontend

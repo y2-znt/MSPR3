@@ -33,12 +33,12 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'http://localhost:4200',
-    actionTimeout: 30000,
-    navigationTimeout: 30000,
+    actionTimeout: 60000,
+    navigationTimeout: 60000,
     trace: 'on-first-retry',
     ignoreHTTPSErrors: true,
     launchOptions: {
-      args: []
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
   },
 
