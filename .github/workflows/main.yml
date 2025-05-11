@@ -21,9 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build backend
-        run: |
-          cd backend
-          mvn clean package -DskipTests
+        working-directory: backend
+        run: mvn clean package -DskipTests
       - name: Upload backend artifact
         uses: actions/upload-artifact@v4
         with:
@@ -38,8 +37,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install and build frontend
+        working-directory: frontend
         run: |
-          cd frontend
           npm install
           npm run build
       - name: Upload frontend artifact
@@ -71,9 +70,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run backend tests
-        run: |
-          cd backend
-          mvn test
+        working-directory: backend
+        run: mvn test
 
   test-frontend:
     needs: build-frontend
@@ -86,22 +84,19 @@ jobs:
         with:
           node-version: lts/*
       - name: Install dependencies
-        run: |
-          cd frontend
-          npm ci
+        working-directory: frontend
+        run: npm ci
       - name: Install Playwright Browsers
-        run: |
-          cd frontend
-          npm run install:browsers
+        working-directory: frontend
+        run: npm run install:browsers
       - name: Start server and wait
+        working-directory: frontend
         run: |
-          cd frontend
           npm run start &
           sleep 30
       - name: Run Playwright tests
-        run: |
-          cd frontend
-          npm run test:e2e:ci
+        working-directory: frontend
+        run: npm run test:e2e:ci
       - name: Upload frontend test results
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
