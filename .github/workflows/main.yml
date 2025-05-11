@@ -127,22 +127,16 @@ jobs:
           --health-timeout=5s
           --health-retries=5
     steps:
-      - uses: actions/checkout@v3
-
+      - uses: actions/checkout@v4
       - name: Install required packages for JMeter
-        run: |
-          apk add --no-cache fontconfig ttf-dejavu
-
+        run: apk add --no-cache fontconfig ttf-dejavu
       - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-jar
           path: backend/target/
-
       - name: Create JMeter resources directory
-        run: |
-          mkdir -p backend/src/test/resources/jmeter/bin
-
+        run: mkdir -p backend/src/test/resources/jmeter/bin
       - name: Create JMeter properties file
         run: |
           cat > backend/src/test/resources/jmeter/bin/jmeter.properties << 'EOF'
@@ -153,19 +147,14 @@ jobs:
           jmeter.save.saveservice.response_data=true
           log_level.jmeter=INFO
           EOF
-
       - name: Start the backend service
         run: |
           nohup java -jar backend/target/backend-0.0.1-SNAPSHOT.jar > backend.log 2>&1 &
           echo "Waiting for backend to start..."
           sleep 30
-
-      - name: Run JMeter Performance Tests
-        run: |
-          cd backend
-          # Utiliser le profil performance-tests pour exécuter uniquement les tests de performance
-          mvn test -P performance-tests
-
+      - name: Run JMeter Tests
+        working-directory: backend
+        run: mvn test -P performance-tests
       - name: Upload JMeter Results
         if: always()
         uses: actions/upload-artifact@v4
