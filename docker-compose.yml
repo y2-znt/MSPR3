@@ -35,6 +35,21 @@ services:
       - db
     networks:
       - mspr2-network
+  ai-api:
+    container_name: mspr2-ai
+    build:
+      context: ./ai-api
+      dockerfile: ai.dockerfile
+    ports:
+      - "8000:80"
+    volumes:
+      - ./ai-api/app:/code/app
+    restart: always
+    depends_on:
+      - backend
+      - db
+    networks:
+      - mspr2-network
 
   db:
     container_name: mspr2-db
