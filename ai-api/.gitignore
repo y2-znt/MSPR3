@@ -1,0 +1,54 @@
+
+# Python environment
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pkl
+*.egg-info/
+
+# Local venv
+.venv/
+env/
+venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Temp files
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# pip cache
+pip-wheel-metadata/
+*.egg
+dist/
+build/
+
+# Docker
+*.env
+.env.local
+.env.dev
+.env.prod
+.env.*
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# Test
+coverage/
+htmlcov/
+.tox/
+pytest_cache/
+
+# mypy / pyright
+.mypy_cache/
+.pyright/
+
+# Docker volumes
+volumes/
