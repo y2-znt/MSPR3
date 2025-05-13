@@ -4,4 +4,4 @@
 .env
 .env.local
 /target/
-*.csv
+exported_data/
