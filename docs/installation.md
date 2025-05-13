@@ -65,7 +65,9 @@ Une fois les services démarrés, vous pouvez accéder aux différentes interfac
 | ----------- | ------------------------------ | ----------------------------- |
 | Frontend    | http://localhost:4200          | Interface utilisateur Angular |
 | Backend API | http://localhost:8080          | API REST Spring Boot          |
-| Swagger UI  | http://localhost:8080/api-docs | Documentation API             |
+| Swagger UI  | http://localhost:8080/api-docs | Documentation API Spring Boot |
+| FastAPI     | http://localhost:8000          | API IA                        |
+| Swagger UI  | http://localhost:8000/docs     | Documentation API FastAPI     |
 | PostgreSQL  | localhost:5432                 | Base de données               |
 
 ## Gestion de la Base de Données
@@ -88,8 +90,17 @@ docker exec -it mspr2-db psql -U <username> -d <dbname>
 ### Exécution des Tests
 
 ```bash
-# Tests Backend
+# Tests Backend local
+mvn test # ou ./mvnw test
+
+# Tests Backend via container
 docker exec -it mspr2-backend mvn test
+
+# Tests Frontend local
+npm run test:e2e:ci
+
+# Tests Frontend via container
+docker exec -it mspr2-frontend npm run test:e2e:ci
 ```
 
 ### Logs des Services

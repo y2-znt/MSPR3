@@ -27,7 +27,7 @@
 ### API IA
 
 - **Framework** : FastAPI
-- **Language** : Python
+- **Language** : Python 3.11
 - **Machine Learning** :
   - Scikit-learn pour les modèles prédictifs
   - Pandas pour la manipulation des données

@@ -27,10 +27,7 @@ L'Organisation Mondiale de la Santé souhaite intégrer des capacités prédicti
 
 - Développement en Python avec FastAPI
 - Intégration de modèles de Machine Learning
-- Prédiction d'indicateurs clés :
-  - Taux de transmission
-  - Mortalité
-  - Propagation géographique
+- Prédiction d'indicateurs clés
 - Documentation complète via **Swagger (OpenAPI)**.
 
 ### 2. Interface Utilisateur
