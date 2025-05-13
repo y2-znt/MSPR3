@@ -8,15 +8,31 @@
 - **UI Framework** : Angular Material UI
 - **Librairies de visualisation** :
   - Chart.js pour les graphiques
-  - Angular Google Maps pour les visualisations géographiques (possibilité)
+- **Tests** :
+  - Playwright pour les tests e2e
+- **Accessibilité** :
+  - ARIA (Accessible Rich Internet Applications)
+  - WCAG 2.1 Guidelines
 
 ## Backend
+
+### API REST
 
 - **Framework** : Spring Boot
 - **Language** : Java 21
 - **ORM** : Spring Data JPA
 - **Documentation API** : Swagger/OpenAPI
 - **Tests** : JUnit 5
+
+### API IA
+
+- **Framework** : FastAPI
+- **Language** : Python 3.11
+- **Machine Learning** :
+  - Scikit-learn pour les modèles prédictifs
+  - Pandas pour la manipulation des données
+  - NumPy pour les calculs numériques
+- **Documentation API** : Swagger/OpenAPI
 
 ## Base de données
 
@@ -34,12 +50,12 @@
 
 - **Conteneurisation** : Docker
 - **Orchestration** : Docker Compose
-- **CI** : GitLab CI/CD
+- **CI** : Github Actions
 
 ## Outils de développement
 
 - **IDE** : IntelliJ IDEA / VS Code
-- **Gestion de versions** : Git, Gitlab
+- **Gestion de versions** : Git, Github
 - **Gestion de projet** :
   - Trello pour le suivi Agile
   - Discord pour la communication
