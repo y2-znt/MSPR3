@@ -1,1 +1,79 @@
-<p>predict works!</p>
+<div class="predict-container">
+  <h2>Prédiction COVID-19</h2>
+  <form (ngSubmit)="onSubmit()" [formGroup]="predictForm" class="predict-form">
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre de cas confirmés</mat-label>
+        <input matInput type="number" formControlName="confirmed_case">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input matInput type="date" formControlName="date">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre de décès</mat-label>
+        <input matInput type="number" formControlName="deaths">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre de personnes guéries</mat-label>
+        <input matInput type="number" formControlName="recovered">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Localisation</mat-label>
+        <input matInput formControlName="location">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Région</mat-label>
+        <input matInput formControlName="region">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Pays</mat-label>
+        <input matInput formControlName="country">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Continent</mat-label>
+        <input matInput formControlName="continent">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Population</mat-label>
+        <input matInput type="number" formControlName="population">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Région OMS</mat-label>
+        <input matInput formControlName="who_region">
+      </mat-form-field>
+    </div>
+    
+    <div class="submit-button">
+      <button mat-raised-button color="primary" type="submit">Lancer la prédiction</button>
+    </div>
+  </form>
+</div>
+
+<mat-card *ngIf="chartReady">
+  <mat-card-title>Résultat de la prédiction</mat-card-title>
+  <mat-card-content>
+    <canvas
+        baseChart
+        aria-label="Graphique de prédiction COVID-19 : cas, guérisons et décès"
+        aria-describedby="chart-description"
+        [data]="areaChartData"
+        [options]="areaChartOptions"
+        [type]="'doughnut'">
+    </canvas>
+    <p id="chart-description" class="visually-hidden">
+        Doughnut chart showing the distribution of predicted COVID-19 classes: cases, recoveries, and deaths.
+    </p>
+
+
+  </mat-card-content>
+</mat-card>
