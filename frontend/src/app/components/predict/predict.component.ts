@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Chart, ChartData, ChartOptions } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
 import { PredictRequest, PredictService } from '../../services/predict.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,7 +35,7 @@ export class PredictComponent {
   predictForm!: FormGroup;
   areaChartData: ChartData<'doughnut'> = {
     labels: ['Probabilité de la classe prédite', 'Autres'],
-    datasets: [{ data: [40, 60], backgroundColor: ['#36A2EB', '#FF6384'] }],
+    datasets: [{ data: [50, 50], backgroundColor: ['#36A2EB', '#FF6384'] }],
   };
   areaChartOptions: ChartOptions = {
     responsive: true,
@@ -44,7 +44,8 @@ export class PredictComponent {
       title: { display: true, text: 'Confiance dans la prédiction' }
     }
   };
-  chartReady = true;
+  chartReady = false;
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   constructor(
     private fb: FormBuilder,
@@ -66,16 +67,41 @@ export class PredictComponent {
     });
   }
 
+  // onSubmit(): void {
+  //   const payload: PredictRequest = this.predictForm.value;
+  //   this.predictService.predict(payload).subscribe((res) => {
+  //     const prob = res.probability;
+  //     this.areaChartData = {
+  //       ...this.areaChartData,
+  //       datasets: [{ data: [prob, 1 - prob], backgroundColor: ['#36A2EB', '#FF6384'] }]
+  //     };
+  //     this.chartReady = true;
+  //     this.chart?.update();
+  //   });
+  // }
+
+  // ...existing code...
+  lastPrediction: number | null = null;
+
   onSubmit(): void {
     const payload: PredictRequest = this.predictForm.value;
     this.predictService.predict(payload).subscribe((res) => {
       const prob = res.probability;
-      this.areaChartData.datasets[0].data = [prob, 1 - prob];
+      this.lastPrediction = res.prediction;
+      this.areaChartData = {
+        labels: this.lastPrediction === 1
+          ? ['Contaminé', 'Pas contaminé']
+          : ['Pas contaminé', 'Contaminé'],
+        datasets: [{
+          data: this.lastPrediction === 1 ? [prob, 1 - prob] : [1 - prob, prob],
+          backgroundColor: ['#FF6384', '#36A2EB']
+        }]
+      };
       this.chartReady = true;
+      this.chart?.update();
     });
   }
 
-  
 
 
 }
