@@ -67,20 +67,6 @@ export class PredictComponent {
     });
   }
 
-  // onSubmit(): void {
-  //   const payload: PredictRequest = this.predictForm.value;
-  //   this.predictService.predict(payload).subscribe((res) => {
-  //     const prob = res.probability;
-  //     this.areaChartData = {
-  //       ...this.areaChartData,
-  //       datasets: [{ data: [prob, 1 - prob], backgroundColor: ['#36A2EB', '#FF6384'] }]
-  //     };
-  //     this.chartReady = true;
-  //     this.chart?.update();
-  //   });
-  // }
-
-  // ...existing code...
   lastPrediction: number | null = null;
 
   onSubmit(): void {
