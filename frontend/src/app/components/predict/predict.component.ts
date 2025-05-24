@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ChartData, ChartOptions } from 'chart.js';
+import { Chart, ChartData, ChartOptions } from 'chart.js';
 import { PredictRequest, PredictService } from '../../services/predict.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
+import { BaseChartDirective } from 'ng2-charts';
 
 
 
@@ -24,6 +25,7 @@ import { MatCardModule } from '@angular/material/card';
     MatInputModule,
     MatSelectModule,
     MatCardModule,
+    BaseChartDirective,
   ],
   templateUrl: './predict.component.html',
   styleUrls: ['./predict.component.scss']
@@ -64,14 +66,14 @@ export class PredictComponent {
     });
   }
 
-  // onSubmit(): void {
-  //   const payload: PredictRequest = this.predictForm.value;
-  //   this.predictService.predict(payload).subscribe((res) => {
-  //     const prob = res.probability;
-  //     this.areaChartData.datasets[0].data = [prob, 1 - prob];
-  //     this.chartReady = true;
-  //   });
-  // }
+  onSubmit(): void {
+    const payload: PredictRequest = this.predictForm.value;
+    this.predictService.predict(payload).subscribe((res) => {
+      const prob = res.probability;
+      this.areaChartData.datasets[0].data = [prob, 1 - prob];
+      this.chartReady = true;
+    });
+  }
 
   
 

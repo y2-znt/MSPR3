@@ -62,18 +62,16 @@
 <mat-card *ngIf="chartReady">
   <mat-card-title>Résultat de la prédiction</mat-card-title>
   <mat-card-content>
-    <canvas
-        baseChart
-        aria-label="Graphique de prédiction COVID-19 : cas, guérisons et décès"
-        aria-describedby="chart-description"
-        [data]="areaChartData"
-        [options]="areaChartOptions"
-        [type]="'doughnut'">
+    <canvas 
+      baseChart
+      [type]="'doughnut'"
+      [data]="areaChartData"
+      [options]="areaChartOptions"
+      aria-label="Graphique de prédiction COVID-19 : cas, guérisons et décès"
+      aria-describedby="chart-description">
     </canvas>
     <p id="chart-description" class="visually-hidden">
-        Doughnut chart showing the distribution of predicted COVID-19 classes: cases, recoveries, and deaths.
+      Doughnut chart showing the distribution of predicted COVID-19 classes: cases, recoveries, and deaths.
     </p>
-
-
   </mat-card-content>
 </mat-card>
