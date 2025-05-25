@@ -1,73 +1,73 @@
 <div class="predict-container">
-  <h2>Prédiction COVID-19</h2>
-  <form (ngSubmit)="onSubmit()" [formGroup]="predictForm" class="predict-form">
+  <h2>COVID-19 Prediction</h2>
+  <form (ngSubmit)="onSubmit()" [formGroup]="predictForm" class="predict-form" aria-label="COVID-19 prediction form">
     <div class="form-grid">
       <mat-form-field appearance="outline">
-        <mat-label>Nombre de cas confirmés</mat-label>
-        <input matInput type="number" formControlName="confirmed_case">
+        <mat-label>Number of confirmed cases</mat-label>
+        <input matInput type="number" formControlName="confirmed_case" aria-label="Number of confirmed cases">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
         <mat-label>Date</mat-label>
-        <input matInput type="date" formControlName="date">
+        <input matInput type="date" formControlName="date" aria-label="Date">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Nombre de décès</mat-label>
-        <input matInput type="number" formControlName="deaths">
+        <mat-label>Number of deaths</mat-label>
+        <input matInput type="number" formControlName="deaths" aria-label="Number of deaths">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Nombre de personnes guéries</mat-label>
-        <input matInput type="number" formControlName="recovered">
+        <mat-label>Number of recoveries</mat-label>
+        <input matInput type="number" formControlName="recovered" aria-label="Number of recoveries">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Localisation</mat-label>
-        <input matInput formControlName="location">
+        <mat-label>Location</mat-label>
+        <input matInput formControlName="location" aria-label="Location">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Région</mat-label>
-        <input matInput formControlName="region">
+        <mat-label>Region</mat-label>
+        <input matInput formControlName="region" aria-label="Region">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Pays</mat-label>
-        <input matInput formControlName="country">
+        <mat-label>Country</mat-label>
+        <input matInput formControlName="country" aria-label="Country">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
         <mat-label>Continent</mat-label>
-        <input matInput formControlName="continent">
+        <input matInput formControlName="continent" aria-label="Continent">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
         <mat-label>Population</mat-label>
-        <input matInput type="number" formControlName="population">
+        <input matInput type="number" formControlName="population" aria-label="Population">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Région OMS</mat-label>
-        <input matInput formControlName="who_region">
+        <mat-label>WHO region</mat-label>
+        <input matInput formControlName="who_region" aria-label="WHO region">
       </mat-form-field>
     </div>
     
     <div class="submit-button">
-      <button mat-raised-button color="primary" type="submit">Lancer la prédiction</button>
+      <button mat-raised-button color="primary" type="submit" aria-label="Submit prediction">Run prediction</button>
     </div>
   </form>
 </div>
 
-<mat-card *ngIf="chartReady">
-  <mat-card-title>Résultat de la prédiction</mat-card-title>
+<mat-card *ngIf="chartReady" aria-live="polite">
+  <mat-card-title>Prediction result</mat-card-title>
   <mat-card-content>
     <canvas 
       baseChart
       [type]="'doughnut'"
       [data]="areaChartData"
       [options]="areaChartOptions"
-      aria-label="Graphique de prédiction COVID-19 : cas, guérisons et décès"
+      aria-label="COVID-19 prediction chart: cases, recoveries, and deaths"
       aria-describedby="chart-description">
     </canvas>
     <p id="chart-description" class="visually-hidden">
