@@ -1,0 +1,52 @@
+.predict-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+  }
+}
+
+.predict-form {
+  display: flex;
+  flex-direction: column;
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .submit-button {
+    text-align: center;
+    margin: 16px 0;
+  }
+}
+
+mat-card {
+  margin-top: 30px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  mat-card-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  mat-card-content {
+    display: flex;
+    justify-content: center;
+    
+    base-chart {
+      height: 300px;
+      width: 300px;
+      margin: 0 auto;
+    }
+  }
+}
