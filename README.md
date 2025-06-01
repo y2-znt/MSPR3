@@ -7,6 +7,9 @@
 ![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0056B3?style=for-the-badge&logo=fastapi&logoColor=white)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626.svg?style=for-the-badge&logo=Jupyter&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
@@ -24,6 +27,8 @@ Solution de surveillance et d'analyse épidémiologique développée pour l'Orga
 - API REST sécurisée avec documentation Swagger
 - Interface utilisateur interactive développée avec Angular Material
 - Visualisations avancées des données avec Chart.js
+- Accessibilité et conformité aux normes WCAG
+- Prédictions de l'évolution pandémique via un modèle d'IA
 - Déploiement conteneurisé et pipeline CI/CD
 - Tests automatisés et intégration continue
 
@@ -40,24 +45,23 @@ docker-compose up -d
 
 Consultez le [guide d'installation](docs/installation.md) pour une configuration détaillée.
 
-## Architecture
-
-![Architecture](docs/ressources/architecture-docker-fullstack-angular-spring-postgres.png)
-
 ## Stack Technique
 
-| Composant       | Technologies                                  |
-| --------------- | --------------------------------------------- |
-| Frontend        | Angular 18, TypeScript, Material UI, Chart.js |
-| Backend         | Spring Boot, Java 21, JPA, Swagger            |
-| Base de données | PostgreSQL                                    |
-| Infrastructure  | Docker, Docker Compose, GitHub Actions        |
+| Composant       | Technologies                                               |
+| --------------- | ---------------------------------------------------------- |
+| Frontend        | Angular 18, TypeScript, Material UI, Chart.js              |
+| Backend         | Spring Boot, Java 21, JPA, Swagger                         |
+| API IA          | FastAPI, Python 3.12, Scikit-learn, Pandas, NumPy          |
+| Traitement IA   | Jupyter Notebook, Python 3.12, Scikit-learn, Pandas, NumPy |
+| Base de données | PostgreSQL                                                 |
+| Infrastructure  | Docker, Docker Compose, GitHub Actions                     |
 
 ## Documentation
 
 ### Projet
 
-- [Présentation](docs/brief.md)
+- [Présentation Part 1](docs/presentation_part1.md)
+- [Présentation Part 2](docs/presentation_part2.md)
 - [Installation](docs/installation.md)
 - [Workflow Git](docs/git-workflow.md)
 - [Gestion de projet](docs/project-management.md)
@@ -66,8 +70,17 @@ Consultez le [guide d'installation](docs/installation.md) pour une configuration
 
 - [Architecture](docs/architecture/)
 - [Modèle de données](docs/data-model.md)
+- [Modèle IA](docs/ai-model.md)
 - [Processus ETL](docs/etl.md)
 - [Technologies utilisées](docs/tech-stack.md)
+
+### Benchmarks
+
+- [Benchmark Backend](docs/benchmark/benchmark-backend.md)
+- [Benchmark Frontend](docs/benchmark/benchmark-frontend.md)
+- [Benchmark ETL](docs/benchmark/benchmark-etl.md)
+- [Benchmark Entrainement IA](docs/benchmark/benchmark-ai-training.md)
+- [Benchmark API IA](docs/benchmark/benchmark-ai-api.md)
 
 ### Diagrammes
 
@@ -78,4 +91,4 @@ Consultez le [guide d'installation](docs/installation.md) pour une configuration
 
 ---
 
-Développé par l'équipe MSPR-1 d'ANALYZE IT.
+Développé par l'équipe MSPR-2 d'ANALYZE IT.
