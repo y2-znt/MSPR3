@@ -1,6 +1,6 @@
 services:
   frontend:
-    container_name: mspr2-frontend
+    container_name: mspr3-frontend
     build:
       context: ./frontend
       dockerfile: frontend.dockerfile
@@ -13,10 +13,10 @@ services:
     depends_on:
       - backend
     networks:
-      - mspr2-network
+      - mspr3-network
 
   backend:
-    container_name: mspr2-backend
+    container_name: mspr3-backend
     build:
       context: ./backend
       dockerfile: backend.dockerfile
@@ -34,9 +34,9 @@ services:
     depends_on:
       - db
     networks:
-      - mspr2-network
+      - mspr3-network
   ai-api:
-    container_name: mspr2-ai
+    container_name: mspr3-ai
     build:
       context: ./ai-api
       dockerfile: ai.dockerfile
@@ -49,10 +49,10 @@ services:
       - backend
       - db
     networks:
-      - mspr2-network
+      - mspr3-network
 
   db:
-    container_name: mspr2-db
+    container_name: mspr3-db
     image: postgres:latest
     environment:
       POSTGRES_USER: ${DB_USERNAME}
@@ -63,12 +63,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - mspr2-network
+      - mspr3-network
 
 volumes:
   pgdata:
-    name: mspr2-pgdata
+    name: mspr3-pgdata
 
 networks:
-  mspr2-network:
+  mspr3-network:
     driver: bridge

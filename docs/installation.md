@@ -11,8 +11,8 @@
 ### 1. Récupération du Projet
 
 ```bash
-git clone https://github.com/y2-znt/MSPR2.git
-cd MSPR2
+git clone https://github.com/y2-znt/MSPR3.git
+cd MSPR3
 ```
 
 ### 2. Configuration de l'Environnement
@@ -76,7 +76,7 @@ Une fois les services démarrés, vous pouvez accéder aux différentes interfac
 
 ```bash
 # Connexion via Docker
-docker exec -it mspr2-db psql -U <username> -d <dbname>
+docker exec -it mspr3-db psql -U <username> -d <dbname>
 
 # Commandes PostgreSQL utiles
 \dt                 # Liste des tables
@@ -94,13 +94,13 @@ docker exec -it mspr2-db psql -U <username> -d <dbname>
 mvn test # ou ./mvnw test
 
 # Tests Backend via container
-docker exec -it mspr2-backend mvn test
+docker exec -it mspr3-backend mvn test
 
 # Tests Frontend local
 npm run test:e2e:ci
 
 # Tests Frontend via container
-docker exec -it mspr2-frontend npm run test:e2e:ci
+docker exec -it mspr3-frontend npm run test:e2e:ci
 ```
 
 ### Logs des Services
