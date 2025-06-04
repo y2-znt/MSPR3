@@ -1,17 +1,20 @@
-import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ChartData, ChartOptions } from 'chart.js';
-import { PredictRequest, PredictService } from '../../services/predict.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatCardModule } from '@angular/material/card';
+import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-
-
+import { PredictRequest } from '../../models/predict.model';
+import { PredictService } from '../../services/predict.service';
 
 @Component({
   selector: 'app-predict',
@@ -28,9 +31,8 @@ import { BaseChartDirective } from 'ng2-charts';
     BaseChartDirective,
   ],
   templateUrl: './predict.component.html',
-  styleUrls: ['./predict.component.scss']
+  styleUrls: ['./predict.component.scss'],
 })
-
 export class PredictComponent {
   predictForm!: FormGroup;
   areaChartData: ChartData<'doughnut'> = {
@@ -41,8 +43,8 @@ export class PredictComponent {
     responsive: true,
     plugins: {
       legend: { display: true },
-      title: { display: true, text: 'Confiance dans la prédiction' }
-    }
+      title: { display: true, text: 'Confiance dans la prédiction' },
+    },
   };
   chartReady = false;
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
@@ -75,19 +77,20 @@ export class PredictComponent {
       const prob = res.probability;
       this.lastPrediction = res.prediction;
       this.areaChartData = {
-        labels: this.lastPrediction === 1
-          ? ['Contaminé', 'Pas contaminé']
-          : ['Pas contaminé', 'Contaminé'],
-        datasets: [{
-          data: this.lastPrediction === 1 ? [prob, 1 - prob] : [1 - prob, prob],
-          backgroundColor: ['#FF6384', '#36A2EB']
-        }]
+        labels:
+          this.lastPrediction === 1
+            ? ['Contaminé', 'Pas contaminé']
+            : ['Pas contaminé', 'Contaminé'],
+        datasets: [
+          {
+            data:
+              this.lastPrediction === 1 ? [prob, 1 - prob] : [1 - prob, prob],
+            backgroundColor: ['#FF6384', '#36A2EB'],
+          },
+        ],
       };
       this.chartReady = true;
       this.chart?.update();
     });
   }
-
-
-
 }

@@ -15,16 +15,18 @@ import {
 })
 export class DiseaseCaseService {
   private http: HttpClient = inject(HttpClient);
-  private url: string = environment.apiUrl;
+  private apiUrl: string = environment.apiUrl;
 
   constructor() {}
 
   getAllDiseaseCases(page: number = 0, size: number = 250): Observable<any> {
-    return this.http.get(`${this.url}disease-cases?page=${page}&size=${size}`);
+    return this.http.get(
+      `${this.apiUrl}disease-cases?page=${page}&size=${size}`
+    );
   }
 
   getDiseaseCaseById(id: number): Observable<DiseaseCase> {
-    return this.http.get<DiseaseCase>(`${this.url}disease-cases/${id}`);
+    return this.http.get<DiseaseCase>(`${this.apiUrl}disease-cases/${id}`);
   }
 
   getDiseaseCases(page: number, size: number): Observable<any> {
@@ -32,11 +34,11 @@ export class DiseaseCaseService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<any>(this.url, { params });
+    return this.http.get<any>(this.apiUrl, { params });
   }
 
   getTotalKpi(): Observable<TotalKpiDto> {
-    return this.http.get<TotalKpiDto>(`${this.url}disease-cases/kpi`);
+    return this.http.get<TotalKpiDto>(`${this.apiUrl}disease-cases/kpi`);
   }
 
   /**
@@ -57,7 +59,7 @@ export class DiseaseCaseService {
     }
 
     return this.http.get<AggregatedDiseaseCase[]>(
-      `${this.url}disease-cases/aggregated-by-date`,
+      `${this.apiUrl}disease-cases/aggregated-by-date`,
       { params }
     );
   }
@@ -86,7 +88,7 @@ export class DiseaseCaseService {
     }
 
     return this.http
-      .get<any[]>(`${this.url}disease-cases/aggregated-by-date`, { params })
+      .get<any[]>(`${this.apiUrl}disease-cases/aggregated-by-date`, { params })
       .pipe(map((data) => data as AggregatedDiseaseCase[]));
   }
 
@@ -103,13 +105,13 @@ export class DiseaseCaseService {
     // if id is a temporary ID (starts with "temp-"), we create a new case instead of updating
     if (typeof id === 'string' && id && id.indexOf('temp-') === 0) {
       return this.http
-        .post(`${this.url}disease-cases/aggregated-by-date`, updateData)
+        .post(`${this.apiUrl}disease-cases/aggregated-by-date`, updateData)
         .pipe(tap((response) => console.log('Create response:', response)));
     }
 
     // Otherwise, we update the existing case
     return this.http
-      .put(`${this.url}disease-cases/aggregated-by-date/${id}`, updateData)
+      .put(`${this.apiUrl}disease-cases/aggregated-by-date/${id}`, updateData)
       .pipe(tap((response) => console.log('Update response:', response)));
   }
 
@@ -132,10 +134,10 @@ export class DiseaseCaseService {
     // Proceed with deletion
     console.log(
       'Service - Sending DELETE request to:',
-      `${this.url}disease-cases/aggregated-by-date/${id}`
+      `${this.apiUrl}disease-cases/aggregated-by-date/${id}`
     );
     return this.http
-      .delete(`${this.url}disease-cases/aggregated-by-date/${id}`)
+      .delete(`${this.apiUrl}disease-cases/aggregated-by-date/${id}`)
       .pipe(
         tap((response) =>
           console.log('Service - Deletion response received:', response)
@@ -149,7 +151,7 @@ export class DiseaseCaseService {
 
     return this.http
       .delete(
-        `${this.url}disease-cases/aggregated-by-date/latest/${countryName}`
+        `${this.apiUrl}disease-cases/aggregated-by-date/latest/${countryName}`
       )
       .pipe(
         tap((response) =>
@@ -170,7 +172,7 @@ export class DiseaseCaseService {
     // Step 1: Retrieve all entries for this country
     return this.http
       .get<any[]>(
-        `${this.url}disease-cases/aggregated-by-date?countries=${countryName}`
+        `${this.apiUrl}disease-cases/aggregated-by-date?countries=${countryName}`
       )
       .pipe(
         tap((results) =>
@@ -204,7 +206,7 @@ export class DiseaseCaseService {
             // If the latest entry has no ID, use the specific endpoint
             return this.http
               .delete(
-                `${this.url}disease-cases/aggregated-by-date/latest/${countryName}`
+                `${this.apiUrl}disease-cases/aggregated-by-date/latest/${countryName}`
               )
               .pipe(
                 tap((response) =>
@@ -230,7 +232,7 @@ export class DiseaseCaseService {
           console.log('Service - Deleting entry with ID:', lastCase.id);
           return this.http
             .delete(
-              `${this.url}disease-cases/aggregated-by-date/${lastCase.id}`
+              `${this.apiUrl}disease-cases/aggregated-by-date/${lastCase.id}`
             )
             .pipe(
               tap((response) =>
@@ -265,7 +267,7 @@ export class DiseaseCaseService {
 
     // Create the case
     return this.http
-      .post(`${this.url}disease-cases/aggregated-by-date`, newCase)
+      .post(`${this.apiUrl}disease-cases/aggregated-by-date`, newCase)
       .pipe(
         tap((response) =>
           console.log('Service - Temporary case created:', response)
@@ -282,7 +284,7 @@ export class DiseaseCaseService {
               response.id
             );
             return this.http.delete(
-              `${this.url}disease-cases/aggregated-by-date/${response.id}`
+              `${this.apiUrl}disease-cases/aggregated-by-date/${response.id}`
             );
           }
 
