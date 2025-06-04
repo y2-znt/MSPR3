@@ -4,95 +4,92 @@ on:
   push:
     paths:
       - 'docs/**'
-    branches:
-      - main
+      - '.github/workflows/docs.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Install Pandoc, LaTeX, and ImageMagick
+      - name: Install Pandoc and LaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-latex-extra imagemagick
+          sudo apt-get install -y pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra imagemagick
 
-      - name: Prepare folders
+      - name: Prepare directories
         run: |
-          mkdir -p pdf site
+          mkdir -p pdf html
 
-      - name: Generate combined.md
+      - name: Convert PNG images to PDF (appendices)
+        run: |
+          mkdir -p pdf/appendices
+          find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \) | while read img; do
+            outname=$(basename "$img")
+            convert "$img" "pdf/appendices/${outname%.*}.pdf"
+          done
+
+      - name: Build combined markdown
         run: |
           echo "" > combined.md
-
-          # Ajout des fichiers dans l'ordre souhaité
           cat docs/brief_part1.md >> combined.md
-          echo "\n\n---\n\n" >> combined.md
-          cat docs/brief_part2.md >> combined.md
-          echo "\n\n---\n\n" >> combined.md
+          echo "\n\newpage\n" >> combined.md
 
           find docs/benchmark -name '*.md' | sort | while read file; do
             cat "$file" >> combined.md
-            echo "\n\n---\n\n" >> combined.md
+            echo "\n\newpage\n" >> combined.md
           done
 
           find docs/architecture -name '*.md' | sort | while read file; do
             cat "$file" >> combined.md
-            echo "\n\n---\n\n" >> combined.md
+            echo "\n\newpage\n" >> combined.md
           done
 
-          [ -f docs/tech-stack.md ] && cat docs/tech-stack.md >> combined.md && echo "\n\n---\n\n" >> combined.md
+          [ -f docs/tech-stack.md ] && cat docs/tech-stack.md >> combined.md && echo "\n\newpage\n" >> combined.md
 
           find docs/ -name '*.md' \
             ! -path 'docs/brief_part1.md' \
-            ! -path 'docs/brief_part2.md' \
             ! -path 'docs/benchmark/*' \
             ! -path 'docs/architecture/*' \
             ! -path 'docs/tech-stack.md' \
             | sort | while read file; do
               cat "$file" >> combined.md
-              echo "\n\n---\n\n" >> combined.md
+              echo "\n\newpage\n" >> combined.md
             done
 
-          echo "# Annexes" >> combined.md
-          echo "Voir les images en bas de cette page." >> combined.md
-
-      - name: Convert images to PDF for appendix
-        run: |
-          mkdir -p pdf/appendices
-          find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \) | while read img; do
-            convert "$img" "pdf/appendices/$(basename "${img%.*}").pdf"
-          done
+          echo "# Annexes\n\nLes documents suivants sont des annexes visuelles." >> combined.md
 
       - name: Generate Master PDF
         run: |
           pandoc combined.md \
+            --resource-path=docs/ \
             -s \
             --pdf-engine=xelatex \
             --toc \
-            --metadata title="Documentation" \
+            --toc-depth=2 \
             -o pdf/documentation.pdf
 
-      - name: Generate HTML version
+      - name: Generate HTML documentation
         run: |
           pandoc combined.md \
+            --resource-path=docs/ \
             -s \
             --toc \
-            --metadata title="Documentation" \
-            -o site/index.html
-
-          # Ajouter lien vers le PDF
-          echo "<p><a href='documentation.pdf' download>Télécharger le PDF complet</a></p>" >> site/index.html
-
-      - name: Copy PDF to site
-        run: |
-          cp pdf/documentation.pdf site/
+            --toc-depth=2 \
+            -o html/index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+          publish_dir: ./html
+
+      - name: Upload PDF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Master PDF
+          path: pdf/documentation.pdf
+          retention-days: 7
+
