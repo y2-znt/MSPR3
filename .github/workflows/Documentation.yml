@@ -1,4 +1,4 @@
-name: Build Docs (PDF + HTML)
+name: Documentation
 
 on:
   push:
