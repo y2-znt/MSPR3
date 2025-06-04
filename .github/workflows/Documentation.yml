@@ -16,7 +16,7 @@ jobs:
       - name: Install Pandoc and LaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-latex-extra imagemagick
+          sudo apt-get install -y pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra imagemagick
 
       - name: Prepare directories
         run: |
@@ -30,8 +30,7 @@ jobs:
             filename="${filename%.md}"
             pandoc "$file" \
               -s \
-              --pdf-engine=xelatex \
-              --template=docs/latex/azure-mui-template.tex \
+              --pdf-engine=pdflatex \
               -o "pdf/$filename.pdf"
           done
 
@@ -84,12 +83,11 @@ jobs:
           echo "# Annexes\n\nLes documents suivants sont des annexes visuelles." >> combined.md
           find pdf/appendices -name '*.pdf' | sort >> combined.md
 
-      - name: Generate master PDF with TOC and style
+      - name: Generate master PDF with TOC
         run: |
           pandoc combined.md \
             -s \
-            --pdf-engine=xelatex \
-            --template=docs/latex/azure-mui-template.tex \
+            --pdf-engine=pdflatex \
             --toc \
             --toc-depth=2 \
             --metadata title="Documentation" \
@@ -98,6 +96,6 @@ jobs:
       - name: Upload PDFs as artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: PDFs
+          name: Documentation PDFs
           path: pdf/
           retention-days: 7
