@@ -33,6 +33,7 @@ jobs:
             filename="${relpath//\//_}"
             filename="${filename%.md}"
             pandoc "$file" \
+              -s \
               -H docs/latex/header.tex \
               --pdf-engine=xelatex \
               --template=docs/latex/azure-mui-template.tex \
