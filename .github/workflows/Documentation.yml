@@ -20,7 +20,8 @@ jobs:
         run: |
           mkdir -p pdf
 
-      - name: Convert individual markdown files to PDFs        run: |
+      - name: Convert individual markdown files to PDFs        
+        run: |
           find docs/ -name '*.md' | while read file; do
             relpath="${file#docs/}"
             filename="${relpath//\//_}"
