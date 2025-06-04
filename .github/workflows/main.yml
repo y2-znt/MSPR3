@@ -123,6 +123,69 @@ jobs:
           path: frontend/playwright-report/
           retention-days: 30
 
+  deploy-backend:
+    name: Deploy Backend Docker Image
+    needs: test-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/backend.prod.dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-backend:latest
+
+  deploy-frontend:
+    name: Deploy Frontend Docker Image
+    needs: test-frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/frontend.dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-frontend:latest
+
+  deploy-ai-api:
+    name: Deploy AI API Docker Image
+    needs: build-ai-api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push AI API image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ai-api
+          file: ./ai-api/ai.prod.dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-ai-api:latest
+
   # performance-test:
   #   name: Performance Tests
   #   runs-on: ubuntu-latest
