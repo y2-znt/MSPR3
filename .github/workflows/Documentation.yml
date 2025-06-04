@@ -53,13 +53,35 @@ jobs:
 
       - name: Generate Master PDF with TOC and Custom Template
         run: |
+          mkdir -p pdf
+
+          # Fichiers à prioriser dans cet ordre
+          echo "docs/brief1.md" > ordered_list.txt
+          echo "docs/brief2.md" >> ordered_list.txt
+          find docs/benchmark -type f -name '*.md' | sort >> ordered_list.txt
+          find docs/architectures -type f -name '*.md' | sort >> ordered_list.txt
+          echo "docs/tech-stack.md" >> ordered_list.txt
+
+          # Ajouter tous les autres fichiers .md restants (pas déjà inclus)
+          find docs/ -type f -name '*.md' | grep -v -F -f ordered_list.txt | sort >> ordered_list.txt
+
+          # Fusionner tous les fichiers dans un seul temporaire avec saut de page
+          rm -f combined.md
+          while read file; do
+            echo -e "\\newpage\n" >> combined.md
+            cat "$file" >> combined.md
+            echo -e "\n" >> combined.md
+          done < ordered_list.txt
+
+          # Générer le PDF avec sommaire cliquable et template custom
           pandoc combined.md \
             -o pdf/documentation.pdf \
             --pdf-engine=xelatex \
-            --template=docs/latex/azure-mui-template.tex
+            --template=docs/latex/azure-mui-template.tex \
             --toc \
             --toc-depth=2 \
             --metadata title="Documentation"
+
 
       - name: Upload PDFs as Artifact
         uses: actions/upload-artifact@v4
