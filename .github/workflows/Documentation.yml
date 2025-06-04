@@ -1,4 +1,4 @@
-name: Convert Markdown to PDF
+name: Documentation
 
 on:
   push:
