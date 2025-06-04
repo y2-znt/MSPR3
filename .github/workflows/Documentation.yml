@@ -3,9 +3,7 @@ name: Documentation
 on:
   push:
     paths:
-      - 'docs/**.md'
-      - 'docs/**.png'
-      - 'docs/latex/**'
+      - 'docs/**'
 
 jobs:
   build:
@@ -18,12 +16,17 @@ jobs:
       - name: Install Pandoc and LaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex librsvg2-bin
+          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-latex-extra imagemagick
 
-      - name: Create output folders
-        run: mkdir -p pdf temp_md
+      - name: Prepare directories
+        run: |
+          mkdir -p pdf docs/latex
 
-      - name: Convert all .md files to individual PDFs
+      - name: Create Pandoc header for tightlist
+        run: |
+          echo '\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}' > docs/latex/header.tex
+
+      - name: Convert individual markdown files to PDFs
         run: |
           find docs/ -name '*.md' | while read file; do
             relpath="${file#docs/}"
@@ -36,40 +39,56 @@ jobs:
               -o "pdf/$filename.pdf"
           done
 
-      - name: Generate combined.md with ordered content
+      - name: Convert PNG images to PDF (appendices)
+        run: |
+          mkdir -p pdf/appendices
+          find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \) | while read img; do
+            outname=$(basename "$img")
+            convert "$img" "pdf/appendices/${outname%.*}.pdf"
+          done
+
+      - name: Create combined.md in desired order
         run: |
           echo "" > combined.md
 
-          # Ordre manuel
-          files=(
-            "docs/brief/brief1.md"
-            "docs/brief/brief2.md"
-            "docs/benchmark/benchmark.md"
-            "docs/architectures/architecture.md"
-            "docs/tech-stack.md"
-          )
+          # 1. Briefs
+          cat docs/brief-1.md >> combined.md
+          echo "\newpage" >> combined.md
+          cat docs/brief-2.md >> combined.md
+          echo "\newpage" >> combined.md
 
-          # Ajouter les fichiers à combined.md avec saut de page
-          for f in "${files[@]}"; do
-            [ -f "$f" ] && echo -e "\n\\newpage\n" >> combined.md && cat "$f" >> combined.md
+          # 2. Benchmarks (and subfiles)
+          find docs/benchmarks -name '*.md' | sort | while read file; do
+            cat "$file" >> combined.md
+            echo "\newpage" >> combined.md
           done
 
-          # Ajouter le reste des fichiers .md triés (hors déjà ajoutés)
-          find docs/ -name '*.md' | sort | while read f; do
-            if ! grep -q "$f" <<< "${files[*]}"; then
-              echo -e "\n\\newpage\n" >> combined.md
-              cat "$f" >> combined.md
-            fi
+          # 3. Architectures (and subfiles)
+          find docs/architecture -name '*.md' | sort | while read file; do
+            cat "$file" >> combined.md
+            echo "\newpage" >> combined.md
           done
 
-          # Ajouter annexe des images (converties en PDF)
-          echo -e "\n\\newpage\n# Annexes\n" >> combined.md
-          for img in $(find docs/ressources -name '*.png'); do
-            name=$(basename "$img")
-            echo -e "![${name}](${img})\n" >> combined.md
-          done
+          # 4. Tech-stack
+          [ -f docs/tech-stack.md ] && cat docs/tech-stack.md >> combined.md && echo "\newpage" >> combined.md
 
-      - name: Convert combined.md to master PDF
+          # 5. Remaining .md files
+          find docs/ -name '*.md' \
+            ! -path 'docs/brief-1.md' \
+            ! -path 'docs/brief-2.md' \
+            ! -path 'docs/benchmarks/*' \
+            ! -path 'docs/architecture/*' \
+            ! -path 'docs/tech-stack.md' \
+            | sort | while read file; do
+              cat "$file" >> combined.md
+              echo "\newpage" >> combined.md
+            done
+
+          # 6. Appendices notice
+          echo "# Annexes\n\nLes documents suivants sont des annexes visuelles." >> combined.md
+          find pdf/appendices -name '*.pdf' | sort >> combined.md
+
+      - name: Generate master PDF with TOC and style
         run: |
           pandoc combined.md \
             -H docs/latex/header.tex \
@@ -80,7 +99,7 @@ jobs:
             --metadata title="Documentation" \
             -o pdf/documentation.pdf
 
-      - name: Upload PDFs as artifact
+      - name: Upload PDFs as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: PDFs
