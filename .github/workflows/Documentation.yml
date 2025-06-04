@@ -25,6 +25,23 @@ jobs:
       - name: Prepare directories
         run: |
           mkdir -p pdf html
+      
+      - name: Convert all .md files to individual PDFs
+        run: |
+          mkdir -p docs/pdfs
+          find docs/ -name '*.md' | while read mdfile; do
+            relative_path="${mdfile#docs/}"
+            outdir="docs/pdfs/$(dirname "$relative_path")"
+            mkdir -p "$outdir"
+            outfile="$outdir/$(basename "${mdfile%.md}.pdf")"
+            pandoc "$mdfile" \
+              --pdf-engine=xelatex \
+              --toc \
+              --toc-depth=2 \
+              -s \
+              -o "$outfile"
+          done
+
 
       - name: Convert PNG images to PDF (appendices)
         run: |
@@ -92,6 +109,13 @@ jobs:
             --toc-depth=2 \
             --include-in-header=docs/latex/header.tex \
             -o pdf/documentation.pdf
+      
+      - name: Upload all individual PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: All PDFs
+          path: docs/pdfs
+          retention-days: 7
 
       - name: Generate HTML documentation
         run: |
@@ -114,4 +138,3 @@ jobs:
           name: Master PDF
           path: pdf/documentation.pdf
           retention-days: 7
-
