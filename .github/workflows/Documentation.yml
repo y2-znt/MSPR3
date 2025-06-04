@@ -16,25 +16,17 @@ jobs:
       - name: Install Pandoc and LaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-latex-extra imagemagick
-
-      - name: Prepare directories
+          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-latex-extra imagemagick      - name: Prepare directories
         run: |
-          mkdir -p pdf docs/latex
+          mkdir -p pdf
 
-      - name: Create Pandoc header for tightlist
-        run: |
-          echo '\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}' > docs/latex/header.tex
-
-      - name: Convert individual markdown files to PDFs
-        run: |
+      - name: Convert individual markdown files to PDFs        run: |
           find docs/ -name '*.md' | while read file; do
             relpath="${file#docs/}"
             filename="${relpath//\//_}"
             filename="${filename%.md}"
             pandoc "$file" \
               -s \
-              -H docs/latex/header.tex \
               --pdf-engine=xelatex \
               --template=docs/latex/azure-mui-template.tex \
               -o "pdf/$filename.pdf"
@@ -87,13 +79,10 @@ jobs:
 
           # 6. Appendices notice
           echo "# Annexes\n\nLes documents suivants sont des annexes visuelles." >> combined.md
-          find pdf/appendices -name '*.pdf' | sort >> combined.md
-
-      - name: Generate master PDF with TOC and style
+          find pdf/appendices -name '*.pdf' | sort >> combined.md      - name: Generate master PDF with TOC and style
         run: |
           pandoc combined.md \
             -s \
-            -H docs/latex/header.tex \
             --pdf-engine=xelatex \
             --template=docs/latex/azure-mui-template.tex \
             --toc \
