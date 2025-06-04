@@ -1,9 +1,7 @@
 services:
   frontend:
     container_name: mspr3-frontend-prod
-    build:
-      context: ./frontend
-      dockerfile: frontend.prod.dockerfile
+    image: ${DOCKERHUB_USERNAME}/mspr3-frontend:latest
     ports:
       - "4200:80"
     restart: always
@@ -14,9 +12,7 @@ services:
 
   backend:
     container_name: mspr3-backend-prod
-    build:
-      context: ./backend
-      dockerfile: backend.prod.dockerfile
+    image: ${DOCKERHUB_USERNAME}/mspr3-backend:latest
     ports:
       - "8080:8080"
     environment:
@@ -32,9 +28,7 @@ services:
 
   ai-api:
     container_name: mspr3-ai-prod
-    build:
-      context: ./ai-api
-      dockerfile: ai.prod.dockerfile
+    image: ${DOCKERHUB_USERNAME}/mspr3-ai-api:latest
     ports:
       - "8000:80"
     restart: always
