@@ -56,10 +56,10 @@ jobs:
           mkdir -p pdf
 
           # Fichiers à prioriser dans cet ordre
-          echo "docs/brief1.md" > ordered_list.txt
-          echo "docs/brief2.md" >> ordered_list.txt
+          echo "docs/brief_part1.md" > ordered_list.txt
+          echo "docs/brief_part2.md" >> ordered_list.txt
           find docs/benchmark -type f -name '*.md' | sort >> ordered_list.txt
-          find docs/architectures -type f -name '*.md' | sort >> ordered_list.txt
+          find docs/architecture -type f -name '*.md' | sort >> ordered_list.txt
           echo "docs/tech-stack.md" >> ordered_list.txt
 
           # Ajouter tous les autres fichiers .md restants (pas déjà inclus)
