@@ -35,19 +35,30 @@ jobs:
         run: |
           echo "" > combined.md
           cat docs/brief_part1.md >> combined.md
-          echo "\n\newpage\n" >> combined.md
+          echo "" >> combined.md
+          echo "\\newpage" >> combined.md
+          echo "" >> combined.md
 
           find docs/benchmark -name '*.md' | sort | while read file; do
             cat "$file" >> combined.md
-            echo "\n\newpage\n" >> combined.md
+            echo "" >> combined.md
+            echo "\\newpage" >> combined.md
+            echo "" >> combined.md
           done
 
           find docs/architecture -name '*.md' | sort | while read file; do
             cat "$file" >> combined.md
-            echo "\n\newpage\n" >> combined.md
+            echo "" >> combined.md
+            echo "\\newpage" >> combined.md
+            echo "" >> combined.md
           done
 
-          [ -f docs/tech-stack.md ] && cat docs/tech-stack.md >> combined.md && echo "\n\newpage\n" >> combined.md
+          if [ -f docs/tech-stack.md ]; then
+            cat docs/tech-stack.md >> combined.md
+            echo "" >> combined.md
+            echo "\\newpage" >> combined.md
+            echo "" >> combined.md
+          fi
 
           find docs/ -name '*.md' \
             ! -path 'docs/brief_part1.md' \
@@ -56,10 +67,14 @@ jobs:
             ! -path 'docs/tech-stack.md' \
             | sort | while read file; do
               cat "$file" >> combined.md
-              echo "\n\newpage\n" >> combined.md
+              echo "" >> combined.md
+              echo "\\newpage" >> combined.md
+              echo "" >> combined.md
             done
 
-          echo "# Annexes\n\nLes documents suivants sont des annexes visuelles." >> combined.md
+          echo "# Annexes" >> combined.md
+          echo "" >> combined.md
+          echo "Les documents suivants sont des annexes visuelles." >> combined.md
 
       - name: Generate Master PDF
         run: |
@@ -92,4 +107,3 @@ jobs:
           name: Master PDF
           path: pdf/documentation.pdf
           retention-days: 7
-
