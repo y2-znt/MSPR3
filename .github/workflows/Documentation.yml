@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir -p pdf html
 
-            - name: Convert PNG images to PDF (appendices)
+      - name: Convert PNG images to PDF (appendices)
         run: |
           mkdir -p pdf/appendices
           # Ancien : find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \)
@@ -93,6 +93,7 @@ jobs:
             --pdf-engine=xelatex \
             --toc \
             --toc-depth=2 \
+            --include-in-header=docs/latex/header.tex \
             -o pdf/documentation.pdf
 
       - name: Generate HTML documentation
