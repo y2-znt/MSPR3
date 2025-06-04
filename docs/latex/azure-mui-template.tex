@@ -1,0 +1,35 @@
+\documentclass{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{fontspec}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
+\setmainfont{Arial}
+\definecolor{azureblue}{RGB}{0, 123, 255}
+\titleformat{\section}{\Large\bfseries\color{azureblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{azureblue}}{\thesubsection}{1em}{}
+\renewcommand{\cftsecfont}{\color{azureblue}}
+\renewcommand{\cftsubsecfont}{\color{azureblue}}
+\hypersetup{colorlinks=true, linkcolor=azureblue, urlcolor=azureblue}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{azureblue}{\thepage}}
+\lhead{\textcolor{azureblue}{\leftmark}}
+\begin{document}
+$if(title)$
+\begin{center}
+    {\Huge \textbf{\color{azureblue}$title$} \par}
+    \vspace{1cm}
+\end{center}
+$endif$
+$if(toc)$
+{
+  \hypersetup{linkcolor=azureblue}
+  \tableofcontents
+  \newpage
+}
+$endif$
+$body$
+\end{document}

@@ -1,4 +1,4 @@
-name: Convert Markdown to PDF
+name: Documentation
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pandoc texlive-xetex
 
-      - name: Convert Markdown to individual PDFs
+      - name: Convert All Markdown Files to Individual PDFs
         run: |
           mkdir -p pdf
           find docs/ -name '*.md' | while read file; do
@@ -27,43 +27,41 @@ jobs:
             pandoc "$file" -o "pdf/$filename.pdf" --pdf-engine=xelatex
           done
 
-      - name: Generate Master PDF with TOC and page breaks
+      - name: Prepare Combined Markdown File in Custom Order
         run: |
           mkdir -p pdf
+          rm -f combined.md
+          
+          # Ajouter dans l'ordre voulu
+          cat docs/brief1.md >> combined.md && echo "\n\n\\newpage\n" >> combined.md
+          cat docs/brief2.md >> combined.md && echo "\n\n\\newpage\n" >> combined.md
 
-          # Créer un fichier temporaire combiné
-          touch combined.md
-
-          # Intro (facultatif)
-          if [ -f docs/README.md ]; then
-            cat docs/README.md >> combined.md
-            echo -e "\n\\newpage\n" >> combined.md
-          fi
-
-          # Ajouter les fichiers dans un ordre personnalisé avec sauts de page
-          for group in \
-              "find docs/ -type f -path 'docs/brief*/' -name '*.md'" \
-              "find docs/benchmarks/ -name '*.md'" \
-              "find docs/architecture/ -name '*.md'" \
-              "find docs/ -name '*.md' ! -path 'docs/brief*/\*' ! -path 'docs/benchmarks/*' ! -path 'docs/architecture/*'"
-          do
-            eval $group | sort | while read file; do
-              cat "$file" >> combined.md
-              echo -e "\n\\newpage\n" >> combined.md
-            done
+          find docs/benchmark -name '*.md' | sort | while read file; do
+            cat "$file" >> combined.md && echo "\n\n\\newpage\n" >> combined.md
           done
 
-          # Générer le PDF combiné avec TOC cliquable
+          find docs/architecture -name '*.md' | sort | while read file; do
+            cat "$file" >> combined.md && echo "\n\n\\newpage\n" >> combined.md
+          done
+
+          [ -f docs/tech-stack.md ] && cat docs/tech-stack.md >> combined.md && echo "\n\n\\newpage\n" >> combined.md
+
+          # Ajouter les autres fichiers qui ne sont pas déjà pris en compte
+          find docs/ -name '*.md' | grep -v -E 'brief1.md|brief2.md|benchmark|architecture|tech-stack.md' | sort | while read file; do
+            cat "$file" >> combined.md && echo "\n\n\\newpage\n" >> combined.md
+          done
+
+      - name: Generate Master PDF with TOC and Custom Template
+        run: |
           pandoc combined.md \
             -o pdf/documentation.pdf \
             --pdf-engine=xelatex \
+            --template=docs/latex/azure-mui-template.tex
             --toc \
             --toc-depth=2 \
-            --metadata title="Documentation" \
-            -V colorlinks=true \
-            -V linkcolor=blue
+            --metadata title="Documentation"
 
-      - name: Upload PDFs as artifact
+      - name: Upload PDFs as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PDFs
