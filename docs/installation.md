@@ -43,6 +43,8 @@ DB_PASSWORD=your_password
 
 ### 3. Démarrage de l'Application
 
+#### Mode Développement
+
 ```bash
 # Construction des images
 docker compose build
@@ -51,10 +53,24 @@ docker compose build
 docker compose up -d
 ```
 
+#### Mode Production
+
+```bash
+# Construction des images de production
+docker compose -f docker-compose.prod.yml build
+
+# Démarrage des services en production
+docker compose -f docker-compose.prod.yml up -d
+```
+
 Vérifiez que les services sont bien démarrés :
 
 ```bash
+# Pour le développement
 docker compose ps
+
+# Pour la production
+docker compose -f docker-compose.prod.yml ps
 ```
 
 ### 4. Vérification de l'Installation
@@ -75,8 +91,11 @@ Une fois les services démarrés, vous pouvez accéder aux différentes interfac
 ### Connexion à PostgreSQL
 
 ```bash
-# Connexion via Docker
+# Connexion via Docker (Développement)
 docker exec -it mspr3-db psql -U <username> -d <dbname>
+
+# Connexion via Docker (Production)
+docker exec -it mspr3-db-prod psql -U <username> -d <dbname>
 
 # Commandes PostgreSQL utiles
 \dt                 # Liste des tables
@@ -93,26 +112,34 @@ docker exec -it mspr3-db psql -U <username> -d <dbname>
 # Tests Backend local
 mvn test # ou ./mvnw test
 
-# Tests Backend via container
+# Tests Backend via container (Développement)
 docker exec -it mspr3-backend mvn test
 
 # Tests Frontend local
 npm run test:e2e:ci
 
-# Tests Frontend via container
+# Tests Frontend via container (Développement)
 docker exec -it mspr3-frontend npm run test:e2e:ci
 ```
 
 ### Logs des Services
 
 ```bash
-# Logs en temps réel
+# Logs en temps réel (Développement)
 docker compose logs -f
 
-# Logs d'un service spécifique
+# Logs en temps réel (Production)
+docker compose -f docker-compose.prod.yml logs -f
+
+# Logs d'un service spécifique (Développement)
 docker compose logs -f backend
 docker compose logs -f frontend
 docker compose logs -f db
+
+# Logs d'un service spécifique (Production)
+docker compose -f docker-compose.prod.yml logs -f backend
+docker compose -f docker-compose.prod.yml logs -f frontend
+docker compose -f docker-compose.prod.yml logs -f db
 ```
 
 ## Gestion des Services
@@ -120,6 +147,7 @@ docker compose logs -f db
 ### Commandes Courantes
 
 ```bash
+# Développement
 # Arrêt des services
 docker compose down
 
@@ -128,6 +156,16 @@ docker compose restart backend
 
 # Suppression des volumes (reset des données)
 docker compose down -v
+
+# Production
+# Arrêt des services
+docker compose -f docker-compose.prod.yml down
+
+# Redémarrage d'un service spécifique
+docker compose -f docker-compose.prod.yml restart backend
+
+# Suppression des volumes (reset des données)
+docker compose -f docker-compose.prod.yml down -v
 ```
 
 ### Mise à Jour de l'Application
@@ -136,8 +174,23 @@ docker compose down -v
 # Mise à jour depuis le repository
 git pull
 
-# Reconstruction et redémarrage
+# Reconstruction et redémarrage (Développement)
 docker compose down
 docker compose build
 docker compose up -d
+
+# Reconstruction et redémarrage (Production)
+docker compose -f docker-compose.prod.yml down
+docker compose -f docker-compose.prod.yml build
+docker compose -f docker-compose.prod.yml up -d
 ```
+
+### Différences entre Développement et Production
+
+Les principales différences entre les environnements de développement et de production sont :
+
+1. **Configuration des conteneurs** : Les conteneurs de production utilisent des configurations optimisées pour la performance
+2. **Noms des conteneurs** : Les conteneurs de production ont le suffixe `-prod`
+3. **Volumes de données** : Les volumes de production sont séparés de ceux de développement
+4. **Profils Spring** : Le backend utilise le profil `prod` en production
+5. **Nginx** : Le frontend utilise Nginx en production pour servir l'application Angular

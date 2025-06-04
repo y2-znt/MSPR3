@@ -9,15 +9,15 @@ import { Location } from '../models/location.model';
 })
 export class LocationService {
   private http: HttpClient = inject(HttpClient);
-  private url: string = environment.apiUrl;
+  private apiUrl: string = environment.apiUrl;
 
   constructor() {}
 
   getAllLocations(): Observable<Location[]> {
-    return this.http.get<Location[]>(`${this.url}locations`);
+    return this.http.get<Location[]>(`${this.apiUrl}locations`);
   }
 
   getLocationById(id: number): Observable<Location> {
-    return this.http.get<Location>(`${this.url}locations/${id}`);
+    return this.http.get<Location>(`${this.apiUrl}locations/${id}`);
   }
 }

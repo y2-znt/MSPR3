@@ -9,15 +9,15 @@ import { Region } from '../models/region.model';
 })
 export class RegionService {
   private http: HttpClient = inject(HttpClient);
-  private url: string = environment.apiUrl;
+  private apiUrl: string = environment.apiUrl;
 
   constructor() {}
 
   getAllRegions(): Observable<Region[]> {
-    return this.http.get<Region[]>(`${this.url}regions`);
+    return this.http.get<Region[]>(`${this.apiUrl}regions`);
   }
 
   getRegionById(id: number): Observable<Region> {
-    return this.http.get<Region>(`${this.url}regions/${id}`);
+    return this.http.get<Region>(`${this.apiUrl}regions/${id}`);
   }
 }
