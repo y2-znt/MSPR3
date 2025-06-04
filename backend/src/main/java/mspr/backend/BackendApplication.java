@@ -18,7 +18,7 @@ public class BackendApplication {
 
 	public static void main(String[] args) {
 		try {
-			// Essayer de charger le fichier .env s'il existe
+			// Try to load the .env file if it exists
 			Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 			dotenv.entries().forEach(entry -> {
 				if (System.getProperty(entry.getKey()) == null) {
