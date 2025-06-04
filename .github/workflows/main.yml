@@ -48,6 +48,24 @@ jobs:
           path: frontend/dist/
           retention-days: 7
 
+  build-ai-api:
+    name: Build AI API
+    runs-on: ubuntu-latest
+    container: python:3.11-slim
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        working-directory: ai-api
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Upload AI API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-api
+          path: ai-api/
+          retention-days: 7
+
   test-backend:
     needs: build-backend
     name: Test Backend
