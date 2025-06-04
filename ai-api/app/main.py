@@ -12,10 +12,25 @@ import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Debug: Print current working directory and list files
+logger.info(f"Current working directory: {os.getcwd()}")
+logger.info(f"Contents of current directory: {os.listdir('.')}")
+logger.info(f"Contents of /code/app/model: {os.listdir('/code/app/model') if os.path.exists('/code/app/model') else 'Directory not found'}")
+
 # Vérifier si le modèle existe
 model_path = "/code/app/model/random_forest_model.pkl"
+logger.info(f"Attempting to load model from: {model_path}")
+logger.info(f"Model file exists: {os.path.exists(model_path)}")
+
 if not os.path.exists(model_path):
-    raise FileNotFoundError(f"Le modèle n'existe pas à l'emplacement {model_path}")
+    # Try relative path as fallback
+    relative_path = "app/model/random_forest_model.pkl"
+    logger.info(f"Absolute path failed, trying relative path: {relative_path}")
+    logger.info(f"Relative path exists: {os.path.exists(relative_path)}")
+    if os.path.exists(relative_path):
+        model_path = relative_path
+    else:
+        raise FileNotFoundError(f"Le modèle n'existe pas à l'emplacement {model_path}")
 
 # Chargement du modèle
 logger.info("Chargement du modèle...")
