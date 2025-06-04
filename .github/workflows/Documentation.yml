@@ -1,9 +1,11 @@
-name: Documentation
+name: Convert Markdown to PDF
 
 on:
   push:
     paths:
-      - 'docs/**'
+      - 'docs/**.md'
+      - 'docs/**.png'
+      - 'docs/latex/**'
 
 jobs:
   build:
@@ -13,77 +15,74 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Install Pandoc, LaTeX, Fonts
+      - name: Install Pandoc and LaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex fonts-dejavu
+          sudo apt-get install -y pandoc texlive-xetex librsvg2-bin
 
-      - name: Prepare directories
-        run: |
-          mkdir -p pdf
+      - name: Create output folders
+        run: mkdir -p pdf temp_md
 
-      - name: Convert all Markdown files to individual PDFs
+      - name: Convert all .md files to individual PDFs
         run: |
           find docs/ -name '*.md' | while read file; do
             relpath="${file#docs/}"
             filename="${relpath//\//_}"
             filename="${filename%.md}"
             pandoc "$file" \
-              -o "pdf/$filename.pdf" \
+              -H docs/latex/header.tex \
               --pdf-engine=xelatex \
               --template=docs/latex/azure-mui-template.tex \
-              --toc \
-              --toc-depth=2 \
-              --metadata title="Documentation Section"
+              -o "pdf/$filename.pdf"
           done
 
-      - name: Convert PNG images to PDF (Annex)
-        run: |
-          mkdir -p pdf/annexes
-          find docs/ -name '*.png' | while read img; do
-            name=$(basename "$img" .png)
-            convert "$img" "pdf/annexes/$name.pdf"
-          done
-
-      - name: Create combined Markdown master file
+      - name: Generate combined.md with ordered content
         run: |
           echo "" > combined.md
-          
-          # Ordre personnalisé
-          cat docs/brief1.md >> combined.md
-          cat docs/brief2.md >> combined.md
-          
-          find docs/benchmark -name '*.md' | sort | while read f; do cat "$f" >> combined.md; done
-          find docs/architecture -name '*.md' | sort | while read f; do cat "$f" >> combined.md; done
-          cat docs/tech-stack.md >> combined.md
 
-          # Ajouter les autres .md restants
-          find docs/ -name '*.md' | grep -v -E 'brief1|brief2|benchmark|architecture|tech-stack' | sort | while read f; do
-            cat "$f" >> combined.md
+          # Ordre manuel
+          files=(
+            "docs/brief/brief1.md"
+            "docs/brief/brief2.md"
+            "docs/benchmark/benchmark.md"
+            "docs/architectures/architecture.md"
+            "docs/tech-stack.md"
+          )
+
+          # Ajouter les fichiers à combined.md avec saut de page
+          for f in "${files[@]}"; do
+            [ -f "$f" ] && echo -e "\n\\newpage\n" >> combined.md && cat "$f" >> combined.md
           done
 
-          # Ajouter les images converties
-          echo "# Annexes" >> combined.md
-          find pdf/annexes -name '*.pdf' | sort | while read annex; do
-            echo "\\includepdf[pages=-]{$annex}" >> combined.md
+          # Ajouter le reste des fichiers .md triés (hors déjà ajoutés)
+          find docs/ -name '*.md' | sort | while read f; do
+            if ! grep -q "$f" <<< "${files[*]}"; then
+              echo -e "\n\\newpage\n" >> combined.md
+              cat "$f" >> combined.md
+            fi
           done
 
-      - name: Fix \tightlist if needed
-        run: |
-          echo "\providecommand{\tightlist}{}" | cat - combined.md > tmp && mv tmp combined.md
+          # Ajouter annexe des images (converties en PDF)
+          echo -e "\n\\newpage\n# Annexes\n" >> combined.md
+          for img in $(find docs/ressources -name '*.png'); do
+            name=$(basename "$img")
+            echo -e "![${name}](${img})\n" >> combined.md
+          done
 
-      - name: Generate Master PDF
+      - name: Convert combined.md to master PDF
         run: |
           pandoc combined.md \
-            -o pdf/documentation.pdf \
+            -H docs/latex/header.tex \
             --pdf-engine=xelatex \
             --template=docs/latex/azure-mui-template.tex \
             --toc \
             --toc-depth=2 \
-            --metadata title="Documentation"
+            --metadata title="Documentation" \
+            -o pdf/documentation.pdf
 
-      - name: Upload PDFs
+      - name: Upload PDFs as artifact
         uses: actions/upload-artifact@v4
         with:
           name: PDFs
           path: pdf/
+          retention-days: 7
