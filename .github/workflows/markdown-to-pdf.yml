@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install Pandoc and LaTeX
         run: |
@@ -26,7 +26,7 @@ jobs:
           done
 
       - name: Upload PDFs as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: PDFs
           path: pdf/
