@@ -3,7 +3,7 @@ name: Convert Markdown to PDF
 on:
   push:
     paths:
-      - 'docs/*.md'
+      - 'docs/**/*.md'
 
 jobs:
   build:
@@ -17,16 +17,55 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pandoc texlive-xetex
 
-      - name: Convert Markdown to PDF
+      - name: Convert Markdown to individual PDFs
         run: |
           mkdir -p pdf
-          for file in docs/*.md; do
-            filename=$(basename "$file" .md)
+          find docs/ -name '*.md' | while read file; do
+            relpath="${file#docs/}"
+            filename="${relpath//\//_}"
+            filename="${filename%.md}"
             pandoc "$file" -o "pdf/$filename.pdf" --pdf-engine=xelatex
           done
+
+      - name: Generate Master PDF with TOC and page breaks
+        run: |
+          mkdir -p pdf
+
+          # Créer un fichier temporaire combiné
+          touch combined.md
+
+          # Intro (facultatif)
+          if [ -f docs/README.md ]; then
+            cat docs/README.md >> combined.md
+            echo -e "\n\\newpage\n" >> combined.md
+          fi
+
+          # Ajouter les fichiers dans un ordre personnalisé avec sauts de page
+          for group in \
+              "find docs/ -type f -path 'docs/brief*/' -name '*.md'" \
+              "find docs/benchmarks/ -name '*.md'" \
+              "find docs/architecture/ -name '*.md'" \
+              "find docs/ -name '*.md' ! -path 'docs/brief*/\*' ! -path 'docs/benchmarks/*' ! -path 'docs/architecture/*'"
+          do
+            eval $group | sort | while read file; do
+              cat "$file" >> combined.md
+              echo -e "\n\\newpage\n" >> combined.md
+            done
+          done
+
+          # Générer le PDF combiné avec TOC cliquable
+          pandoc combined.md \
+            -o pdf/documentation.pdf \
+            --pdf-engine=xelatex \
+            --toc \
+            --toc-depth=2 \
+            --metadata title="Documentation" \
+            -V colorlinks=true \
+            -V linkcolor=blue
 
       - name: Upload PDFs as artifact
         uses: actions/upload-artifact@v4
         with:
           name: PDFs
           path: pdf/
+          retention-days: 7
