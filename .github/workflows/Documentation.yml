@@ -11,12 +11,12 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3      - name: Install Pandoc and LaTeX
+        uses: actions/checkout@v3
+
+      - name: Install Pandoc and LaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-latex-extra imagemagick
-
-      - name: Prepare directories
+          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-latex-extra imagemagick      - name: Prepare directories
         run: |
           mkdir -p pdf      - name: Convert individual markdown files to PDFs
         run: |
@@ -39,28 +39,32 @@ jobs:
             convert "$img" "pdf/appendices/${outname%.*}.pdf"
           done
 
-      - name: Create combined.md in desired order
+            - name: Create combined.md in desired order
         run: |
-          echo "" > combined.md          # 1. Briefs
+          echo "" > combined.md
+
+          # 1. Briefs
           cat docs/brief_part1.md >> combined.md
           echo "\newpage" >> combined.md
           cat docs/brief_part2.md >> combined.md
           echo "\newpage" >> combined.md
 
-          # 2. Benchmarks (and subfiles)
+          # 2. Benchmarks
           find docs/benchmark -name '*.md' | sort | while read file; do
             cat "$file" >> combined.md
             echo "\newpage" >> combined.md
           done
 
-          # 3. Architectures (and subfiles)
+          # 3. Architectures
           find docs/architecture -name '*.md' | sort | while read file; do
             cat "$file" >> combined.md
             echo "\newpage" >> combined.md
           done
 
           # 4. Tech-stack
-          [ -f docs/tech-stack.md ] && cat docs/tech-stack.md >> combined.md && echo "\newpage" >> combined.md          # 5. Remaining .md files
+          [ -f docs/tech-stack.md ] && cat docs/tech-stack.md >> combined.md && echo "\newpage" >> combined.md
+
+          # 5. Remaining .md files
           find docs/ -name '*.md' \
             ! -path 'docs/brief_part1.md' \
             ! -path 'docs/brief_part2.md' \
@@ -70,11 +74,11 @@ jobs:
             | sort | while read file; do
               cat "$file" >> combined.md
               echo "\newpage" >> combined.md
-            done# 6. Appendices notice
-          echo "# Annexes\n\nLes documents suivants sont des annexes visuelles." >> combined.md
-          find pdf/appendices -name '*.pdf' | sort >> combined.md
+            done
 
-      - name: Generate master PDF with TOC and style
+          # 6. Appendices notice
+          echo "# Annexes\n\nLes documents suivants sont des annexes visuelles." >> combined.md
+          find pdf/appendices -name '*.pdf' | sort >> combined.md      - name: Generate master PDF with TOC and style
         run: |
           pandoc combined.md \
             -s \
