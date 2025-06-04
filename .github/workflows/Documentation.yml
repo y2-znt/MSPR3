@@ -39,7 +39,6 @@ jobs:
           done
           rm tmp_images.txt
 
-
       - name: Build combined markdown
         run: |
           echo "" > combined.md
@@ -85,7 +84,7 @@ jobs:
           echo "" >> combined.md
           echo "Les documents suivants sont des annexes visuelles." >> combined.md
 
-            - name: Generate Master PDF
+      - name: Generate Master PDF
         run: |
           pandoc combined.md \
             --resource-path=docs/:ressources/:ressources/diarams/class/:ressources/diarams/merise/:ressources/diarams/sequence/:ressources/diarams/use-case/ \
@@ -105,7 +104,6 @@ jobs:
             --toc-depth=2 \
             -o html/index.html
 
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -118,3 +116,4 @@ jobs:
           name: Master PDF
           path: pdf/documentation.pdf
           retention-days: 7
+
