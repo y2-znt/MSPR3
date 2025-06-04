@@ -1,0 +1,2975 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>combined</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#brief-du-projet-plateforme-oms-de-suivi-des-pandémies"
+id="toc-brief-du-projet-plateforme-oms-de-suivi-des-pandémies">Brief du
+Projet : Plateforme OMS de Suivi des Pandémies</a>
+<ul>
+<li><a href="#contexte-détaillé" id="toc-contexte-détaillé">Contexte
+Détaillé</a></li>
+<li><a href="#périmètre-de-la-mspr"
+id="toc-périmètre-de-la-mspr">Périmètre de la MSPR</a></li>
+<li><a href="#description-générale"
+id="toc-description-générale">Description Générale</a></li>
+<li><a href="#objectifs-clés" id="toc-objectifs-clés">Objectifs
+Clés</a></li>
+<li><a href="#fonctionnalités-principales"
+id="toc-fonctionnalités-principales">Fonctionnalités
+Principales</a></li>
+</ul></li>
+<li><a href="#documentation-technique-choix-de-fastapi"
+id="toc-documentation-technique-choix-de-fastapi">Documentation
+Technique : Choix de FastAPI</a>
+<ul>
+<li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+<li><a href="#pourquoi-fastapi" id="toc-pourquoi-fastapi">Pourquoi
+FastAPI ?</a></li>
+<li><a href="#cas-dutilisation" id="toc-cas-dutilisation">Cas
+d’utilisation</a></li>
+<li><a href="#avantages" id="toc-avantages">Avantages</a></li>
+<li><a href="#inconvénients"
+id="toc-inconvénients">Inconvénients</a></li>
+<li><a href="#architecture-et-composants"
+id="toc-architecture-et-composants">Architecture et composants</a></li>
+<li><a href="#intégration-avec-notre-projet"
+id="toc-intégration-avec-notre-projet">Intégration avec notre
+projet</a></li>
+<li><a href="#analyse-comparative-des-frameworks-dapi-pour-lia"
+id="toc-analyse-comparative-des-frameworks-dapi-pour-lia">Analyse
+comparative des frameworks d’API pour l’IA</a></li>
+<li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+</ul></li>
+<li><a href="#documentation-technique-choix-de-google-colab"
+id="toc-documentation-technique-choix-de-google-colab">Documentation
+Technique : Choix de Google Colab</a>
+<ul>
+<li><a href="#introduction-1"
+id="toc-introduction-1">Introduction</a></li>
+<li><a href="#pourquoi-google-colab"
+id="toc-pourquoi-google-colab">Pourquoi Google Colab ?</a></li>
+<li><a href="#cas-dutilisation-1" id="toc-cas-dutilisation-1">Cas
+d’utilisation</a></li>
+<li><a href="#avantages-1" id="toc-avantages-1">Avantages</a></li>
+<li><a href="#inconvénients-1"
+id="toc-inconvénients-1">Inconvénients</a></li>
+<li><a href="#architecture-et-fonctionnement"
+id="toc-architecture-et-fonctionnement">Architecture et
+fonctionnement</a></li>
+<li><a href="#intégration-avec-notre-projet-1"
+id="toc-intégration-avec-notre-projet-1">Intégration avec notre
+projet</a></li>
+<li><a href="#analyse-comparative-des-plateformes-dia"
+id="toc-analyse-comparative-des-plateformes-dia">Analyse comparative des
+plateformes d’IA</a></li>
+<li><a href="#conclusion-1" id="toc-conclusion-1">Conclusion</a></li>
+</ul></li>
+<li><a href="#documentation-technique-choix-de-spring-boot-en-java"
+id="toc-documentation-technique-choix-de-spring-boot-en-java">Documentation
+Technique : Choix de Spring Boot en Java</a>
+<ul>
+<li><a href="#introduction-2"
+id="toc-introduction-2">Introduction</a></li>
+<li><a href="#pourquoi-spring-boot"
+id="toc-pourquoi-spring-boot">Pourquoi Spring Boot ?</a></li>
+<li><a href="#cas-dutilisation-2" id="toc-cas-dutilisation-2">Cas
+d’utilisation</a></li>
+<li><a href="#avantages-2" id="toc-avantages-2">Avantages</a></li>
+<li><a href="#inconvénients-2"
+id="toc-inconvénients-2">Inconvénients</a></li>
+<li><a href="#pourquoi-java" id="toc-pourquoi-java">Pourquoi Java
+?</a></li>
+<li><a href="#architecture-et-design-patterns"
+id="toc-architecture-et-design-patterns">Architecture et Design
+Patterns</a></li>
+<li><a href="#intégration-avec-angular"
+id="toc-intégration-avec-angular">Intégration avec Angular</a></li>
+<li><a href="#analyse-comparative-des-frameworks-backend"
+id="toc-analyse-comparative-des-frameworks-backend">Analyse comparative
+des frameworks backend</a></li>
+<li><a href="#conclusion-2" id="toc-conclusion-2">Conclusion</a></li>
+</ul></li>
+<li><a href="#documentation-technique-choix-dun-etl-personnalisé"
+id="toc-documentation-technique-choix-dun-etl-personnalisé">Documentation
+Technique : Choix d’un ETL Personnalisé</a>
+<ul>
+<li><a href="#introduction-3"
+id="toc-introduction-3">Introduction</a></li>
+<li><a href="#pourquoi-un-etl-personnalisé"
+id="toc-pourquoi-un-etl-personnalisé">Pourquoi un ETL Personnalisé
+?</a></li>
+<li><a href="#cas-dutilisation-3" id="toc-cas-dutilisation-3">Cas
+d’utilisation</a></li>
+<li><a href="#avantages-3" id="toc-avantages-3">Avantages</a></li>
+<li><a href="#inconvénients-3"
+id="toc-inconvénients-3">Inconvénients</a></li>
+<li><a href="#architecture-et-design-patterns-1"
+id="toc-architecture-et-design-patterns-1">Architecture et Design
+Patterns</a></li>
+<li><a href="#performances" id="toc-performances">Performances</a></li>
+<li><a href="#gestion-des-erreurs" id="toc-gestion-des-erreurs">Gestion
+des Erreurs</a></li>
+<li><a href="#intégration-avec-spring-boot"
+id="toc-intégration-avec-spring-boot">Intégration avec Spring
+Boot</a></li>
+<li><a href="#analyse-comparative-des-solutions-etl"
+id="toc-analyse-comparative-des-solutions-etl">Analyse comparative des
+solutions ETL</a></li>
+<li><a href="#conclusion-3" id="toc-conclusion-3">Conclusion</a></li>
+</ul></li>
+<li><a href="#documentation-technique-choix-dangular"
+id="toc-documentation-technique-choix-dangular">Documentation Technique
+: Choix d’Angular</a>
+<ul>
+<li><a href="#introduction-4"
+id="toc-introduction-4">Introduction</a></li>
+<li><a href="#pourquoi-angular" id="toc-pourquoi-angular">Pourquoi
+Angular ?</a></li>
+<li><a href="#cas-dutilisation-4" id="toc-cas-dutilisation-4">Cas
+d’utilisation</a></li>
+<li><a href="#avantages-4" id="toc-avantages-4">Avantages</a></li>
+<li><a href="#inconvénients-4"
+id="toc-inconvénients-4">Inconvénients</a></li>
+<li><a href="#pourquoi-typescript" id="toc-pourquoi-typescript">Pourquoi
+TypeScript ?</a></li>
+<li><a href="#architecture-et-design-patterns-2"
+id="toc-architecture-et-design-patterns-2">Architecture et Design
+Patterns</a></li>
+<li><a href="#intégration-avec-spring-boot-1"
+id="toc-intégration-avec-spring-boot-1">Intégration avec Spring
+Boot</a></li>
+<li><a href="#analyse-comparative-des-frameworks-frontend"
+id="toc-analyse-comparative-des-frameworks-frontend">Analyse comparative
+des frameworks frontend</a></li>
+<li><a href="#conclusion-4" id="toc-conclusion-4">Conclusion</a></li>
+</ul></li>
+<li><a href="#architecture-du-projet-backend"
+id="toc-architecture-du-projet-backend">Architecture du Projet
+Backend</a>
+<ul>
+<li><a href="#structure-du-projet"
+id="toc-structure-du-projet">Structure du Projet</a></li>
+<li><a href="#technologies-et-frameworks"
+id="toc-technologies-et-frameworks">Technologies et Frameworks</a></li>
+<li><a href="#organisation-du-code"
+id="toc-organisation-du-code">Organisation du Code</a></li>
+<li><a href="#etl-extract-transform-load"
+id="toc-etl-extract-transform-load">ETL (Extract, Transform,
+Load)</a></li>
+<li><a href="#configuration-et-environnement"
+id="toc-configuration-et-environnement">Configuration et
+Environnement</a></li>
+<li><a href="#docker" id="toc-docker">Docker</a></li>
+<li><a href="#tests" id="toc-tests">Tests</a></li>
+</ul></li>
+<li><a href="#architecture-du-projet-frontend"
+id="toc-architecture-du-projet-frontend">Architecture du Projet
+Frontend</a>
+<ul>
+<li><a href="#structure-du-projet-1"
+id="toc-structure-du-projet-1">Structure du Projet</a></li>
+<li><a href="#organisation-du-code-1"
+id="toc-organisation-du-code-1">Organisation du Code</a></li>
+<li><a href="#configuration-et-environnement-1"
+id="toc-configuration-et-environnement-1">Configuration et
+Environnement</a></li>
+<li><a href="#docker-1" id="toc-docker-1">Docker</a></li>
+</ul></li>
+<li><a href="#architecture-du-projet-api-ia"
+id="toc-architecture-du-projet-api-ia">Architecture du Projet API IA</a>
+<ul>
+<li><a href="#structure-du-projet-2"
+id="toc-structure-du-projet-2">Structure du Projet</a></li>
+<li><a href="#organisation-du-code-2"
+id="toc-organisation-du-code-2">Organisation du Code</a></li>
+<li><a href="#technologies-et-frameworks-1"
+id="toc-technologies-et-frameworks-1">Technologies et
+Frameworks</a></li>
+<li><a href="#configuration-et-environnement-2"
+id="toc-configuration-et-environnement-2">Configuration et
+Environnement</a></li>
+<li><a href="#docker-2" id="toc-docker-2">Docker</a></li>
+<li><a href="#flux-de-prédiction-typique"
+id="toc-flux-de-prédiction-typique">Flux de Prédiction Typique</a></li>
+</ul></li>
+<li><a href="#stack-technique-du-projet"
+id="toc-stack-technique-du-projet">Stack Technique du Projet</a>
+<ul>
+<li><a href="#frontend" id="toc-frontend">Frontend</a></li>
+<li><a href="#backend" id="toc-backend">Backend</a></li>
+<li><a href="#base-de-données-1" id="toc-base-de-données-1">Base de
+données</a></li>
+<li><a href="#etl-data-processing" id="toc-etl-data-processing">ETL
+&amp; Data Processing</a></li>
+<li><a href="#devops-infrastructure"
+id="toc-devops-infrastructure">DevOps &amp; Infrastructure</a></li>
+<li><a href="#outils-de-développement"
+id="toc-outils-de-développement">Outils de développement</a></li>
+</ul></li>
+<li><a href="#modèle-dintelligence-artificielle"
+id="toc-modèle-dintelligence-artificielle">Modèle d’Intelligence
+Artificielle</a>
+<ul>
+<li><a href="#aperçu" id="toc-aperçu">Aperçu</a></li>
+<li><a href="#détails-du-modèle" id="toc-détails-du-modèle">Détails du
+Modèle</a></li>
+<li><a href="#données-dentrée-coviddata"
+id="toc-données-dentrée-coviddata">Données d’Entrée
+(<code>CovidData</code>)</a></li>
+<li><a href="#traitement-des-caractéristiques-feature-engineering"
+id="toc-traitement-des-caractéristiques-feature-engineering">Traitement
+des Caractéristiques (Feature Engineering)</a></li>
+<li><a href="#sortie-de-prédiction" id="toc-sortie-de-prédiction">Sortie
+de Prédiction</a></li>
+<li><a href="#points-importants" id="toc-points-importants">Points
+Importants</a></li>
+</ul></li>
+<li><a
+href="#brief-du-projet-plateforme-oms-de-suivi-des-pandémies---phase-2"
+id="toc-brief-du-projet-plateforme-oms-de-suivi-des-pandémies---phase-2">Brief
+du Projet : Plateforme OMS de Suivi des Pandémies - Phase 2</a>
+<ul>
+<li><a href="#contexte-détaillé-1" id="toc-contexte-détaillé-1">Contexte
+Détaillé</a></li>
+<li><a href="#périmètre-de-la-mspr-1"
+id="toc-périmètre-de-la-mspr-1">Périmètre de la MSPR</a></li>
+<li><a href="#description-générale-1"
+id="toc-description-générale-1">Description Générale</a></li>
+<li><a href="#objectifs-clés-1" id="toc-objectifs-clés-1">Objectifs
+Clés</a></li>
+<li><a href="#fonctionnalités-principales-1"
+id="toc-fonctionnalités-principales-1">Fonctionnalités
+Principales</a></li>
+</ul></li>
+<li><a href="#modèle-de-données" id="toc-modèle-de-données">Modèle de
+Données</a>
+<ul>
+<li><a href="#diagramme-du-modèle-de-données"
+id="toc-diagramme-du-modèle-de-données">Diagramme du Modèle de
+Données</a></li>
+<li><a href="#entités" id="toc-entités">Entités</a></li>
+<li><a href="#relations" id="toc-relations">Relations</a></li>
+<li><a href="#énumérations" id="toc-énumérations">Énumérations</a></li>
+<li><a href="#notes-techniques" id="toc-notes-techniques">Notes
+Techniques</a></li>
+</ul></li>
+<li><a href="#documentation-détaillée-de-loutil-etl-covid-19"
+id="toc-documentation-détaillée-de-loutil-etl-covid-19">Documentation
+Détaillée de l’Outil ETL COVID-19</a>
+<ul>
+<li><a href="#contexte-et-objectifs-de-letl"
+id="toc-contexte-et-objectifs-de-letl">1. Contexte et Objectifs de
+l’ETL</a></li>
+<li><a href="#périmètre-détaillé-de-letl"
+id="toc-périmètre-détaillé-de-letl">2. Périmètre Détaillé de
+l’ETL</a></li>
+</ul></li>
+<li><a href="#documentation-organisation-et-conventions-git"
+id="toc-documentation-organisation-et-conventions-git">Documentation :
+Organisation et Conventions Git</a>
+<ul>
+<li><a href="#structure-des-branches"
+id="toc-structure-des-branches">Structure des branches</a></li>
+<li><a href="#explication-des-branches"
+id="toc-explication-des-branches">Explication des Branches</a></li>
+<li><a href="#conventions-de-nommage"
+id="toc-conventions-de-nommage">Conventions de Nommage</a></li>
+<li><a href="#workflow-de-développement"
+id="toc-workflow-de-développement">Workflow de développement</a></li>
+<li><a href="#bonnes-pratiques" id="toc-bonnes-pratiques">Bonnes
+pratiques</a></li>
+</ul></li>
+<li><a href="#guide-dinstallation" id="toc-guide-dinstallation">Guide
+d’Installation</a>
+<ul>
+<li><a href="#prérequis-système" id="toc-prérequis-système">Prérequis
+Système</a></li>
+<li><a href="#installation-pas-à-pas"
+id="toc-installation-pas-à-pas">Installation Pas à Pas</a></li>
+<li><a href="#gestion-de-la-base-de-données"
+id="toc-gestion-de-la-base-de-données">Gestion de la Base de
+Données</a></li>
+<li><a href="#tests-et-validation" id="toc-tests-et-validation">Tests et
+Validation</a></li>
+<li><a href="#gestion-des-services"
+id="toc-gestion-des-services">Gestion des Services</a></li>
+</ul></li>
+<li><a href="#gestion-de-projet" id="toc-gestion-de-projet">Gestion de
+Projet</a>
+<ul>
+<li><a href="#méthodologie-adoptée"
+id="toc-méthodologie-adoptée">Méthodologie adoptée</a></li>
+<li><a href="#outils-utilisés" id="toc-outils-utilisés">Outils
+utilisés</a></li>
+<li><a href="#organisation-du-travail"
+id="toc-organisation-du-travail">Organisation du travail</a></li>
+<li><a href="#déroulé-du-projet" id="toc-déroulé-du-projet">Déroulé du
+projet</a></li>
+<li><a href="#suivi-de-la-qualité" id="toc-suivi-de-la-qualité">Suivi de
+la qualité</a></li>
+<li><a href="#bilan-et-retours-dexpérience"
+id="toc-bilan-et-retours-dexpérience">Bilan et retours
+d’expérience</a></li>
+</ul></li>
+<li><a href="#documentation-daccessibilité-frontend"
+id="toc-documentation-daccessibilité-frontend">Documentation
+d’Accessibilité Frontend</a>
+<ul>
+<li><a href="#aperçu-1" id="toc-aperçu-1">Aperçu</a></li>
+<li><a href="#fonctionnalités-daccessibilité-implémentées"
+id="toc-fonctionnalités-daccessibilité-implémentées">Fonctionnalités
+d’Accessibilité Implémentées</a></li>
+<li><a href="#implémentation-spécifique-aux-composants"
+id="toc-implémentation-spécifique-aux-composants">Implémentation
+Spécifique aux Composants</a></li>
+<li><a href="#tests-et-validation-1"
+id="toc-tests-et-validation-1">Tests et Validation</a></li>
+<li><a href="#bonnes-pratiques-pour-les-développeurs"
+id="toc-bonnes-pratiques-pour-les-développeurs">Bonnes Pratiques pour
+les Développeurs</a></li>
+<li><a href="#normes-de-conformité" id="toc-normes-de-conformité">Normes
+de Conformité</a></li>
+<li><a href="#améliorations-futures"
+id="toc-améliorations-futures">Améliorations Futures</a></li>
+<li><a href="#ressources" id="toc-ressources">Ressources</a></li>
+</ul></li>
+<li><a href="#annexes" id="toc-annexes">Annexes</a></li>
+</ul>
+</nav>
+<h1 id="brief-du-projet-plateforme-oms-de-suivi-des-pandémies">Brief du
+Projet : Plateforme OMS de Suivi des Pandémies</h1>
+<h2 id="contexte-détaillé">Contexte Détaillé</h2>
+<p>Dans le cadre de la gestion de la pandémie de COVID-19 et de la
+montée du virus de la variole du singe (MPOX), l’Europe et le
+gouvernement américain ont décidé de créer une nouvelle division de
+recherche au sein de l’OMS. Cette division est dédiée à la détection et
+à la prévention des pandémies. L’objectif est de développer une
+plateforme permettant de collecter, nettoyer, analyser et visualiser les
+données historiques sur les pandémies. Cette plateforme doit aider les
+chercheurs et les décideurs à visualiser des indicateurs clés,
+comprendre les dynamiques des pandémies passées et formuler des
+hypothèses pour des modèles prédictifs. Actuellement, la division ne
+compte qu’une seule personne concentrée sur la mise en place de
+l’infrastructure, nécessitant donc l’intervention de prestataires pour
+développer la solution.</p>
+<h2 id="périmètre-de-la-mspr">Périmètre de la MSPR</h2>
+<p>Pour cette Mise en Situation Professionnelle Reconstituée (MSPR),
+vous travaillez pour le groupe ANALYZE IT, spécialisé dans les données
+de santé, et dépêché par l’OMS en tant que prestataire de service. Votre
+mission est de développer une solution permettant d’ingérer des données
+provenant de différentes sources (bases de données publiques de santé,
+archives hospitalières, publications scientifiques, etc.) au format JSON
+ou CSV. Vous devez nettoyer, trier et assurer la qualité des données, en
+tenant compte des sources hétérogènes. Vous devez également construire
+une structure de stockage adaptée pour l’analyse des données, permettant
+une interrogation rapide et flexible. Enfin, vous devez mettre en place
+une solution de lecture de données pour l’équipe de développement de la
+division et créer des tableaux de bord interactifs pour la visualisation
+et l’extraction des indicateurs clés de performance.</p>
+<h2 id="description-générale">Description Générale</h2>
+<p>L’Organisation Mondiale de la Santé souhaite mettre en place une
+plateforme de veille pandémique. Cette solution devra permettre
+d’exploiter des jeux de données ouverts (open data), les transformer,
+les visualiser via une interface claire, et exposer les données via une
+API REST sécurisée.</p>
+<p>En tant qu’équipe de l’entreprise ANALYZE IT, vous avez été mandatés
+pour réaliser ce projet de A à Z, en utilisant une stack moderne adaptée
+à une architecture web robuste.</p>
+<h2 id="objectifs-clés">Objectifs Clés</h2>
+<ul>
+<li>Intégrer et transformer les données en provenance de deux sources
+open data.</li>
+<li>Stocker les données nettoyées dans une base relationnelle
+PostgreSQL.</li>
+<li>Offrir une API REST documentée et filtrable pour les développeurs de
+l’OMS.</li>
+<li>Proposer des tableaux de bord interactifs affichés via une interface
+Angular.</li>
+<li>Industrialiser la solution avec Docker et GitLab CI/CD.</li>
+<li>Suivre le projet de manière agile, avec une planification
+continue.</li>
+</ul>
+<h2 id="fonctionnalités-principales">Fonctionnalités Principales</h2>
+<h3 id="collecte-préparation-des-données">1. Collecte &amp; Préparation
+des Données</h3>
+<ul>
+<li>Sélection de <strong>jeu de données Kaggle</strong> (ex. :
+COVID-19).</li>
+<li>Format de données : JSON, CSV.</li>
+<li>Développement d’un module Spring pour effectuer le pipeline ETL :
+<ul>
+<li>Extraction automatique.</li>
+<li>Nettoyage, suppression des doublons, normalisation des valeurs.</li>
+<li>Chargement vers la base PostgreSQL via JPA.</li>
+</ul></li>
+<li>Documentation technique dédiée à l’ETL.</li>
+</ul>
+<h3 id="modélisation-et-stockage">2. Modélisation et Stockage</h3>
+<ul>
+<li>Modèle de données présenté en Merise et UML (MCD, MLD, MPD).</li>
+<li>Génération des entités JPA à partir du modèle logique.</li>
+<li>Structure optimisée pour les requêtes analytiques.</li>
+</ul>
+<h3 id="api-restful">3. API RESTful</h3>
+<ul>
+<li>Développée en Java avec Spring.</li>
+<li>Expose des endpoints CRUD pour les entités principales.</li>
+<li>Possibilité de filtrer les réponses (query params).</li>
+<li>Documentation complète via <strong>Swagger (OpenAPI)</strong>.</li>
+</ul>
+<h3 id="visualisation-des-données">4. Visualisation des Données</h3>
+<ul>
+<li>Frontend Angular affichant des tableaux de bord dynamiques :
+<ul>
+<li>KPI : taux de transmission, mortalité, zones géographiques
+touchées.</li>
+<li>Graphiques filtrables par pays, période, maladie, etc.</li>
+</ul></li>
+<li>Justification des filtres mis en place dans la documentation.</li>
+</ul>
+<h3 id="déploiement-et-industrialisation">5. Déploiement et
+Industrialisation</h3>
+<ul>
+<li>Conteneurisation via <strong>Docker</strong> (frontend + backend +
+base de données).</li>
+<li>Automatisation CI/CD avec <strong>GitLab</strong> pour
+build/test/deploy.</li>
+<li>Pipeline intégrant les tests JUnit5 avant toute mise en
+production.</li>
+</ul>
+<h3 id="documentation-suivi">6. Documentation &amp; Suivi</h3>
+<ul>
+<li>Documentation Swagger pour l’API.</li>
+<li>Rapport technique sur l’ETL et le processus de nettoyage.</li>
+<li>Benchmark des outils d’analyse (ex : Apache Hop vs Talend).</li>
+<li>Suivi d’avancement régulier (Discord, Trello).</li>
+</ul>
+<h1 id="documentation-technique-choix-de-fastapi">Documentation
+Technique : Choix de FastAPI</h1>
+<h2 id="introduction">Introduction</h2>
+<p>FastAPI est un framework web moderne pour la création d’APIs avec
+Python 3.7+, basé sur les standards ouverts pour les APIs (OpenAPI et
+JSON Schema). Il est spécialement conçu pour développer des APIs
+performantes avec une validation automatique des types, une
+documentation interactive et une excellente intégration avec les modèles
+d’intelligence artificielle.</p>
+<h2 id="pourquoi-fastapi">Pourquoi FastAPI ?</h2>
+<p>Les performances exceptionnelles de FastAPI, comparables à NodeJS,
+optimisent les temps de réponse des inférences IA. La validation
+automatique des données d’entrée via Pydantic renforce la fiabilité. La
+documentation OpenAPI/Swagger générée automatiquement facilite
+l’adoption. La compatibilité native avec les modèles Python (PyTorch,
+TensorFlow, scikit-learn) simplifie l’intégration. Le support asynchrone
+natif permet une gestion efficace des requêtes concurrentes et des
+tâches de longue durée.</p>
+<h2 id="cas-dutilisation">Cas d’utilisation</h2>
+<p>FastAPI excelle dans le déploiement de modèles d’IA en production
+avec garantie de performances. L’exposition des prédictions via API REST
+standardisée facilite l’intégration frontend. Le traitement asynchrone
+est optimal pour les inférences longues. La validation avancée des
+entrées est cruciale pour les modèles sensibles aux formats. La mise à
+l’échelle est simplifiée grâce au déploiement avec Uvicorn et
+Gunicorn.</p>
+<h2 id="avantages">Avantages</h2>
+<p>La documentation interactive Swagger UI et ReDoc améliore
+l’expérience développeur. Le typage statique avec Python 3.6+ réduit les
+erreurs de développement. La validation automatique des requêtes élimine
+le code boilerplate. Les performances de Starlette et Pydantic assurent
+une latence minimale. La courbe d’apprentissage réduite accélère le
+développement. L’écosystème Python facilite l’intégration avec des
+bibliothèques d’IA. Les middlewares personnalisables permettent
+d’ajouter des fonctionnalités avancées (CORS, authentification,
+journalisation).</p>
+<h2 id="inconvénients">Inconvénients</h2>
+<p>L’écosystème, bien que mature, est moins étendu que celui de
+frameworks plus anciens. La gestion d’état entre requêtes nécessite des
+solutions externes (Redis, bases de données). La version 1.0 étant
+récente, certaines bibliothèques tierces peuvent manquer d’intégration
+native. L’hébergement spécifique à Python peut être plus coûteux que des
+alternatives polyvalentes. Les performances de calcul pour l’inférence
+sont limitées par les capacités du serveur, nécessitant potentiellement
+une mise à l’échelle horizontale.</p>
+<h2 id="architecture-et-composants">Architecture et composants</h2>
+<p>FastAPI s’appuie sur Starlette pour les fonctionnalités web
+asynchrones. Pydantic gère la validation et sérialisation des données.
+Uvicorn sert de serveur ASGI hautes performances. Les routes et
+endpoints sont organisés par domaine fonctionnel. Les modèles d’IA sont
+chargés en mémoire au démarrage de l’application. Le middleware CORS
+assure la compatibilité avec notre frontend Angular. Les caches Redis
+optimisent les inférences répétitives.</p>
+<h2 id="intégration-avec-notre-projet">Intégration avec notre
+projet</h2>
+<p>L’API FastAPI expose les endpoints de prédiction COVID-19 consommés
+par le frontend Angular. Les modèles entraînés sur Google Colab sont
+exportés et chargés par l’API.</p>
+<h2 id="analyse-comparative-des-frameworks-dapi-pour-lia">Analyse
+comparative des frameworks d’API pour l’IA</h2>
+<h3 id="flask">Flask</h3>
+<p>Flask est un micro-framework Python léger et flexible, largement
+adopté dans la communauté data science. Sa simplicité et sa modularité
+permettent une prise en main rapide et une personnalisation poussée.
+L’écosystème étendu offre de nombreuses extensions pour toutes les
+fonctionnalités nécessaires.</p>
+<p>Cependant, Flask présente des limitations significatives pour notre
+contexte d’API IA. Son serveur intégré n’est pas conçu pour la
+production et ses performances sont nettement inférieures à FastAPI.
+L’absence de validation automatique des données nécessite
+l’implémentation manuelle de contrôles. Le support asynchrone limité
+pénalise le traitement parallèle des requêtes d’inférence. L’absence de
+documentation automatique complique l’adoption par les équipes
+frontend.</p>
+<h3 id="django-rest-framework">Django REST Framework</h3>
+<p>Django REST Framework (DRF) offre une solution complète et mature
+pour le développement d’APIs, avec un écosystème riche et une communauté
+active. Ses points forts incluent un ORM puissant, un système
+d’authentification robuste et des outils d’administration avancés.</p>
+<p>Toutefois, l’architecture monolithique de Django introduit une
+complexité et un overhead injustifiés pour notre cas d’usage spécifique
+d’API IA. Les performances sont significativement moins bonnes que
+FastAPI, impactant la latence des inférences. La courbe d’apprentissage
+plus importante et la verbosité du framework ralentissent le
+développement. L’intégration avec les bibliothèques modernes d’IA
+demande davantage d’efforts.</p>
+<h3 id="express.js-node.js">Express.js (Node.js)</h3>
+<p>Express.js sur Node.js propose une plateforme légère et performante
+pour le développement d’APIs, avec un modèle non-bloquant efficace pour
+les opérations I/O. L’écosystème JavaScript unifié simplifie le
+développement full-stack et l’interopérabilité avec le frontend.</p>
+<p>Néanmoins, Express.js présente des inconvénients majeurs pour notre
+API IA. L’écosystème Python domine largement le domaine de l’IA, rendant
+l’intégration des modèles plus complexe avec Node.js (nécessitant des
+ponts comme TensorFlow.js avec des limitations). La validation des types
+est moins robuste qu’avec Pydantic. La gestion des calculs intensifs est
+moins optimale sur l’environnement d’exécution JavaScript, impactant les
+performances des inférences complexes.</p>
+<h3 id="justification-du-choix-de-fastapi">Justification du choix de
+FastAPI</h3>
+<p>Notre sélection de FastAPI s’appuie sur une analyse approfondie des
+besoins spécifiques d’une API d’intelligence artificielle :</p>
+<ol type="1">
+<li><p><strong>Performance optimale</strong> : Les benchmarks montrent
+que FastAPI offre des performances comparables aux frameworks Node.js
+les plus rapides, tout en conservant la simplicité de Python,
+garantissant une latence minimale pour les inférences IA.</p></li>
+<li><p><strong>Intégration native avec l’écosystème IA</strong> : La
+compatibilité directe avec PyTorch, TensorFlow, scikit-learn et
+l’ensemble de l’écosystème Python pour l’IA élimine les frictions
+d’intégration et permet d’utiliser les modèles sans conversion ou
+compromis.</p></li>
+<li><p><strong>Validation robuste des données</strong> : Le système de
+validation Pydantic intégré assure l’intégrité des entrées des modèles
+IA, évitant les erreurs d’inférence dues à des données mal formatées
+tout en réduisant le code boilerplate.</p></li>
+<li><p><strong>Support asynchrone natif</strong> : Les capacités
+asynchrones permettent de gérer efficacement les inférences longues et
+multiples requêtes simultanées sans bloquer le serveur, optimisant
+l’utilisation des ressources.</p></li>
+<li><p><strong>Documentation automatique</strong> : La génération
+automatique de documentation interactive via Swagger UI facilite
+significativement l’intégration avec notre frontend Angular et accélère
+le cycle de développement.</p></li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>FastAPI représente le choix optimal pour notre API d’intelligence
+artificielle, offrant un équilibre parfait entre performances, facilité
+de développement et intégration native avec l’écosystème Python d’IA.
+Cette solution nous permet de déployer rapidement des modèles robustes
+en production tout en garantissant évolutivité et maintenabilité à long
+terme.</p>
+<h1 id="documentation-technique-choix-de-google-colab">Documentation
+Technique : Choix de Google Colab</h1>
+<h2 id="introduction-1">Introduction</h2>
+<p>Google Colab est une plateforme cloud basée sur Jupyter Notebook qui
+permet de développer et d’exécuter du code Python, spécialement
+optimisée pour l’entraînement de modèles d’intelligence artificielle.
+Elle offre un accès gratuit à des ressources GPU et TPU, facilitant
+ainsi le développement et l’expérimentation de modèles d’apprentissage
+profond.</p>
+<h2 id="pourquoi-google-colab">Pourquoi Google Colab ?</h2>
+<p>L’accès gratuit aux GPU et TPU réduit significativement les coûts
+d’infrastructure pour l’entraînement des modèles. L’environnement
+pré-configuré avec les principales bibliothèques d’IA élimine les
+problèmes d’installation. Le partage et la collaboration sont facilités
+grâce à l’intégration avec Google Drive. L’exécution cloud permet de
+travailler depuis n’importe quel appareil. L’interface Jupyter Notebook
+offre une expérience interactive combinant code, visualisation et
+documentation.</p>
+<h2 id="cas-dutilisation-1">Cas d’utilisation</h2>
+<p>Google Colab est particulièrement adapté au prototypage rapide de
+modèles d’IA. L’entraînement de réseaux de neurones profonds bénéficie
+de l’accélération GPU/TPU. L’analyse exploratoire des données est
+simplifiée par l’environnement interactif. L’enseignement et les
+démonstrations sont facilités par le partage instantané. Les projets de
+recherche académique peuvent exploiter des ressources puissantes sans
+investissement matériel.</p>
+<h2 id="avantages-1">Avantages</h2>
+<p>La gratuité de l’offre de base démocratise l’accès aux technologies
+d’IA. Les runtimes persistants permettent de conserver l’environnement
+entre les sessions. L’intégration avec Google Drive facilite le stockage
+et l’accès aux données. La compatibilité avec GitHub permet une gestion
+efficace du code source. Les bibliothèques pré-installées (TensorFlow,
+PyTorch, scikit-learn, etc.) accélèrent le développement. L’interface
+utilisateur intuitive réduit la courbe d’apprentissage. La possibilité
+d’upgrader vers Colab Pro offre plus de ressources si nécessaire.</p>
+<h2 id="inconvénients-1">Inconvénients</h2>
+<p>Les sessions gratuites ont une durée limitée (12h) et peuvent être
+interrompues en cas d’inactivité. Les ressources allouées varient selon
+la disponibilité. Le stockage persistant nécessite une configuration
+manuelle avec Google Drive. Les performances réseau peuvent être
+limitées pour les transferts volumineux. La personnalisation de
+l’environnement est moins flexible qu’une solution auto-hébergée. Les
+contraintes de confidentialité peuvent être problématiques pour les
+données sensibles.</p>
+<h2 id="architecture-et-fonctionnement">Architecture et
+fonctionnement</h2>
+<p>Google Colab fonctionne sur des conteneurs éphémères associés à des
+instances de machines virtuelles. Les GPU (NVIDIA Tesla K80, P100, T4)
+et TPU sont alloués dynamiquement. L’exécution du code se fait par
+cellules indépendantes. Le stockage utilise le système de fichiers
+temporaire local ou Google Drive pour la persistance. L’accès aux
+ressources est géré par un système de file d’attente et d’allocation
+équitable.</p>
+<h2 id="intégration-avec-notre-projet-1">Intégration avec notre
+projet</h2>
+<p>Les notebooks Colab sont utilisés pour le développement des modèles
+prédictifs COVID-19. Les données traitées par notre ETL sont importées
+via les API REST de notre backend.</p>
+<h2 id="analyse-comparative-des-plateformes-dia">Analyse comparative des
+plateformes d’IA</h2>
+<h3 id="amazon-sagemaker">Amazon SageMaker</h3>
+<p>Amazon SageMaker propose un environnement complet pour le
+développement, l’entraînement et le déploiement de modèles d’IA. Ses
+points forts incluent l’intégration native avec l’écosystème AWS,
+l’infrastructure hautement scalable et les capacités avancées d’MLOps.
+La plateforme offre des algorithmes optimisés et une gestion fine des
+ressources de calcul.</p>
+<p>Cependant, SageMaker présente plusieurs inconvénients pour notre
+contexte. Son modèle de tarification basé sur la consommation engendre
+des coûts significatifs pour les entraînements prolongés ou fréquents.
+La complexité de configuration et de déploiement nécessite une expertise
+spécifique. L’intégration avec des outils externes à l’écosystème AWS
+peut s’avérer compliquée.</p>
+<h3 id="azure-machine-learning">Azure Machine Learning</h3>
+<p>Azure Machine Learning offre une suite robuste d’outils pour le cycle
+de vie complet des projets d’IA. Ses avantages incluent une excellente
+intégration avec les solutions Microsoft, des capacités avancées
+d’automatisation et une interface utilisateur intuitive. La plateforme
+propose également des fonctionnalités de gouvernance des modèles et
+d’explicabilité de l’IA.</p>
+<p>Toutefois, l’utilisation d’Azure ML implique des coûts
+d’infrastructure non négligeables. La dépendance à l’écosystème
+Microsoft peut limiter certaines intégrations. La courbe d’apprentissage
+initiale est significative, particulièrement pour configurer
+correctement les environnements de calcul et les pipelines.</p>
+<h3 id="auto-hébergement-pytorchtensorflow">Auto-hébergement
+(PyTorch/TensorFlow)</h3>
+<p>L’auto-hébergement avec des frameworks comme PyTorch ou TensorFlow
+sur infrastructure propre offre un contrôle total sur l’environnement
+d’entraînement. Cette approche permet une personnalisation maximale, une
+meilleure confidentialité des données et l’absence de limitations
+temporelles des sessions.</p>
+<p>Cette solution présente néanmoins des inconvénients majeurs :
+l’investissement initial en matériel (GPU) est conséquent, la
+maintenance de l’infrastructure exige des compétences spécifiques, et la
+scalabilité est limitée par les ressources disponibles. Les coûts
+énergétiques et la complexité de configuration des environnements
+optimaux représentent également des défis significatifs.</p>
+<h3 id="justification-du-choix-de-google-colab">Justification du choix
+de Google Colab</h3>
+<p>Notre décision d’utiliser Google Colab s’appuie sur plusieurs
+facteurs déterminants :</p>
+<ol type="1">
+<li><p><strong>Rapport coût-bénéfice optimal</strong> : L’accès gratuit
+à des GPU performants élimine la barrière financière à l’expérimentation
+en IA, tout en offrant des performances suffisantes pour nos modèles
+actuels.</p></li>
+<li><p><strong>Accessibilité et collaboration</strong> : La plateforme
+cloud permet à notre équipe distribuée de collaborer efficacement sans
+contraintes matérielles, facilitant le transfert de connaissances et
+l’itération rapide.</p></li>
+<li><p><strong>Environnement pré-configuré</strong> : L’écosystème
+Python pour l’IA est préinstallé et maintenu à jour, éliminant les
+complexités de configuration et assurant la compatibilité des
+dépendances.</p></li>
+<li><p><strong>Flexibilité et scalabilité</strong> : La possibilité de
+passer à Colab Pro ou d’exporter facilement nos modèles vers d’autres
+plateformes offre une évolutivité adaptée à la croissance du
+projet.</p></li>
+<li><p><strong>Intégration avec notre stack technique</strong> : La
+compatibilité avec notre ETL Java/Spring Boot via API REST et l’export
+de modèles standardisés facilitent l’intégration dans notre architecture
+globale.</p></li>
+</ol>
+<h2 id="conclusion-1">Conclusion</h2>
+<p>Google Colab représente le choix optimal pour notre phase actuelle de
+développement de modèles d’IA, offrant un équilibre idéal entre
+accessibilité, performances et flexibilité. Cette solution nous permet
+de concentrer nos ressources sur la qualité des modèles plutôt que sur
+la gestion d’infrastructure, tout en maintenant la possibilité d’évoluer
+vers des solutions plus avancées à mesure que nos besoins se
+complexifient.</p>
+<h1
+id="documentation-technique-choix-de-spring-boot-en-java">Documentation
+Technique : Choix de Spring Boot en Java</h1>
+<h2 id="introduction-2">Introduction</h2>
+<p>Spring Boot est un framework basé sur Java conçu pour simplifier le
+développement d’applications Spring. Il permet de créer des applications
+autonomes et prêtes pour la production rapidement, avec une
+configuration minimale.</p>
+<h2 id="pourquoi-spring-boot">Pourquoi Spring Boot ?</h2>
+<p>La configuration automatique de Spring Boot réduit drastiquement le
+temps de mise en place des projets. L’inclusion d’un serveur Tomcat
+embarqué simplifie le déploiement. Le système de gestion des dépendances
+avec les starters pré-configurés facilite l’intégration. Les outils de
+métriques via Spring Actuator permettent une surveillance efficace.
+L’intégration native de Spring Security assure une base solide pour la
+sécurité.</p>
+<h2 id="cas-dutilisation-2">Cas d’utilisation</h2>
+<p>Spring Boot excelle dans les architectures microservices grâce à sa
+légèreté et sa modularité. Sa robustesse répond aux besoins des
+applications d’entreprise. La création d’APIs RESTful est simplifiée par
+des annotations intuitives. Le support natif pour le cloud facilite le
+déploiement. L’ORM avec Spring Data simplifie la gestion des
+données.</p>
+<h2 id="avantages-2">Avantages</h2>
+<p>Spring Initializr permet un démarrage rapide des projets. Le hot
+reload et la configuration par convention accélèrent le développement.
+L’écosystème Spring s’intègre nativement avec de nombreuses
+technologies. Le support des bases de données est complet et flexible.
+Spring Tools Suite offre un environnement optimisé. Le debugging avancé
+et le profiling facilitent l’optimisation. Les performances sont
+optimisées par le framework. La gestion des ressources et le système de
+cache sont efficaces. La sécurité inclut l’authentification,
+l’autorisation et la protection CSRF par défaut.</p>
+<h2 id="inconvénients-2">Inconvénients</h2>
+<p>La complexité de l’écosystème Spring peut freiner l’apprentissage
+initial. La configuration, bien qu’automatisée, peut être complexe à
+personnaliser. L’empreinte mémoire est plus importante que les
+frameworks légers. Les temps de démarrage sont plus longs. Certaines
+fonctionnalités automatiques peuvent être superflues. Les dépendances
+transitives alourdissent parfois l’application.</p>
+<h2 id="pourquoi-java">Pourquoi Java ?</h2>
+<p>Java est un langage mature avec une grande communauté. Sa JVM moderne
+offre d’excellentes performances. La portabilité “Write Once, Run
+Anywhere” facilite le déploiement. L’écosystème riche de bibliothèques
+assure la pérennité.</p>
+<h2 id="architecture-et-design-patterns">Architecture et Design
+Patterns</h2>
+<p>Le pattern MVC sépare les contrôleurs, services et repositories.
+Chaque couche a une responsabilité claire. Les DTOs découplent les
+entités de l’API. Ils optimisent les transferts de données et renforcent
+la sécurité. Le Repository Pattern standardise l’accès aux données.
+L’injection de dépendances assure un couplage faible.</p>
+<h2 id="intégration-avec-angular">Intégration avec Angular</h2>
+<p>Les APIs REST sont documentées via Swagger. La sécurité utilise JWT
+avec une configuration CORS adaptée. La validation des données est
+rigoureuse. L’intégration est testée via des tests end-to-end.</p>
+<h2 id="analyse-comparative-des-frameworks-backend">Analyse comparative
+des frameworks backend</h2>
+<h3 id="node.js-avec-express">Node.js avec Express</h3>
+<p>Node.js, couplé avec Express.js, offre une solution backend légère et
+performante. Son modèle non-bloquant et événementiel permet une
+excellente gestion de la concurrence, particulièrement efficace pour les
+applications nécessitant de nombreuses opérations I/O. L’utilisation de
+JavaScript/TypeScript sur l’ensemble de la stack simplifie le
+développement full-stack et accélère les cycles de développement.</p>
+<p>Néanmoins, l’approche minimaliste d’Express nécessite l’assemblage
+manuel de nombreux composants pour obtenir des fonctionnalités
+entreprise. La gestion de processus lourds peut impacter les
+performances en raison de la nature single-threaded de Node.js.
+L’écosystème, bien que vaste, manque parfois de standardisation dans les
+pratiques de développement.</p>
+<h3 id="django-python">Django (Python)</h3>
+<p>Django propose un framework “batteries included” avec une approche
+full-stack mature. Son ORM puissant et son panel d’administration
+automatisé accélèrent significativement le développement. La philosophie
+“convention over configuration” et la documentation exhaustive
+facilitent la prise en main et la maintenance.</p>
+<p>Cependant, Django peut s’avérer moins flexible pour les architectures
+microservices modernes. Son approche monolithique, bien que robuste,
+peut être contraignante pour des besoins spécifiques. Les performances
+brutes sont généralement inférieures aux solutions basées sur la JVM,
+particulièrement pour les applications à forte charge.</p>
+<h3 id="net-core">.NET Core</h3>
+<p>La plateforme .NET Core de Microsoft offre un framework moderne et
+cross-platform avec d’excellentes performances. Son écosystème
+entreprise mature, son intégration native avec Azure et ses outils de
+développement sophistiqués en font un choix solide pour les applications
+d’entreprise. L’utilisation de C# apporte des fonctionnalités avancées
+et un typage fort.</p>
+<p>Les principaux freins à l’adoption de .NET Core concernent la
+dépendance historique à l’écosystème Microsoft, bien que cela s’atténue
+avec l’open-source. Le coût des licences pour certains outils
+professionnels et une courbe d’apprentissage significative pour les
+équipes non familières avec C# peuvent également être des facteurs
+limitants.</p>
+<h3 id="justification-du-choix-de-spring-boot">Justification du choix de
+Spring Boot</h3>
+<p>Notre sélection de Spring Boot s’appuie sur une analyse approfondie
+des besoins de notre projet. La maturité de l’écosystème Java et la
+robustesse de Spring Boot en environnement de production sont des atouts
+majeurs. La gestion native des problématiques d’entreprise (sécurité,
+monitoring, scalabilité) évite de nombreux développements
+personnalisés.</p>
+<p>L’architecture modulaire de Spring Boot facilite l’adoption
+progressive et l’évolution vers les microservices. Les starters Spring
+Boot standardisent l’intégration des composants tout en maintenant la
+flexibilité nécessaire. La performance de la JVM moderne, couplée aux
+optimisations de Spring Boot, assure une excellente scalabilité.</p>
+<p>Le support de la communauté Spring, la documentation exhaustive et la
+stabilité long-terme garantie par Pivotal renforcent la pérennité de ce
+choix technologique. L’intégration naturelle avec notre frontend Angular
+et l’excellent support des outils de CI/CD modernes complètent ces
+avantages.</p>
+<h2 id="conclusion-2">Conclusion</h2>
+<p>Spring Boot est un choix mature et éprouvé pour notre backend. Sa
+robustesse et son écosystème en font une solution idéale pour les
+applications d’entreprise modernes.</p>
+<h1
+id="documentation-technique-choix-dun-etl-personnalisé">Documentation
+Technique : Choix d’un ETL Personnalisé</h1>
+<h2 id="introduction-3">Introduction</h2>
+<p>L’ETL (Extract, Transform, Load) personnalisé est une solution
+développée en interne basée sur Java et Spring Boot. Il permet de
+traiter efficacement les données COVID-19 provenant de différentes
+sources avec une logique métier spécifique et une gestion optimisée des
+relations entre entités.</p>
+<h2 id="pourquoi-un-etl-personnalisé">Pourquoi un ETL Personnalisé
+?</h2>
+<p>La complexité du nettoyage des données et la gestion fine des
+relations entre entités nécessitaient une approche sur mesure.
+L’intégration native avec Spring Boot et l’écosystème Java simplifie le
+déploiement et la maintenance. Le contrôle total sur le flux de données
+permet une adaptation rapide aux changements de format ou à l’ajout de
+nouvelles sources.</p>
+<h2 id="cas-dutilisation-3">Cas d’utilisation</h2>
+<p>Notre ETL excelle dans le traitement de données COVID-19 avec des
+règles métier spécifiques. La gestion des synonymes et la normalisation
+des noms de pays/régions requièrent une logique personnalisée. Le
+système de cache optimise la création et la liaison des entités.
+L’intégration avec Spring Boot facilite le monitoring et le partage de
+code.</p>
+<h2 id="avantages-3">Avantages</h2>
+<p>Le développement interne offre une transparence totale sur le
+traitement des données. Le <code>CacheManager</code> optimise la
+déduplication et les relations entre entités. L’utilisation de Spring
+Boot simplifie le déploiement et la maintenance. L’absence de coûts de
+licence réduit les dépenses. L’expertise existante en Java accélère le
+développement. La flexibilité permet des adaptations rapides aux
+changements.</p>
+<h2 id="inconvénients-3">Inconvénients</h2>
+<p>Le développement initial nécessite plus de temps qu’une solution clé
+en main. La maintenance du code est sous notre responsabilité. Les
+performances dépendent de notre optimisation. La documentation doit être
+créée et maintenue en interne. Les fonctionnalités avancées doivent être
+développées manuellement.</p>
+<h2 id="architecture-et-design-patterns-1">Architecture et Design
+Patterns</h2>
+<h3 id="composants-principaux">Composants Principaux</h3>
+<ul>
+<li><strong>CommandLineRunner</strong> : Déclenche l’ETL au
+démarrage</li>
+<li><strong>CacheManager</strong> : Gère la déduplication et les
+relations</li>
+<li><strong>Repositories</strong> : Interfaces Spring Data JPA pour la
+persistance</li>
+<li><strong>Helpers</strong> : Utilitaires spécialisés pour le
+traitement</li>
+</ul>
+<h3 id="helpers-détaillés">Helpers Détaillés</h3>
+<ul>
+<li><strong>CsvReaderHelper</strong> : Lecture et parsing des fichiers
+CSV</li>
+<li><strong>CleanerHelper</strong> : Standardisation des données</li>
+<li><strong>PersistenceHelper</strong> : Sauvegarde en masse des
+entités</li>
+<li><strong>AbstractCsvImportService</strong> : Template pour l’import
+de fichiers</li>
+</ul>
+<h2 id="performances">Performances</h2>
+<h3 id="benchmarks-sur-configuration-standard">Benchmarks sur
+Configuration Standard</h3>
+<p>(CPU i7, 16Go RAM, SSD)</p>
+<ul>
+<li><strong>Temps total</strong> : 121,171 secondes</li>
+<li><strong>Lignes traitées</strong> : 711,016</li>
+<li><strong>Entités créées</strong> :
+<ul>
+<li>Pays : 210</li>
+<li>Régions : 340</li>
+<li>Localisations : 3,622</li>
+<li>Cas : 711,016</li>
+</ul></li>
+</ul>
+<h3 id="détail-par-source">Détail par Source</h3>
+<ul>
+<li>Worldometer : 0,143 sec (209 lignes)</li>
+<li>Clean Complete : 1,994 sec (49,068 lignes)</li>
+<li>Full Grouped : 2,576 sec (35,156 lignes)</li>
+<li>USA County : 111,953 sec (627,920 lignes)</li>
+</ul>
+<h2 id="gestion-des-erreurs">Gestion des Erreurs</h2>
+<p>L’ETL implémente une hiérarchie d’exceptions personnalisées :</p>
+<ul>
+<li><strong>DataFileNotFoundException</strong> : Fichier source
+manquant</li>
+<li><strong>DataParsingException</strong> : Erreur de parsing</li>
+<li><strong>MappingException</strong> : Erreur de transformation</li>
+<li><strong>PersistenceException</strong> : Erreur de sauvegarde</li>
+</ul>
+<h2 id="intégration-avec-spring-boot">Intégration avec Spring Boot</h2>
+<p>L’ETL s’intègre naturellement dans l’écosystème Spring Boot. Il
+utilise :</p>
+<ul>
+<li>Spring Data JPA pour la persistance</li>
+<li>Logback pour le logging</li>
+<li>Spring DI pour l’injection de dépendances</li>
+<li>Spring Batch pour le traitement par lots</li>
+</ul>
+<h2 id="analyse-comparative-des-solutions-etl">Analyse comparative des
+solutions ETL</h2>
+<h3 id="apache-nifi">Apache NiFi</h3>
+<p>Apache NiFi offre une interface graphique intuitive pour la
+conception de flux de données et une excellente scalabilité. Ses points
+forts incluent le suivi en temps réel des données, la reprise sur erreur
+et la gestion des backpressures. L’outil excelle dans les scénarios de
+streaming de données et offre une grande variété de processeurs
+prédéfinis.</p>
+<p>Cependant, pour notre cas d’usage spécifique, l’overhead
+d’installation et de configuration de NiFi aurait été disproportionné.
+La personnalisation des processeurs pour notre logique métier complexe
+(nettoyage des noms de pays, gestion des synonymes) aurait nécessité un
+développement significatif en plus de la maintenance de l’infrastructure
+NiFi.</p>
+<h3 id="talend-open-studio">Talend Open Studio</h3>
+<p>Talend propose une suite complète d’outils ETL avec une interface
+graphique riche et de nombreux connecteurs préétablis. Son approche
+low-code permet un développement rapide pour des cas d’usage standards,
+et sa communauté active offre de nombreuses ressources et composants
+réutilisables.</p>
+<p>Toutefois, les limitations de la version open source et la complexité
+de l’intégration avec notre stack technique existante auraient créé des
+contraintes. La personnalisation poussée nécessaire pour notre logique
+métier aurait requis du développement Java en parallèle, perdant ainsi
+les avantages du low-code.</p>
+<h3 id="pentaho-data-integration-pdi">Pentaho Data Integration
+(PDI)</h3>
+<p>PDI (Kettle) offre un environnement complet pour la création et
+l’automatisation des processus ETL. Ses capacités de transformation de
+données et son support natif pour différentes sources de données en font
+une solution robuste pour les projets d’entreprise.</p>
+<p>Néanmoins, l’utilisation de PDI aurait introduit une dépendance à un
+système externe complexe. La courbe d’apprentissage significative et la
+difficulté d’intégrer notre logique métier spécifique dans leur modèle
+de transformation auraient ralenti le développement.</p>
+<h3 id="justification-du-choix-dun-etl-personnalisé">Justification du
+choix d’un ETL personnalisé</h3>
+<p>Notre décision de développer un ETL personnalisé repose sur plusieurs
+facteurs clés :</p>
+<ol type="1">
+<li><p><strong>Intégration native</strong> : Notre solution s’intègre
+parfaitement avec notre stack technique Spring Boot existante, évitant
+la complexité d’une intégration avec un système externe.</p></li>
+<li><p><strong>Contrôle total</strong> : Le développement sur mesure
+nous permet d’implémenter précisément notre logique métier complexe sans
+compromis ou contournements.</p></li>
+<li><p><strong>Performance optimisée</strong> : Notre implémentation
+ciblée, avec son système de cache personnalisé, offre des performances
+optimales pour notre cas d’usage spécifique.</p></li>
+<li><p><strong>Coût total</strong> : L’investissement initial en
+développement est compensé par l’absence de coûts de licence et
+d’infrastructure supplémentaire.</p></li>
+<li><p><strong>Expertise existante</strong> : Notre équipe maîtrise déjà
+Java et Spring Boot, minimisant la courbe d’apprentissage et les risques
+techniques.</p></li>
+</ol>
+<h2 id="conclusion-3">Conclusion</h2>
+<p>Le développement d’un ETL personnalisé s’est révélé être un choix
+judicieux pour notre projet. La maîtrise complète du processus, la
+flexibilité d’adaptation et l’intégration native avec notre stack
+technique justifient pleinement cette approche, malgré l’investissement
+initial plus important.</p>
+<h1 id="documentation-technique-choix-dangular">Documentation Technique
+: Choix d’Angular</h1>
+<h2 id="introduction-4">Introduction</h2>
+<p>Angular est un framework frontend développé par Google, basé sur
+TypeScript. Il permet de créer des applications web robustes, évolutives
+et performantes avec une architecture modulaire et une approche orientée
+composants.</p>
+<h2 id="pourquoi-angular">Pourquoi Angular ?</h2>
+<p>La structure modulaire d’Angular facilite l’organisation du code en
+composants réutilisables. Le système de templates déclaratifs avec le
+two-way data binding simplifie le développement d’interfaces dynamiques.
+Le système d’injection de dépendances natif améliore la testabilité. Les
+outils de développement intégrés (Angular CLI) accélèrent le
+développement. L’utilisation de TypeScript apporte un typage fort et une
+meilleure maintenabilité.</p>
+<h2 id="cas-dutilisation-4">Cas d’utilisation</h2>
+<p>Angular excelle dans les applications d’entreprise complexes grâce à
+sa structure robuste. La création d’interfaces utilisateur riches est
+facilitée par Angular Material. Le système de routing puissant permet
+une navigation fluide. Les formulaires réactifs offrent une validation
+avancée. L’architecture MVVM (Model-View-ViewModel) assure une
+séparation claire des responsabilités.</p>
+<h2 id="avantages-4">Avantages</h2>
+<p>Angular CLI automatise la création de composants et services. Le hot
+reload accélère le cycle de développement. L’écosystème riche inclut des
+bibliothèques comme Chart.js et ng2-charts. La compilation AOT
+(Ahead-of-Time) optimise les performances. RxJS facilite la gestion des
+flux de données asynchrones. Les tests unitaires sont intégrés
+nativement avec Jasmine et Karma. Le système de modules permet une
+gestion efficace des dépendances. Angular Material fournit des
+composants UI prêts à l’emploi.</p>
+<h2 id="inconvénients-4">Inconvénients</h2>
+<p>La courbe d’apprentissage peut être raide pour les débutants. La
+verbosité du framework peut ralentir le développement initial. La taille
+du bundle peut être importante sans optimisation. Les mises à jour
+majeures peuvent nécessiter des adaptations significatives. La
+complexité de RxJS peut être un défi pour les nouveaux développeurs.</p>
+<h2 id="pourquoi-typescript">Pourquoi TypeScript ?</h2>
+<p>TypeScript apporte un typage statique qui réduit les erreurs.
+L’autocomplétion et la refactorisation sont améliorées. La documentation
+du code est plus claire avec les interfaces. La détection d’erreurs à la
+compilation renforce la fiabilité. L’héritage des fonctionnalités
+ECMAScript futures est assuré.</p>
+<h2 id="architecture-et-design-patterns-2">Architecture et Design
+Patterns</h2>
+<p>L’architecture est basée sur des composants réutilisables. Les
+services gèrent la logique métier et les appels API. Les guards
+protègent les routes. Les intercepteurs HTTP standardisent les requêtes.
+Les resolvers préchargent les données. Les modules organisent le code de
+manière cohérente.</p>
+<h2 id="intégration-avec-spring-boot-1">Intégration avec Spring
+Boot</h2>
+<p>L’intégration backend utilise le HttpClient d’Angular pour les appels
+REST. Les interfaces TypeScript correspondent aux DTOs Java. La sécurité
+est gérée via tokens JWT et intercepteurs. Les tests end-to-end assurent
+une intégration fluide.</p>
+<h2 id="analyse-comparative-des-frameworks-frontend">Analyse comparative
+des frameworks frontend</h2>
+<h3 id="react-meta">React (Meta)</h3>
+<p>React, développé par Meta, s’est imposé comme une bibliothèque
+incontournable dans l’écosystème JavaScript. Sa force réside dans sa
+flexibilité architecturale et sa courbe d’apprentissage accessible.
+L’utilisation du Virtual DOM offre des performances remarquables,
+notamment pour les mises à jour d’interface dynamiques. Son écosystème
+riche et sa communauté active assurent un support constant et des
+solutions variées.</p>
+<p>Cependant, cette flexibilité peut devenir un inconvénient majeur dans
+un contexte d’entreprise. L’absence de structure imposée nécessite des
+décisions architecturales importantes et peut mener à des inconsistances
+dans les grands projets. La configuration manuelle des fonctionnalités
+essentielles comme le routing ou la gestion d’état demande un
+investissement initial conséquent.</p>
+<h3 id="vue.js">Vue.js</h3>
+<p>Vue.js représente une approche équilibrée, conjuguant simplicité et
+puissance. Le framework se distingue par sa documentation exemplaire et
+son architecture progressive qui permet une adoption graduelle. Sa
+syntaxe intuitive et ses performances optimisées en font un choix
+attractif pour de nombreux projets.</p>
+<p>Toutefois, Vue.js présente certaines limitations pour notre contexte.
+Son écosystème, bien que croissant, reste plus restreint que celui
+d’Angular ou React. Les ressources disponibles pour les cas
+d’utilisation complexes sont moins nombreuses, et la communauté,
+principalement non-anglophone, peut complexifier la recherche de
+solutions pour certaines problématiques spécifiques.</p>
+<h3 id="justification-du-choix-dangular">Justification du choix
+d’Angular</h3>
+<p>Notre décision d’utiliser Angular repose sur plusieurs facteurs
+déterminants. Premièrement, sa maturité et sa structure rigoureuse
+correspondent parfaitement aux exigences des applications d’entreprise.
+L’intégration native de TypeScript renforce la maintenabilité et la
+robustesse du code, aspects cruciaux pour notre projet.</p>
+<p>L’environnement de développement complet d’Angular, incluant Angular
+CLI, les outils de test intégrés et l’excellent support IDE, accélère
+significativement le cycle de développement. Son architecture opinionée
+garantit une cohérence dans les grandes équipes, réduisant la dette
+technique à long terme.</p>
+<p>Le support de Google et la feuille de route claire d’Angular assurent
+la pérennité de notre investissement technologique. De plus,
+l’excellente compatibilité avec Spring Boot, notre backend choisi,
+optimise l’intégration full-stack de notre application.</p>
+<h2 id="conclusion-4">Conclusion</h2>
+<p>Angular est un choix solide pour notre frontend, offrant une
+architecture robuste et des outils modernes pour le développement
+d’applications web professionnelles.</p>
+<h1 id="architecture-du-projet-backend">Architecture du Projet
+Backend</h1>
+<p>Ce document présente l’architecture générale du projet backend
+développé avec Spring Boot.</p>
+<h2 id="structure-du-projet">Structure du Projet</h2>
+<pre><code>backend/
+├── src/                      # Code source principal
+│   ├── main/                 # Code source de l&#39;application
+│   │   ├── java/            # Code Java
+│   │   │   └── mspr/        # Package racine
+│   │   │       ├── controllers/  # Contrôleurs REST
+│   │   │       ├── services/     # Services métier
+│   │   │       ├── repositories/ # Repositories JPA
+│   │   │       ├── models/       # Entités et modèles
+│   │   │       ├── config/       # Configuration Spring
+│   │   │       ├── dto/          # Objets de transfert de données
+│   │   │       └── etl/          # Module ETL
+│   │   │           ├── service/  # Services de traitement ETL
+│   │   │           ├── runner/   # Exécuteurs des tâches ETL
+│   │   │           ├── mapper/   # Mappeurs de données
+│   │   │           ├── helpers/  # Utilitaires ETL
+│   │   │           ├── dto/      # DTOs spécifiques à l&#39;ETL
+│   │   │           └── exceptions/ # Gestion des erreurs ETL
+│   │   └── resources/       # Ressources et configuration
+│   │       └── application.properties  # Configuration principale
+│   └── test/                # Tests unitaires et d&#39;intégration
+├── target/                  # Build de production
+├── .mvn/                    # Configuration Maven Wrapper
+└── pom.xml                  # Configuration Maven et dépendances
+</code></pre>
+<h2 id="technologies-et-frameworks">Technologies et Frameworks</h2>
+<h3 id="spring-boot">Spring Boot</h3>
+<p>Le backend est construit avec Spring Boot 3.4.4, offrant :</p>
+<ul>
+<li>Un framework web robuste</li>
+<li>Une gestion simplifiée des dépendances</li>
+<li>Une configuration automatique</li>
+<li>Un serveur embarqué</li>
+</ul>
+<h3 id="base-de-données">Base de données</h3>
+<ul>
+<li>PostgreSQL comme système de gestion de base de données</li>
+<li>Spring Data JPA pour la persistance</li>
+<li>Hibernate comme ORM (Object-Relational Mapping)</li>
+</ul>
+<h3 id="documentation-api">Documentation API</h3>
+<ul>
+<li>SpringDoc OpenAPI UI (Swagger) pour la documentation des API
+REST</li>
+<li>Interface interactive accessible via l’endpoint
+<code>/swagger-ui.html</code></li>
+</ul>
+<h2 id="organisation-du-code">Organisation du Code</h2>
+<h3 id="contrôleurs-controllers">Contrôleurs (controllers/)</h3>
+<p>Les contrôleurs REST gèrent les points d’entrée de l’API :</p>
+<ul>
+<li>Exposition des endpoints REST</li>
+<li>Validation des requêtes</li>
+<li>Gestion des réponses HTTP</li>
+<li>Documentation Swagger</li>
+</ul>
+<h3 id="services-services">Services (services/)</h3>
+<p>La couche service contient la logique métier :</p>
+<ul>
+<li>Implémentation des règles métier</li>
+<li>Orchestration des opérations</li>
+<li>Transactions</li>
+<li>Validation des données</li>
+</ul>
+<h3 id="repositories-repositories">Repositories (repositories/)</h3>
+<p>Interface avec la base de données :</p>
+<ul>
+<li>Requêtes JPA</li>
+<li>Requêtes personnalisées</li>
+</ul>
+<h3 id="modèles-entity">Modèles (entity/)</h3>
+<p>Entités JPA représentant la structure des données :</p>
+<ul>
+<li>Mapping objet-relationnel</li>
+<li>Validation des données</li>
+<li>Relations entre entités</li>
+</ul>
+<h3 id="configuration-config">Configuration (config/)</h3>
+<p>Configuration de l’application :</p>
+<ul>
+<li>CORS</li>
+</ul>
+<h2 id="etl-extract-transform-load">ETL (Extract, Transform, Load)</h2>
+<p>L’application intègre un système ETL pour le traitement des données
+:</p>
+<pre><code>etl/
+├── service/     # Services de traitement ETL
+├── runner/      # Exécuteurs des tâches ETL
+├── mapper/      # Mappeurs de données
+├── helpers/     # Utilitaires ETL
+├── dto/         # Objets de transfert spécifiques à l&#39;ETL
+└── exceptions/  # Gestion des erreurs ETL</code></pre>
+<p>Le module ETL est responsable de :</p>
+<ul>
+<li>L’extraction des données depuis diverses sources</li>
+<li>La transformation et le nettoyage des données</li>
+<li>Le chargement des données dans la base de données</li>
+<li>La synchronisation périodique des données</li>
+</ul>
+<h2 id="configuration-et-environnement">Configuration et
+Environnement</h2>
+<h3 id="maven">Maven</h3>
+<ul>
+<li><code>pom.xml</code> : Gestion des dépendances et du build</li>
+<li>Plugins configurés pour le développement et la production</li>
+<li>Dépendances principales :
+<ul>
+<li>spring-boot-starter-web</li>
+<li>spring-boot-starter-data-jpa</li>
+<li>postgresql</li>
+<li>springdoc-openapi-ui</li>
+</ul></li>
+</ul>
+<h3 id="variables-denvironnement">Variables d’Environnement</h3>
+<ul>
+<li><code>.env</code> : Configuration des variables d’environnement</li>
+<li>Paramètres sensibles : Connexion base de données</li>
+</ul>
+<h2 id="docker">Docker</h2>
+<p>Le projet inclut une configuration Docker pour le déploiement :</p>
+<ul>
+<li><code>backend.dockerfile</code> pour la construction de l’image</li>
+<li><code>.dockerignore</code> pour exclure les fichiers non
+nécessaires</li>
+</ul>
+<h2 id="tests">Tests</h2>
+<p>Organisation des tests dans <code>src/test/</code> :</p>
+<ul>
+<li>Tests unitaires</li>
+<li>Tests d’intégration</li>
+<li>Configuration des tests</li>
+<li>Mocks et fixtures</li>
+</ul>
+<h1 id="architecture-du-projet-frontend">Architecture du Projet
+Frontend</h1>
+<p>Ce document présente l’architecture générale du projet frontend
+développé avec Angular.</p>
+<h2 id="structure-du-projet-1">Structure du Projet</h2>
+<pre><code>frontend/
+├── src/                     # Code source principal
+│   ├── app/                 # Composants et logique de l&#39;application
+│   │   ├── components/      # Composants réutilisables
+│   │   ├── services/        # Services pour la logique métier et API
+│   │   ├── models/         # Interfaces et modèles de données
+│   │   ├── pipes/          # Pipes personnalisés
+│   │   └── app.routes.ts   # Configuration du routage
+│   ├── environments/       # Configuration des environnements
+│   ├── assets/            # Ressources statiques
+│   └── styles.scss        # Styles globaux
+├── public/                # Fichiers publics statiques
+├── dist/                  # Build de production
+└── node_modules/         # Dépendances</code></pre>
+<h2 id="organisation-du-code-1">Organisation du Code</h2>
+<h3 id="composants">Composants</h3>
+<p>Les composants sont organisés dans le dossier
+<code>src/app/components/</code>. Chaque composant suit la structure
+standard Angular avec :</p>
+<ul>
+<li>Un fichier <code>.ts</code> pour la logique</li>
+<li>Un fichier <code>.html</code> pour le template</li>
+<li>Un fichier <code>.scss</code> pour les styles</li>
+<li>Un fichier <code>.spec.ts</code> pour les tests</li>
+</ul>
+<h3 id="services">Services</h3>
+<h3 id="services-srcappservices">Services (src/app/services/)</h3>
+<p>Les services constituent la couche d’accès aux données et la logique
+métier de l’application. Ils suivent le pattern Injectable d’Angular et
+sont organisés comme suit :</p>
+<h4 id="communication-api">Communication API</h4>
+<ul>
+<li>Utilisation du <code>HttpClient</code> d’Angular pour les requêtes
+HTTP</li>
+<li>Gestion des appels REST API avec observables (RxJS)</li>
+<li>Services principaux :
+<ul>
+<li><code>DiseaseService</code> : Gestion des maladies</li>
+<li><code>CountryService</code> : Gestion des pays avec pagination</li>
+<li><code>RegionService</code> : Gestion des régions</li>
+<li><code>LocationService</code> : Gestion des localisations</li>
+<li><code>DiseaseCaseService</code> : Gestion des cas de maladies</li>
+</ul></li>
+</ul>
+<h3 id="modèles">Modèles</h3>
+<p>Le dossier <code>src/app/models/</code> contient les interfaces
+TypeScript définissant la structure des données.</p>
+<h2 id="configuration-et-environnement-1">Configuration et
+Environnement</h2>
+<h3 id="typescript">TypeScript</h3>
+<ul>
+<li><code>tsconfig.json</code> : Configuration stricte de
+TypeScript</li>
+<li>Types stricts pour une meilleure maintenabilité</li>
+<li>Déclarations de types personnalisés</li>
+</ul>
+<h3 id="angular-configuration">Angular Configuration</h3>
+<ul>
+<li><code>angular.json</code> : Configuration du workspace Angular</li>
+<li>Optimisations de build pour la production</li>
+<li>Configuration des assets et styles globaux</li>
+</ul>
+<h3 id="variables-denvironnement-1">Variables d’Environnement</h3>
+<ul>
+<li><code>.env</code> : Variables d’environnement sensibles</li>
+<li><code>environments/*.ts</code> : Configuration spécifique par
+environnement
+<ul>
+<li>URLs des API</li>
+<li>Clés d’API</li>
+<li>Configurations spécifiques</li>
+</ul></li>
+</ul>
+<h2 id="docker-1">Docker</h2>
+<p>Le projet inclut une configuration Docker pour le déploiement avec
+:</p>
+<ul>
+<li><code>frontend.dockerfile</code> pour la construction de
+l’image</li>
+<li><code>.dockerignore</code> pour exclure les fichiers non
+nécessaires</li>
+</ul>
+<h1 id="architecture-du-projet-api-ia">Architecture du Projet API
+IA</h1>
+<p>Ce document présente l’architecture générale du projet API IA
+développé avec FastAPI.</p>
+<h2 id="structure-du-projet-2">Structure du Projet</h2>
+<pre><code>ai-api/
+├── app/                     # Code source principal de l&#39;application IA
+│   ├── model/               # Modèles de Machine Learning et preprocesseurs
+│   ├── main.py              # Point d&#39;entrée de l&#39;API FastAPI et logique des routes
+│   └── __init__.py          # Initialisation du module app
+├── requirements.txt         # Dépendances Python du projet
+├── ai.dockerfile            # Configuration Docker pour l&#39;API IA
+└── .gitignore               # Fichiers et dossiers à ignorer par Git</code></pre>
+<h2 id="organisation-du-code-2">Organisation du Code</h2>
+<h3 id="main.py"><code>main.py</code></h3>
+<p>Ce fichier est le cœur de l’API IA. Il est responsable de :</p>
+<ul>
+<li>L’initialisation de l’application FastAPI.</li>
+<li>La définition des routes (endpoints) de l’API.</li>
+<li>Le chargement des modèles de Machine Learning au démarrage (si
+applicable).</li>
+<li>La gestion des requêtes entrantes, incluant la validation des
+données.</li>
+<li>L’appel aux fonctions de prédiction des modèles.</li>
+<li>La formulation et le renvoi des réponses HTTP.</li>
+</ul>
+<h3 id="model"><code>model/</code></h3>
+<p>Ce répertoire contient les éléments liés aux modèles de Machine
+Learning :</p>
+<ul>
+<li>Les fichiers des modèles de Machine Learning entraînés (par exemple,
+au format <code>.joblib</code> ou <code>.pkl</code>).</li>
+<li>Les scripts ou objets de prétraitement des données (scalers,
+encodeurs, etc.) nécessaires avant de faire des prédictions.</li>
+<li>Potentiellement, des scripts d’entraînement ou de réentraînement des
+modèles (bien que l’entraînement puisse être géré dans un processus
+séparé).</li>
+</ul>
+<h2 id="technologies-et-frameworks-1">Technologies et Frameworks</h2>
+<h3 id="fastapi">FastAPI</h3>
+<p>L’API est construite avec FastAPI, un framework web moderne et
+performant pour Python, offrant :</p>
+<ul>
+<li>Une validation automatique des données basée sur les types
+Python.</li>
+<li>Une documentation interactive automatique des API (Swagger UI et
+ReDoc).</li>
+<li>Des performances élevées grâce à Starlette et Pydantic.</li>
+<li>La prise en charge de la programmation asynchrone.</li>
+</ul>
+<h3 id="uvicorn">Uvicorn</h3>
+<p>Uvicorn est utilisé comme serveur ASGI (Asynchronous Server Gateway
+Interface) pour exécuter l’application FastAPI.</p>
+<h3 id="scikit-learn-pandas-numpy">Scikit-learn, Pandas, NumPy</h3>
+<p>Ces bibliothèques sont utilisées pour :</p>
+<ul>
+<li><code>scikit-learn</code> : Charger et utiliser les modèles de
+Machine Learning.</li>
+<li><code>pandas</code> : Manipuler et structurer les données d’entrée
+pour les modèles.</li>
+<li><code>numpy</code> : Effectuer des opérations numériques, souvent en
+conjonction avec <code>pandas</code> et <code>scikit-learn</code>.</li>
+</ul>
+<h3 id="joblib">Joblib</h3>
+<p>Utilisé pour la sérialisation et la désérialisation des modèles
+<code>scikit-learn</code> (sauvegarde et chargement des modèles).</p>
+<h2 id="configuration-et-environnement-2">Configuration et
+Environnement</h2>
+<h3 id="requirements.txt"><code>requirements.txt</code></h3>
+<p>Ce fichier liste toutes les dépendances Python nécessaires pour faire
+fonctionner l’API IA. Il est utilisé pour recréer l’environnement
+d’exécution de manière cohérente.</p>
+<h3 id="variables-denvironnement-2">Variables d’Environnement</h3>
+<p>Bien que non explicitement listé dans la structure de base, il est
+courant d’utiliser des variables d’environnement pour configurer
+certains aspects de l’application, tels que :</p>
+<ul>
+<li>Les chemins vers les fichiers de modèles.</li>
+<li>Les configurations spécifiques à l’environnement (développement,
+production).</li>
+<li>Les clés d’API ou autres informations sensibles.</li>
+</ul>
+<h2 id="docker-2">Docker</h2>
+<p>Le projet inclut une configuration Docker pour le déploiement de
+l’API IA :</p>
+<ul>
+<li><code>ai.dockerfile</code> : Contient les instructions pour
+construire l’image Docker de l’application. Cela inclut l’installation
+des dépendances Python et la copie du code source de l’application.</li>
+<li><code>.dockerignore</code> : Spécifie les fichiers et dossiers à
+exclure du contexte de build Docker pour optimiser la taille de l’image
+et la vitesse de construction.</li>
+</ul>
+<h2 id="flux-de-prédiction-typique">Flux de Prédiction Typique</h2>
+<ol type="1">
+<li>Une requête HTTP (généralement POST) arrive sur un endpoint défini
+dans <code>main.py</code>.</li>
+<li>FastAPI valide les données d’entrée par rapport au schéma Pydantic
+défini.</li>
+<li>Les données d’entrée sont prétraitées si nécessaire (en utilisant
+des objets chargés depuis le dossier <code>model/</code>).</li>
+<li>Les données prétraitées sont passées au modèle de Machine Learning
+chargé (depuis <code>model/</code>) pour obtenir une prédiction.</li>
+<li>La prédiction est formatée et renvoyée dans une réponse HTTP.</li>
+</ol>
+<h1 id="stack-technique-du-projet">Stack Technique du Projet</h1>
+<h2 id="frontend">Frontend</h2>
+<ul>
+<li><strong>Framework</strong> : Angular 18</li>
+<li><strong>Language</strong> : TypeScript</li>
+<li><strong>Styling</strong> : SCSS</li>
+<li><strong>UI Framework</strong> : Angular Material UI</li>
+<li><strong>Librairies de visualisation</strong> :
+<ul>
+<li>Chart.js pour les graphiques</li>
+</ul></li>
+<li><strong>Tests</strong> :
+<ul>
+<li>Playwright pour les tests e2e</li>
+</ul></li>
+<li><strong>Accessibilité</strong> :
+<ul>
+<li>ARIA (Accessible Rich Internet Applications)</li>
+<li>WCAG 2.1 Guidelines</li>
+</ul></li>
+</ul>
+<h2 id="backend">Backend</h2>
+<h3 id="api-rest">API REST</h3>
+<ul>
+<li><strong>Framework</strong> : Spring Boot</li>
+<li><strong>Language</strong> : Java 21</li>
+<li><strong>ORM</strong> : Spring Data JPA</li>
+<li><strong>Documentation API</strong> : Swagger/OpenAPI</li>
+<li><strong>Tests</strong> : JUnit 5</li>
+</ul>
+<h3 id="api-ia">API IA</h3>
+<ul>
+<li><strong>Framework</strong> : FastAPI</li>
+<li><strong>Language</strong> : Python 3.11</li>
+<li><strong>Machine Learning</strong> :
+<ul>
+<li>Scikit-learn pour les modèles prédictifs</li>
+<li>Pandas pour la manipulation des données</li>
+<li>NumPy pour les calculs numériques</li>
+</ul></li>
+<li><strong>Documentation API</strong> : Swagger/OpenAPI</li>
+</ul>
+<h2 id="base-de-données-1">Base de données</h2>
+<ul>
+<li><strong>SGBD</strong> : PostgreSQL</li>
+<li><strong>Modélisation</strong> :
+<ul>
+<li>Merise</li>
+<li>UML</li>
+</ul></li>
+</ul>
+<h2 id="etl-data-processing">ETL &amp; Data Processing</h2>
+<ul>
+<li><strong>Framework ETL</strong> : Spring</li>
+<li><strong>Formats de données supportés</strong> : CSV</li>
+</ul>
+<h2 id="devops-infrastructure">DevOps &amp; Infrastructure</h2>
+<ul>
+<li><strong>Conteneurisation</strong> : Docker</li>
+<li><strong>Orchestration</strong> : Docker Compose</li>
+<li><strong>CI</strong> : Github Actions</li>
+</ul>
+<h2 id="outils-de-développement">Outils de développement</h2>
+<ul>
+<li><strong>IDE</strong> : IntelliJ IDEA / VS Code</li>
+<li><strong>Gestion de versions</strong> : Git, Github</li>
+<li><strong>Gestion de projet</strong> :
+<ul>
+<li>Trello pour le suivi Agile</li>
+<li>Discord pour la communication</li>
+</ul></li>
+</ul>
+<h1 id="modèle-dintelligence-artificielle">Modèle d’Intelligence
+Artificielle</h1>
+<h2 id="aperçu">Aperçu</h2>
+<p>Ce document décrit le modèle d’intelligence artificielle utilisé pour
+la prédiction des cas de Covid-19. Le modèle est basé sur un algorithme
+de Random Forest et est servi via une API FastAPI.</p>
+<h2 id="détails-du-modèle">Détails du Modèle</h2>
+<ul>
+<li><strong>Type de Modèle</strong>: Random Forest</li>
+<li><strong>Fichier du Modèle</strong>:
+<code>random_forest_model.pkl</code> (chargé via
+<code>joblib</code>)</li>
+<li><strong>Objectif</strong>: Prédire le nombre de cas de
+Covid-19.</li>
+</ul>
+<h2 id="données-dentrée-coviddata">Données d’Entrée
+(<code>CovidData</code>)</h2>
+<p>Le modèle attend les données d’entrée structurées comme suit:</p>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 8%" />
+<col style="width: 72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Champ</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>confirmed_case</code></td>
+<td>INTEGER</td>
+<td>Nombre de cas confirmés existants</td>
+</tr>
+<tr class="even">
+<td><code>date</code></td>
+<td>DATE</td>
+<td>Date des données (non directement utilisée comme feature)</td>
+</tr>
+<tr class="odd">
+<td><code>deaths</code></td>
+<td>INTEGER</td>
+<td>Nombre de décès existants</td>
+</tr>
+<tr class="even">
+<td><code>recovered</code></td>
+<td>INTEGER</td>
+<td>Nombre de personnes guéries existantes</td>
+</tr>
+<tr class="odd">
+<td><code>location</code></td>
+<td>STRING</td>
+<td>Localisation spécifique (ex: “France - Île-de-France - Paris”)</td>
+</tr>
+<tr class="even">
+<td><code>region</code></td>
+<td>STRING</td>
+<td>Région administrative (ex: “France - Île-de-France”)</td>
+</tr>
+<tr class="odd">
+<td><code>country</code></td>
+<td>STRING</td>
+<td>Pays (ex: “France”)</td>
+</tr>
+<tr class="even">
+<td><code>continent</code></td>
+<td>STRING</td>
+<td>Continent</td>
+</tr>
+<tr class="odd">
+<td><code>population</code></td>
+<td>FLOAT</td>
+<td>Population de la zone concernée</td>
+</tr>
+<tr class="even">
+<td><code>who_region</code></td>
+<td>STRING</td>
+<td>Région OMS</td>
+</tr>
+</tbody>
+</table>
+<h2 id="traitement-des-caractéristiques-feature-engineering">Traitement
+des Caractéristiques (Feature Engineering)</h2>
+<p>Les données d’entrée sont transformées en un vecteur de
+caractéristiques numériques avant d’être fournies au modèle.</p>
+<h3 id="caractéristiques-numériques-directes">Caractéristiques
+Numériques Directes</h3>
+<p>Les champs suivants sont utilisés directement comme caractéristiques
+numériques :</p>
+<ul>
+<li><code>confirmed_case</code></li>
+<li><code>deaths</code></li>
+<li><code>recovered</code></li>
+<li><code>population</code></li>
+</ul>
+<p>Total: 4 caractéristiques numériques.</p>
+<h3
+id="encodage-one-hot-pour-les-caractéristiques-catégorielles">Encodage
+One-Hot pour les Caractéristiques Catégorielles</h3>
+<ol type="1">
+<li><p><strong>Continent (<code>continent</code>)</strong>:</p>
+<ul>
+<li><p>Encodé en un vecteur de 6 caractéristiques.</p></li>
+<li><p>Mapping utilisé :</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>continents_map <span class="op">=</span> {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;AFRICA&#39;</span>: <span class="dv">0</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;ASIA&#39;</span>: <span class="dv">1</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;EUROPE&#39;</span>: <span class="dv">2</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;NORTH_AMERICA&#39;</span>: <span class="dv">3</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;OCEANIA&#39;</span>: <span class="dv">4</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;SOUTH_AMERICA&#39;</span>: <span class="dv">5</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div></li>
+</ul></li>
+<li><p><strong>Région OMS (<code>who_region</code>)</strong>:</p>
+<ul>
+<li><p>Encodé en un vecteur de 6 caractéristiques.</p></li>
+<li><p>Mapping utilisé :</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>who_regions_map <span class="op">=</span> {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Africa&#39;</span>: <span class="dv">0</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Americas&#39;</span>: <span class="dv">1</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Eastern_Mediterranean&#39;</span>: <span class="dv">2</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Europe&#39;</span>: <span class="dv">3</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;South-East_Asia&#39;</span>: <span class="dv">4</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Western_Pacific&#39;</span>: <span class="dv">5</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div></li>
+</ul></li>
+<li><p><strong>Localisation (<code>location</code>)</strong>:</p>
+<ul>
+<li>Encodé en un vecteur de 250 caractéristiques (taille fixe). La
+logique exacte de mapping n’est pas détaillée dans l’API mais est
+supposée être gérée par le modèle pré-entraîné.</li>
+</ul></li>
+<li><p><strong>Région (<code>region</code>)</strong>:</p>
+<ul>
+<li>Encodé en un vecteur de 250 caractéristiques (taille fixe).
+Similaire à <code>location</code>.</li>
+</ul></li>
+<li><p><strong>Pays (<code>country</code>)</strong>:</p>
+<ul>
+<li>Encodé en un vecteur de 211 caractéristiques (taille fixe).
+Similaire à <code>location</code>.</li>
+</ul></li>
+</ol>
+<h3 id="vecteur-de-caractéristiques-final">Vecteur de Caractéristiques
+Final</h3>
+<p>Le vecteur final fourni au modèle est une concaténation de toutes ces
+caractéristiques :</p>
+<ul>
+<li>Caractéristiques numériques (4)</li>
+<li>Caractéristiques du continent (6)</li>
+<li>Caractéristiques de la région OMS (6)</li>
+<li>Caractéristiques de la localisation (250)</li>
+<li>Caractéristiques de la région (250)</li>
+<li>Caractéristiques du pays (211)</li>
+</ul>
+<p><strong>Taille totale du vecteur de caractéristiques</strong>: 4 + 6
++ 6 + 250 + 250 + 211 = 727 caractéristiques.</p>
+<h2 id="sortie-de-prédiction">Sortie de Prédiction</h2>
+<p>L’API retourne les informations suivantes après une prédiction :</p>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 6%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Champ</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>prediction</code></td>
+<td>INTEGER</td>
+<td>Le nombre prédit de cas (arrondi à l’entier).</td>
+</tr>
+<tr class="even">
+<td><code>probability</code></td>
+<td>FLOAT</td>
+<td>La probabilité associée à la classe prédite (max des probabilités
+par classe).</td>
+</tr>
+<tr class="odd">
+<td><code>features_length</code></td>
+<td>INTEGER</td>
+<td>La longueur totale du vecteur de caractéristiques utilisé.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="points-importants">Points Importants</h2>
+<ul>
+<li>Le champ <code>date</code> de l’objet <code>CovidData</code> n’est
+pas explicitement utilisé dans la construction du vecteur de
+caractéristiques dans le code de l’API <code>main.py</code>. Sa
+pertinence pour le modèle dépend de la manière dont le modèle
+<code>random_forest_model.pkl</code> a été entraîné.</li>
+<li>Les tailles fixes pour les vecteurs one-hot de
+<code>location</code>, <code>region</code>, et <code>country</code>
+(250, 250, 211 respectivement) suggèrent que le modèle a été entraîné
+avec un vocabulaire spécifique pour ces catégories. Toute nouvelle
+valeur non vue lors de l’entraînement pourrait ne pas être gérée de
+manière optimale ou entraîner une erreur si le mapping n’est pas
+présent.</li>
+<li>L’API inclut une gestion des erreurs basique et un logging des
+requêtes et des erreurs.</li>
+<li>La configuration CORS autorise les requêtes depuis
+<code>http://localhost:4200</code>.</li>
+</ul>
+<h1
+id="brief-du-projet-plateforme-oms-de-suivi-des-pandémies---phase-2">Brief
+du Projet : Plateforme OMS de Suivi des Pandémies - Phase 2</h1>
+<h2 id="contexte-détaillé-1">Contexte Détaillé</h2>
+<p>À la suite de la mise en place réussie du backend permettant la
+collecte, le nettoyage et la visualisation des données historiques sur
+les pandémies (MSPR 1), la nouvelle division de l’OMS souhaite étendre
+les fonctionnalités de la plateforme en intégrant des capacités
+prédictives avancées grâce à l’Intelligence Artificielle (IA).</p>
+<h2 id="périmètre-de-la-mspr-1">Périmètre de la MSPR</h2>
+<p>Pour cette seconde phase de la Mise en Situation Prjofessionnelle
+Reconstituée (MSPR), nous avons continué à travailler pour le groupe
+ANALYZE IT. Notre mission est d’enrichir la plateforme existante avec
+des capacités prédictives basées sur l’IA. Bous devions développer une
+API capable d’analyser les données historiques pour prédire l’évolution
+des pandémies, et créer une interface utilisateur accessible permettant
+aux chercheurs et décideurs d’interagir avec ces prédictions.</p>
+<h2 id="description-générale-1">Description Générale</h2>
+<p>L’Organisation Mondiale de la Santé souhaite intégrer des capacités
+prédictives à sa plateforme de veille pandémique. Cette extension devra
+permettre d’exploiter les données nettoyées de la première phase pour
+générer des prédictions via une API IA, et les présenter dans une
+interface accessible et intuitive.</p>
+<h2 id="objectifs-clés-1">Objectifs Clés</h2>
+<ul>
+<li>Développer une API IA en Python avec FastAPI pour les prédictions
+pandémiques</li>
+<li>Créer une interface utilisateur moderne et accessible</li>
+<li>Intégrer des visualisations de données interactives</li>
+<li>Assurer l’accessibilité selon les normes WCAG</li>
+<li>Maintenir une documentation technique complète</li>
+<li>Suivre une approche agile pour le développement</li>
+</ul>
+<h2 id="fonctionnalités-principales-1">Fonctionnalités Principales</h2>
+<h3 id="api-prédictive">1. API Prédictive</h3>
+<ul>
+<li>Développement en Python avec FastAPI</li>
+<li>Intégration de modèles de Machine Learning</li>
+<li>Prédiction d’indicateurs clés</li>
+<li>Documentation complète via <strong>Swagger (OpenAPI)</strong>.</li>
+</ul>
+<h3 id="interface-utilisateur">2. Interface Utilisateur</h3>
+<ul>
+<li>Design responsive et accessible</li>
+<li>Composants visuels interactifs</li>
+<li>Visualisations avec Chart.js</li>
+<li>Support des standards WCAG</li>
+</ul>
+<h3 id="visualisation-des-données-1">3. Visualisation des Données</h3>
+<ul>
+<li>Graphiques prédictifs interactifs</li>
+<li>Filtres dynamiques sur les données</li>
+<li>Export des résultats</li>
+</ul>
+<h3 id="accessibilité">4. Accessibilité</h3>
+<ul>
+<li>Navigation au clavier</li>
+<li>Support lecture d’écran audio</li>
+<li>Contrastes de couleurs adaptés</li>
+<li>Polices accessibles</li>
+<li>Composants ARIA</li>
+</ul>
+<h3 id="déploiement-et-tests">5. Déploiement et Tests</h3>
+<ul>
+<li>Tests automatisés de l’interface</li>
+<li>Rapports de couverture</li>
+<li>Documentation technique</li>
+<li>Intégration avec l’infrastructure existante</li>
+</ul>
+<h3 id="documentation-suivi-1">6. Documentation &amp; Suivi</h3>
+<ul>
+<li>Documentation des modèles IA</li>
+<li>Guide d’accessibilité</li>
+<li>Métriques de performance</li>
+<li>Suivi d’avancement régulier (Discord, Trello).</li>
+</ul>
+<h1 id="modèle-de-données">Modèle de Données</h1>
+<h2 id="diagramme-du-modèle-de-données">Diagramme du Modèle de
+Données</h2>
+<figure>
+<img src="ressources/data-model.png" alt="Modèle de données" />
+<figcaption aria-hidden="true">Modèle de données</figcaption>
+</figure>
+<h2 id="entités">Entités</h2>
+<h3 id="disease-maladie">Disease (Maladie)</h3>
+<p>Représente une maladie suivie par l’OMS.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Champ</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>INTEGER</td>
+<td>Identifiant unique de la maladie</td>
+</tr>
+<tr class="even">
+<td>name</td>
+<td>VARCHAR(255)</td>
+<td>Nom de la maladie</td>
+</tr>
+<tr class="odd">
+<td>description</td>
+<td>VARCHAR(255)</td>
+<td>Description de la maladie</td>
+</tr>
+</tbody>
+</table>
+<h3 id="location-localisation">Location (Localisation)</h3>
+<p>Représente une zone géographique spécifique.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Champ</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>INTEGER</td>
+<td>Identifiant unique de la localisation</td>
+</tr>
+<tr class="even">
+<td>name</td>
+<td>VARCHAR(255)</td>
+<td>Nom de la localisation</td>
+</tr>
+<tr class="odd">
+<td>region_id</td>
+<td>INTEGER</td>
+<td>Clé étrangère vers la région</td>
+</tr>
+</tbody>
+</table>
+<h3 id="region">Region</h3>
+<p>Représente une région administrative.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Champ</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>INTEGER</td>
+<td>Identifiant unique de la région</td>
+</tr>
+<tr class="even">
+<td>name</td>
+<td>VARCHAR</td>
+<td>Nom de la région</td>
+</tr>
+<tr class="odd">
+<td>country_id</td>
+<td>INTEGER</td>
+<td>Clé étrangère vers le pays</td>
+</tr>
+</tbody>
+</table>
+<h3 id="country-pays">Country (Pays)</h3>
+<p>Représente un pays avec ses informations démographiques.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Champ</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>INTEGER</td>
+<td>Identifiant unique du pays</td>
+</tr>
+<tr class="even">
+<td>name</td>
+<td>VARCHAR</td>
+<td>Nom du pays</td>
+</tr>
+<tr class="odd">
+<td>continent</td>
+<td>CONTINENT_ENUM</td>
+<td>Continent du pays</td>
+</tr>
+<tr class="even">
+<td>who_region</td>
+<td>WHO_REGION_ENUM</td>
+<td>Région OMS</td>
+</tr>
+<tr class="odd">
+<td>population</td>
+<td>INTEGER</td>
+<td>Population du pays</td>
+</tr>
+</tbody>
+</table>
+<h3 id="diseasecase-cas-de-maladie">DiseaseCase (Cas de Maladie)</h3>
+<p>Représente les statistiques de cas pour une maladie dans une
+localisation donnée.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Champ</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>disease_id</td>
+<td>INTEGER</td>
+<td>Clé étrangère vers la maladie</td>
+</tr>
+<tr class="even">
+<td>location_id</td>
+<td>INTEGER</td>
+<td>Clé étrangère vers la localisation</td>
+</tr>
+<tr class="odd">
+<td>date</td>
+<td>DATE</td>
+<td>Date des statistiques</td>
+</tr>
+<tr class="even">
+<td>confirmed_cases</td>
+<td>INTEGER</td>
+<td>Nombre de cas confirmés</td>
+</tr>
+<tr class="odd">
+<td>deaths</td>
+<td>INTEGER</td>
+<td>Nombre de décès</td>
+</tr>
+<tr class="even">
+<td>recovered</td>
+<td>INTEGER</td>
+<td>Nombre de personnes guéries</td>
+</tr>
+</tbody>
+</table>
+<h2 id="relations">Relations</h2>
+<ol type="1">
+<li><p><strong>Location - Region</strong> (N:1)</p>
+<ul>
+<li>Une location appartient à une seule région</li>
+<li>Une région peut avoir plusieurs locations</li>
+</ul></li>
+<li><p><strong>Region - Country</strong> (N:1)</p>
+<ul>
+<li>Une région appartient à un seul pays</li>
+<li>Un pays peut avoir plusieurs régions</li>
+</ul></li>
+<li><p><strong>DiseaseCase - Disease</strong> (N:1)</p>
+<ul>
+<li>Un cas est lié à une seule maladie</li>
+<li>Une maladie peut avoir plusieurs cas</li>
+</ul></li>
+<li><p><strong>DiseaseCase - Location</strong> (N:1)</p>
+<ul>
+<li>Un cas est lié à une seule location</li>
+<li>Une location peut avoir plusieurs cas</li>
+</ul></li>
+</ol>
+<h2 id="énumérations">Énumérations</h2>
+<h3 id="continent_enum">CONTINENT_ENUM</h3>
+<ul>
+<li>Valeurs possibles pour les continents</li>
+</ul>
+<h3 id="who_region_enum">WHO_REGION_ENUM</h3>
+<ul>
+<li>Valeurs possibles pour les régions définies par l’OMS</li>
+</ul>
+<h2 id="notes-techniques">Notes Techniques</h2>
+<ul>
+<li>Toutes les clés primaires sont auto-incrémentées</li>
+<li>Les relations sont maintenues par des clés étrangères avec
+contraintes d’intégrité référentielle</li>
+<li>Les dates sont stockées au format ISO 8601</li>
+<li>Les compteurs (confirmed_cases, deaths, recovered) ne peuvent pas
+être négatifs</li>
+</ul>
+<h1 id="documentation-détaillée-de-loutil-etl-covid-19">Documentation
+Détaillée de l’Outil ETL COVID-19</h1>
+<h2 id="contexte-et-objectifs-de-letl">1. Contexte et Objectifs de
+l’ETL</h2>
+<p>Cet outil ETL (Extract, Transform, Load) a été développé pour
+répondre au besoin de consolidation et de structuration des données
+hétérogènes relatives à la pandémie de COVID-19. Face à la multitude de
+sources de données, souvent avec des formats et des niveaux de
+granularité différents, il est devenu essentiel de disposer d’un
+processus automatisé pour :</p>
+<ul>
+<li><p><strong>Centraliser</strong> les informations clés issues de
+différentes sources reconnues (Worldometer, JHU CSSE via Kaggle,
+etc.).</p></li>
+<li><p><strong>Nettoyer et Harmoniser</strong> les données pour assurer
+leur cohérence (ex: standardisation des noms de pays/régions, format des
+nombres).</p></li>
+<li><p><strong>Structurer</strong> ces données dans un modèle
+relationnel optimisé pour les requêtes et les analyses futures.</p></li>
+<li><p><strong>Alimenter</strong> une base de données unique qui peut
+servir de source fiable pour d’autres applications, des tableaux de bord
+de suivi, ou des analyses statistiques et épidémiologiques.</p></li>
+</ul>
+<p>L’objectif final est de transformer des fichiers CSV bruts en une
+base de données relationnelle propre, cohérente et exploitable
+concernant les cas de COVID-19, les localisations géographiques et les
+métadonnées associées.</p>
+<h2 id="périmètre-détaillé-de-letl">2. Périmètre Détaillé de l’ETL</h2>
+<h3 id="sources-de-données-traitées">2.1 Sources de Données
+Traitées</h3>
+<p>L’ETL est configuré pour traiter les fichiers CSV suivants, attendus
+dans un répertoire spécifique accessible par l’application :</p>
+<ol type="1">
+<li><p><strong><code>worldometer_data.csv</code></strong>: Fournit des
+statistiques globales agrégées par pays. Contient des informations
+telles que le nom du pays, le continent, la population, le total des cas
+confirmés, des décès, des guérisons, le nombre de cas actifs et la
+région OMS associée. Ce fichier est crucial pour établir la structure
+géographique de base (Pays, Continents).</p></li>
+<li><p><strong><code>covid_19_clean_complete.csv</code></strong>:
+Contient des données de cas journaliers, potentiellement plus
+granulaires (par province/état en plus du pays). Inclut typiquement la
+date, la province/état, le pays/région, latitude, longitude, cas
+confirmés, décès, guérisons. Ces données permettent un suivi temporel et
+géographique plus fin.</p></li>
+<li><p><strong><code>full_grouped.csv</code></strong>: Semble être une
+agrégation journalière par pays, incluant la date, le pays, les cas
+confirmés, les décès, les guérisons, les nouveaux cas, les nouveaux
+décès, les nouvelles guérisons et la région OMS. Il complète
+potentiellement les données des autres sources avec des indicateurs
+journaliers agrégés.</p></li>
+<li><p><strong><code>usa_county_wise.csv</code></strong>: Spécifique aux
+États-Unis, ce fichier descend au niveau du comté. Il contient des
+informations détaillées par comté, incluant le nom du comté, l’état, le
+FIPS code, latitude, longitude, population, et les chiffres de
+cas/décès. Essentiel pour une analyse fine sur le territoire
+américain.</p></li>
+</ol>
+<h3 id="déroulement-simplifié-du-processus-etl">2.2 Déroulement
+Simplifié du Processus ETL</h3>
+<p>Le traitement complet des données est géré par le
+<code>DataImportCovid19Runner</code> lorsqu’on lance l’application.
+Voici les étapes clés, décomposées pour plus de clarté :</p>
+<ol type="1">
+<li><strong>Initialisation (Fait par
+<code>DataImportCovid19Runner</code>)</strong></li>
+</ol>
+<ul>
+<li><p><strong>Nettoyage Prévu</strong>: Avant de commencer, le Runner
+demande la suppression de toutes les données COVID précédentes dans la
+base de données (Tables: <code>DiseaseCase</code>, <code>Disease</code>,
+<code>Location</code>, <code>Region</code>, <code>Country</code>). Cela
+assure que chaque exécution part d’une base propre.</p></li>
+<li><p><strong>Préparation Maladie</strong>: Il s’assure que la maladie
+“COVID-19” existe dans la base et la garde en mémoire (cache) pour une
+utilisation rapide.</p></li>
+</ul>
+<ol start="2" type="1">
+<li><strong>Traitement Séquentiel des Fichiers (Piloté par
+<code>DataImportCovid19Runner</code>, Exécuté par les
+<code>Services</code>)</strong></li>
+</ol>
+<ul>
+<li><p>Le Runner lance le traitement pour chaque fichier CSV, l’un après
+l’autre (<code>worldometer</code>, <code>covid_19_clean_complete</code>,
+etc.). Chaque fichier a son propre <code>Service</code> dédié (ex:
+<code>WorldometerService</code>).</p></li>
+<li><p>Pour un fichier donné (prenons <code>worldometer_data.csv</code>
+comme exemple) :</p></li>
+</ul>
+<ol type="a">
+<li><strong>Étape 1 : Lecture du Fichier (Fait par
+<code>AbstractCsvImportService</code> et
+<code>CsvReaderHelper</code>)</strong></li>
+</ol>
+<ul>
+<li><p>Le service trouve le fichier CSV
+(<code>worldometer_data.csv</code>).</p></li>
+<li><p>Le <code>CsvReaderHelper</code> lit le fichier ligne par
+ligne.</p></li>
+<li><p>Chaque ligne est découpée en colonnes.</p></li>
+</ul>
+<ol start="2" type="a">
+<li><strong>Étape 2 : Transformation de Chaque Ligne (Fait par
+<code>WorldometerService</code>, <code>WorldometerMapper</code>,
+<code>CleanerHelper</code>, <code>CacheManager</code>)</strong></li>
+</ol>
+<ul>
+<li><p><strong>Validation/Nettoyage Simple
+(<code>WorldometerService</code>)</strong>: Vérifie si la ligne a assez
+de colonnes. Transforme les textes en nombres, enlève les espaces
+inutiles. Si une ligne a un problème (ex: mauvais format de nombre),
+elle est ignorée avec un message d’alerte.</p></li>
+<li><p><strong>Nettoyage Avancé (<code>CleanerHelper</code>)</strong>:
+Standardise les noms importants (ex: “US”, “USA”, “United States”
+deviennent tous “United States”). Ignore certaines lignes si le pays est
+dans une liste prédéfinie (<code>skipList</code>).</p></li>
+<li><p><strong>Création Objet Temporaire
+(<code>WorldometerService</code>)</strong>: Les données nettoyées de la
+ligne sont mises dans un objet simple appelé DTO
+(<code>WorldometerDto</code>).</p></li>
+<li><p><strong>Transformation en Données Finales
+(<code>WorldometerMapper</code> avec
+<code>CacheManager</code>)</strong>: C’est le cœur du travail !</p>
+<ul>
+<li><p>Le <code>Mapper</code> prend le DTO
+(<code>WorldometerDto</code>).</p></li>
+<li><p>Il demande au <code>CacheManager</code> : “As-tu déjà un Pays,
+une Région, une Localisation correspondant à ces noms ?”.</p></li>
+<li><p>Le <code>CacheManager</code> regarde dans sa mémoire (des
+<code>Map</code> Java).</p>
+<ul>
+<li><p>Si <strong>Oui</strong> : il renvoie l’objet existant (ex:
+l’objet <code>Country</code> pour “France”).</p></li>
+<li><p>Si <strong>Non</strong> : il crée un nouvel objet (ex:
+<code>new Country()</code>) mais <strong>ne le sauvegarde pas encore en
+base</strong>. Il le met dans sa mémoire et le renvoie.</p></li>
+</ul></li>
+<li><p>Le <code>Mapper</code> met à jour les informations de l’objet
+(ex: la population du <code>Country</code>) avec les données du
+DTO.</p></li>
+<li><p>Pour les fichiers contenant les cas (comme
+<code>covid_19_clean_complete.csv</code>), le Mapper crée un nouvel
+objet <code>DiseaseCase</code> et le relie à la <code>Disease</code>
+(“COVID-19”) et à la <code>Location</code> (Pays/Région/Comté) trouvées
+via le <code>CacheManager</code>.</p></li>
+</ul></li>
+</ul>
+<ol start="3" type="a">
+<li><strong>Étape 3 : Sauvegarde en Base de Données (Fait par
+<code>AbstractCsvImportService</code> et
+<code>PersistenceHelper</code>)</strong></li>
+</ol>
+<ul>
+<li><p>Une fois toutes les lignes du fichier traitées, le service
+demande au <code>PersistenceHelper</code> de sauvegarder.</p></li>
+<li><p>Le <code>PersistenceHelper</code> récupère tous les objets (Pays,
+Régions, Localisations, Cas) qui ont été créés ou modifiés et qui sont
+dans la mémoire du <code>CacheManager</code> ou accumulés par le
+service.</p></li>
+<li><p>Il envoie tout cela à la base de données en une seule fois (ou
+par gros paquets - “batch”, dans le cas des données du fichier le plus
+volumineux : usa_county_wise.csv) pour être efficace.</p></li>
+<li><p>Grâce à l’annotation<code>@Transactional</code>, si une erreur
+survient pendant la sauvegarde d’un fichier, toutes les modifications
+pour ce fichier sont annulées, gardant la base de données
+cohérente.</p></li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Finalisation (Fait par
+<code>DataImportCovid19Runner</code>)</strong></li>
+</ol>
+<ul>
+<li>Une fois tous les fichiers traités, le Runner affiche un résumé :
+combien de lignes lues par fichier, combien de temps ça a pris, et
+combien d’objets (Pays, Régions, Cas, etc.) sont maintenant dans la base
+de données. Cela aide à faire des Benchmarks cohérentes.</li>
+</ul>
+<h1 id="documentation-organisation-et-conventions-git">Documentation :
+Organisation et Conventions Git</h1>
+<h2 id="structure-des-branches">Structure des branches</h2>
+<p>Nous adoptons un workflow Git simple et efficace, centré autour d’une
+branche principale :</p>
+<ul>
+<li><code>main</code> : la branche de référence contenant le code en
+production.</li>
+<li>Branches de fonctionnalité : créées depuis <code>main</code> pour
+chaque nouvelle tâche ou correction.</li>
+</ul>
+<p>Cette approche garantit un historique propre et une gestion
+simplifiée des versions.</p>
+<hr />
+<h2 id="explication-des-branches">Explication des Branches</h2>
+<h3 id="main"><code>main</code></h3>
+<ul>
+<li><strong>Rôle :</strong>
+<ul>
+<li>Branche principale, représentant le code actuellement en
+production.</li>
+<li>Toujours stable, aucun développement direct n’y est réalisé.</li>
+</ul></li>
+<li><strong>Utilisation :</strong>
+<ul>
+<li>Les modifications proviennent exclusivement des branches de
+fonctionnalité via des Pull Requests.</li>
+<li>Toutes les livraisons (releases) sont générées à partir de cette
+branche.</li>
+</ul></li>
+</ul>
+<h3 id="branches-de-fonctionnalité-feature-branches">Branches de
+fonctionnalité (<code>feature branches</code>)</h3>
+<ul>
+<li><strong>Rôle :</strong> Développement des nouvelles fonctionnalités
+ou corrections.</li>
+<li><strong>Convention de nommage :</strong>
+<code>feature/nom-fonctionnalité</code>
+<ul>
+<li>Exemple : <code>feature/authentification-google</code></li>
+</ul></li>
+<li><strong>Point de départ :</strong> <code>main</code></li>
+<li><strong>Point de fin :</strong> Merge dans <code>main</code> après
+validation.</li>
+</ul>
+<hr />
+<h2 id="conventions-de-nommage">Conventions de Nommage</h2>
+<h3 id="branches">Branches</h3>
+<ul>
+<li><strong>Syntaxe générale :</strong>
+<code>{type}/{description}</code>
+<ul>
+<li>Types recommandés : <code>feature</code>, <code>fix</code>,
+<code>chore</code>, <code>refactor</code>, etc.</li>
+</ul></li>
+<li><strong>Exemples :</strong>
+<ul>
+<li><code>feature/authentification-google</code></li>
+<li><code>fix/correction-timeout-api</code></li>
+</ul></li>
+</ul>
+<h3 id="commits">Commits</h3>
+<ul>
+<li>Format recommandé :</li>
+</ul>
+<pre class="php-template"><code>&lt;type&gt; : &lt;description&gt;</code></pre>
+<ul>
+<li><p>Types courants :</p>
+<ul>
+<li><code>feat</code> : nouvelle fonctionnalité</li>
+<li><code>fix</code> : correction de bug</li>
+<li><code>docs</code> : documentation</li>
+<li><code>style</code> : mise en forme, indentation</li>
+<li><code>refactor</code> : restructuration sans changement
+fonctionnel</li>
+<li><code>test</code> : ajout ou modification de tests</li>
+<li><code>chore</code> : maintenance, tâches annexes</li>
+<li><code>release</code> : publication d’une version</li>
+</ul></li>
+<li><p>Exemples :</p>
+<ul>
+<li><code>feat: ajout de la connexion avec Google</code></li>
+<li><code>fix: correction du timeout sur les requêtes</code></li>
+<li><code>release: v1.0.2</code></li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="workflow-de-développement">Workflow de développement</h2>
+<ol type="1">
+<li><p><strong>Création d’une nouvelle branche</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> auth-system</span></code></pre></div></li>
+<li><p><strong>Commits clairs et cohérents</strong></p>
+<p>Respectez le format :</p>
+<pre><code>&lt;type&gt; : &lt;description&gt;</code></pre>
+<p>Exemples :</p>
+<pre><code>feat : ajout de l&#39;authentification Google
+fix: correction du timeout des requêtes API
+docs : mise à jour du README</code></pre></li>
+<li><p><strong>Mise à jour de la branche avant un merge</strong></p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout auth-system</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span></code></pre></div></li>
+</ol>
+<hr />
+<h2 id="bonnes-pratiques">Bonnes pratiques</h2>
+<h3 id="gestion-des-commits">Gestion des commits</h3>
+<ul>
+<li><strong>Atomicité</strong> : Un commit = une
+fonctionnalité/correction</li>
+<li><strong>Messages descriptifs</strong> : Suivre les conventions de
+commit</li>
+<li><strong>Fréquence</strong> : Commiter régulièrement pour éviter les
+gros changements</li>
+<li><strong>Qualité</strong> : Tester les modifications avant chaque
+commit</li>
+</ul>
+<h3 id="gestion-des-branches">Gestion des branches</h3>
+<ul>
+<li><strong>Synchronisation</strong> : Maintenir sa branche à jour avec
+<code>main</code></li>
+<li><strong>Protection</strong> : Ne jamais pusher directement sur
+<code>main</code></li>
+<li><strong>Nettoyage</strong> : Supprimer les branches mergées</li>
+<li><strong>Nommage</strong> : Utiliser des noms explicites pour les
+branches</li>
+</ul>
+<h3 id="rédaction-de-pull-requests">Rédaction de Pull Requests</h3>
+<ul>
+<li><strong>Titre clair :</strong> Résumez le travail effectué.</li>
+<li><strong>Description détaillée :</strong> Ajoutez le contexte, les
+modifications apportées, et le lien vers une issue (si applicable).</li>
+<li><strong>Checklist avant merge :</strong>
+<ul>
+<li>Tests unitaires passés.</li>
+<li>Code review approuvée.</li>
+<li>Conformité avec les conventions de codage.</li>
+</ul></li>
+</ul>
+<h3 id="revue-de-code">Revue de Code</h3>
+<ul>
+<li>Toujours effectuer une revue par un pair avant tout merge.</li>
+<li>Vérifier la clarté, l’optimisation et la conformité des
+modifications proposées.</li>
+</ul>
+<h1 id="guide-dinstallation">Guide d’Installation</h1>
+<h2 id="prérequis-système">Prérequis Système</h2>
+<ul>
+<li>Git</li>
+<li>Docker</li>
+<li>Docker Compose</li>
+</ul>
+<h2 id="installation-pas-à-pas">Installation Pas à Pas</h2>
+<h3 id="récupération-du-projet">1. Récupération du Projet</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/y2-znt/MSPR3.git</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> MSPR3</span></code></pre></div>
+<h3 id="configuration-de-lenvironnement">2. Configuration de
+l’Environnement</h3>
+<h4 id="configuration-globale">Configuration Globale</h4>
+<p>Créez un fichier <code>.env</code> à la racine du projet :</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration PostgreSQL</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="va">DB_URL</span><span class="op">=</span>jdbc:postgresql://db:5432/database_name</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="va">DB_USERNAME</span><span class="op">=</span>your_username</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PASSWORD</span><span class="op">=</span>your_password</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PORT</span><span class="op">=</span>5432</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="va">DB_NAME</span><span class="op">=</span>database_name</span></code></pre></div>
+<h4 id="configuration-backend">Configuration Backend</h4>
+<p>Créez un fichier <code>.env</code> dans le dossier
+<code>backend</code> :</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration Base de données</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="va">DB_URL</span><span class="op">=</span>jdbc:postgresql://db:5432/database_name</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="va">DB_USERNAME</span><span class="op">=</span>your_username</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PASSWORD</span><span class="op">=</span>your_password</span></code></pre></div>
+<h3 id="démarrage-de-lapplication">3. Démarrage de l’Application</h3>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction des images</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose build</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Démarrage des services</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div>
+<p>Vérifiez que les services sont bien démarrés :</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose ps</span></code></pre></div>
+<h3 id="vérification-de-linstallation">4. Vérification de
+l’Installation</h3>
+<p>Une fois les services démarrés, vous pouvez accéder aux différentes
+interfaces :</p>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 42%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Service</th>
+<th>URL</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Frontend</td>
+<td>http://localhost:4200</td>
+<td>Interface utilisateur Angular</td>
+</tr>
+<tr class="even">
+<td>Backend API</td>
+<td>http://localhost:8080</td>
+<td>API REST Spring Boot</td>
+</tr>
+<tr class="odd">
+<td>Swagger UI</td>
+<td>http://localhost:8080/api-docs</td>
+<td>Documentation API Spring Boot</td>
+</tr>
+<tr class="even">
+<td>FastAPI</td>
+<td>http://localhost:8000</td>
+<td>API IA</td>
+</tr>
+<tr class="odd">
+<td>Swagger UI</td>
+<td>http://localhost:8000/docs</td>
+<td>Documentation API FastAPI</td>
+</tr>
+<tr class="even">
+<td>PostgreSQL</td>
+<td>localhost:5432</td>
+<td>Base de données</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gestion-de-la-base-de-données">Gestion de la Base de
+Données</h2>
+<h3 id="connexion-à-postgresql">Connexion à PostgreSQL</h3>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Connexion via Docker</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-db psql <span class="at">-U</span> <span class="op">&lt;</span>username<span class="op">&gt;</span> -d <span class="op">&lt;</span>dbname<span class="op">&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Commandes PostgreSQL utiles</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="ex">\dt</span>                 <span class="co"># Liste des tables</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="ex">\d</span> <span class="op">&lt;</span>nom_table<span class="op">&gt;</span>      # Structure d<span class="st">&#39;une table</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="st">\l                  # Liste des bases de données</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="st">\du                 # Liste des utilisateurs</span></span></code></pre></div>
+<h2 id="tests-et-validation">Tests et Validation</h2>
+<h3 id="exécution-des-tests">Exécution des Tests</h3>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Backend local</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mvn</span> test <span class="co"># ou ./mvnw test</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Backend via container</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-backend mvn test</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Frontend local</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run test:e2e:ci</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Frontend via container</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-frontend npm run test:e2e:ci</span></code></pre></div>
+<h3 id="logs-des-services">Logs des Services</h3>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs en temps réel</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs d&#39;un service spécifique</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span> backend</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span> frontend</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span> db</span></code></pre></div>
+<h2 id="gestion-des-services">Gestion des Services</h2>
+<h3 id="commandes-courantes">Commandes Courantes</h3>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrêt des services</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Redémarrage d&#39;un service spécifique</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose restart backend</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppression des volumes (reset des données)</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down <span class="at">-v</span></span></code></pre></div>
+<h3 id="mise-à-jour-de-lapplication">Mise à Jour de l’Application</h3>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mise à jour depuis le repository</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruction et redémarrage</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose build</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div>
+<h1 id="gestion-de-projet">Gestion de Projet</h1>
+<h2 id="méthodologie-adoptée">Méthodologie adoptée</h2>
+<p>Pour mener à bien ce projet, nous avons mis en place une organisation
+basée sur les principes de l’agilité. Sans suivre une méthode stricte
+comme Scrum, nous nous sommes inspirés de ses pratiques (réunions
+courtes quotidiennes, rétrospectives hebdomadaires, répartition des
+tâches en fonction des priorités) pour structurer notre travail de
+manière efficace. L’objectif était de rester flexibles tout en gardant
+un rythme de développement régulier.</p>
+<h2 id="outils-utilisés">Outils utilisés</h2>
+<h3 id="suivi-et-répartition-des-tâches">Suivi et répartition des
+tâches</h3>
+<p>Nous avons utilisé Trello pour organiser les tâches de manière
+claire. Le tableau principal était divisé en colonnes représentant
+l’avancement (à faire, en cours, terminé), avec des cartes classées par
+domaine (Frontend, Backend, DevOps, Documentation, etc.). Cela nous a
+permis de mieux répartir le travail entre nous et de suivre l’avancement
+global du projet.</p>
+<h3 id="communication-déquipe">Communication d’équipe</h3>
+<p>La coordination s’est faite principalement sur Discord. Ce serveur a
+centralisé toutes les discussions, les notifications Gitlab, Github, les
+mises à jour Trello, et a facilité la prise de décision rapide. Ce choix
+nous a permis de gagner du temps et de rester synchronisés, même en
+travaillant à distance.</p>
+<h3 id="versioning-et-intégration-continue">Versioning et intégration
+continue</h3>
+<p>Nous avons commencé le projet sur GitLab, mais les limites de
+pipelines gratuites nous ont rapidement freinés. Nous avons donc migré
+vers Github, ce qui nous a permis d’exécuter plus librement nos
+workflows CI/CD. Cette décision a eu un impact positif sur le
+développement, notamment pour les tests automatisés et les builds.</p>
+<h2 id="organisation-du-travail">Organisation du travail</h2>
+<h3 id="réunions">Réunions</h3>
+<p>Chaque jour, une courte réunion nous permettait de faire un point
+rapide sur l’avancement de chacun et de lever les éventuels blocages.
+Une fois par semaine, une réunion plus longue servait à revoir les
+objectifs de la semaine et à ajuster la répartition du travail si
+nécessaire.</p>
+<h3 id="revue-de-code-1">Revue de code</h3>
+<p>Les revues de code étaient planifiées régulièrement. Nous les avons
+utilisées non seulement pour vérifier la qualité du code, mais aussi
+pour échanger sur nos choix techniques et progresser ensemble. Cela a
+renforcé l’homogénéité de notre base de code et permis de garder un bon
+niveau de qualité.</p>
+<h2 id="déroulé-du-projet">Déroulé du projet</h2>
+<p>Le projet s’est déroulé en plusieurs phases successives :</p>
+<ul>
+<li><strong>Phase de conception</strong> : définition des besoins et des
+fonctionnalités, création de maquettes, identification des données
+nécessaires, etc.</li>
+<li><strong>Phase DevOps</strong> : mise en place de l’environnement
+technique, Dockerisation, automatisation des déploiements et
+configuration des pipelines.</li>
+<li><strong>Phase Backend</strong> : développement de l’API avec Spring
+Boot, en veillant à la clarté de la structure et à la documentation
+grâce à Swagger.</li>
+<li><strong>Phase Data</strong> : préparation et nettoyage des données
+via un processus ETL sur mesure, garantissant leur qualité dès le
+départ.</li>
+<li><strong>Phase Frontend</strong> : création de l’interface
+utilisateur avec Angular, en assurant une bonne intégration avec l’API
+et une expérience fluide.</li>
+<li><strong>Phase Documentation</strong> : rédaction de la documentation
+technique et utilisateur, accompagnée de schémas et de guides
+clairs.</li>
+</ul>
+<h2 id="suivi-de-la-qualité">Suivi de la qualité</h2>
+<p>Nous avons défini quelques indicateurs simples pour suivre notre
+progression : tâches Trello complétées, taux de couverture des tests,
+délais de résolution des bugs. Ces données nous ont aidés à identifier
+les points à améliorer et à ajuster notre rythme au fil des
+semaines.</p>
+<h2 id="bilan-et-retours-dexpérience">Bilan et retours d’expérience</h2>
+<p>Ce projet nous a permis de mettre en pratique une gestion de projet
+complète, de la planification initiale au produit final. La migration
+vers GitHub, les outils de communication choisis et l’organisation agile
+ont été des éléments clés dans notre réussite. Travailler en équipe sur
+toutes les dimensions du projet nous a aussi permis de mieux comprendre
+l’importance de la coordination et de la rigueur dans le développement
+d’une application.</p>
+<p>top !!!! </p>
+<h1 id="documentation-daccessibilité-frontend">Documentation
+d’Accessibilité Frontend</h1>
+<h2 id="aperçu-1">Aperçu</h2>
+<p>Ce document décrit les fonctionnalités d’accessibilité et les normes
+mises en œuvre dans notre application frontend pour assurer la
+conformité aux WCAG (Web Content Accessibility Guidelines) et fournir
+une expérience utilisateur inclusive pour tous les utilisateurs, y
+compris ceux en situation de handicap.</p>
+<h2 id="fonctionnalités-daccessibilité-implémentées">Fonctionnalités
+d’Accessibilité Implémentées</h2>
+<h3 id="rôles-et-labels-aria">1. Rôles et Labels ARIA</h3>
+<p>L’application implémente des rôles et labels ARIA (Applications
+Internet Riches Accessibles) appropriés dans tous ses composants :</p>
+<ul>
+<li><p><strong>Tableau de Bord Principal</strong></p>
+<ul>
+<li>Zone de contenu principal marquée avec <code>role="main"</code></li>
+<li>Hiérarchie appropriée des titres avec sections étiquetées</li>
+<li>Zone de filtres marquée avec <code>role="region"</code></li>
+<li>Section des indicateurs KPI marquée avec les labels ARIA
+appropriés</li>
+</ul></li>
+<li><p><strong>Tableaux de Données</strong></p>
+<ul>
+<li>Structure de tableau avec rôles ARIA appropriés</li>
+<li>Colonnes triables avec attributs <code>aria-sort</code></li>
+<li>En-têtes de lignes et colonnes correctement étiquetés</li>
+<li>États de chargement annoncés via les régions
+<code>aria-live</code></li>
+</ul></li>
+<li><p><strong>Formulaires et Champs de Saisie</strong></p>
+<ul>
+<li>Tous les contrôles de formulaire ont des labels associés</li>
+<li>Messages d’erreur liés aux champs via
+<code>aria-describedby</code></li>
+<li>Champs obligatoires marqués avec des indicateurs visuels et
+ARIA</li>
+<li>Retour de validation de formulaire fourni via les régions ARIA
+live</li>
+</ul></li>
+</ul>
+<h3 id="navigation-au-clavier">2. Navigation au Clavier</h3>
+<ul>
+<li>Tous les éléments interactifs sont accessibles au clavier</li>
+<li>Ordre de tabulation logique maintenu dans toute l’application</li>
+<li>Indicateurs de focus visibles et clairement stylés</li>
+<li>Pas de pièges au clavier dans les boîtes de dialogue modales ou les
+widgets complexes</li>
+</ul>
+<h3 id="support-des-lecteurs-décran">3. Support des Lecteurs
+d’Écran</h3>
+<ul>
+<li>Textes alternatifs significatifs pour les images et icônes</li>
+<li>Mises à jour d’état annoncées via les régions
+<code>aria-live</code></li>
+<li>Texte d’aide caché pour les lecteurs d’écran où nécessaire</li>
+<li>Structure claire des titres pour une navigation facile</li>
+</ul>
+<h3 id="considérations-visuelles">4. Considérations Visuelles</h3>
+<ul>
+<li>Schémas de couleurs à fort contraste</li>
+<li>Texte respectant les exigences minimales de contraste</li>
+<li>Éléments interactifs clairement visibles</li>
+<li>Design responsive maintenant l’accessibilité à toutes les tailles
+d’écran</li>
+</ul>
+<h3 id="accessibilité-des-formulaires">5. Accessibilité des
+Formulaires</h3>
+<ul>
+<li>Messages d’erreur clairs</li>
+<li>Retour de validation de formulaire</li>
+<li>Indication des champs obligatoires</li>
+<li>Instructions de saisie claires</li>
+<li>Associations appropriées des labels</li>
+</ul>
+<h2 id="implémentation-spécifique-aux-composants">Implémentation
+Spécifique aux Composants</h2>
+<h3 id="composant-tableau-de-bord">Composant Tableau de Bord</h3>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle de région principale</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Sections étiquetées</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Régions ARIA live pour le contenu dynamique</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Hiérarchie appropriée des titres</span></code></pre></div>
+<h3 id="composant-tableaux-de-données">Composant Tableaux de
+Données</h3>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> En<span class="op">-</span>têtes de colonnes triables avec attributs ARIA</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Relations lignes<span class="op">/</span>colonnes</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Annonces pour le tri et le filtrage via lecteur d<span class="st">&#39;écran</span></span></code></pre></div>
+<h3 id="composants-de-dialogue">Composants de Dialogue</h3>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle modal</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion du focus</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion de la touche Échap</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Labels ARIA pour les contrôles de formulaire</span></code></pre></div>
+<h2 id="tests-et-validation-1">Tests et Validation</h2>
+<h3 id="tests-automatisés">Tests Automatisés</h3>
+<h4 id="résultats-lighthouse">Résultats Lighthouse</h4>
+<figure>
+<img src="../docs/ressources/accessibility-lighthouse.png"
+alt="Score d’accessibilité Lighthouse" />
+<figcaption aria-hidden="true">Score d’accessibilité
+Lighthouse</figcaption>
+</figure>
+<p>Notre application a obtenu un score parfait de 100/100 en
+accessibilité selon l’audit Lighthouse, démontrant notre engagement
+envers les meilleures pratiques d’accessibilité web. Ce score reflète
+:</p>
+<ul>
+<li>La conformité aux directives WCAG</li>
+<li>L’implémentation correcte des attributs ARIA</li>
+<li>La structure sémantique appropriée</li>
+<li>Le contraste des couleurs adéquat</li>
+<li>La navigation au clavier fonctionnelle</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> : Bien que le score Lighthouse soit excellent,
+nous continuons à effectuer des tests manuels réguliers pour garantir
+une expérience utilisateur optimale pour tous.</p>
+</blockquote>
+<ul>
+<li>Audits réguliers avec Lighthouse</li>
+</ul>
+<h3 id="tests-manuels">Tests Manuels</h3>
+<ul>
+<li>Tests de navigation au clavier</li>
+<li>Tests avec lecteur d’écran</li>
+<li>Tests en mode contraste élevé</li>
+<li>Tests de compatibilité navigateur</li>
+</ul>
+<h2 id="bonnes-pratiques-pour-les-développeurs">Bonnes Pratiques pour
+les Développeurs</h2>
+<ol type="1">
+<li><p><strong>Toujours Inclure des Labels ARIA</strong></p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">button</span> <span class="er">aria-label</span><span class="ot">=</span><span class="st">&quot;Fermer la boîte de dialogue&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-icon</span><span class="dt">&gt;</span>close<span class="dt">&lt;/</span><span class="kw">mat-icon</span><span class="dt">&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;</span></span></code></pre></div></li>
+<li><p><strong>Structure Appropriée des Titres</strong></p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>Titre Principal de la Page<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">section</span><span class="dt">&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>Titre de Section<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">&lt;!-- Contenu --&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">section</span><span class="dt">&gt;</span></span></code></pre></div></li>
+<li><p><strong>Labels des Champs de Formulaire</strong></p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-label</span><span class="dt">&gt;</span>Rechercher des pays<span class="dt">&lt;/</span><span class="kw">mat-label</span><span class="dt">&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">input</span> <span class="er">matInput</span> <span class="er">[attr.aria-label]</span><span class="ot">=</span><span class="st">&quot;&#39;Rechercher des pays&#39;&quot;</span> <span class="dt">/&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span></code></pre></div></li>
+</ol>
+<h2 id="normes-de-conformité">Normes de Conformité</h2>
+<p>L’application vise à respecter les normes WCAG 2.1 Niveau AA,
+notamment :</p>
+<ul>
+<li>Perceptible : L’information doit être présentable aux utilisateurs
+de manière perceptible</li>
+<li>Utilisable : Les composants de l’interface utilisateur doivent être
+utilisables</li>
+<li>Compréhensible : L’information et l’utilisation doivent être
+compréhensibles</li>
+<li>Robuste : Le contenu doit être suffisamment robuste pour être
+interprété par une grande variété d’agents utilisateurs</li>
+</ul>
+<h2 id="améliorations-futures">Améliorations Futures</h2>
+<ol type="1">
+<li>Implémenter des liens d’évitement pour le contenu principal</li>
+<li>Raccourcis clavier améliorés pour les utilisateurs avancés</li>
+<li>Amélioration de la gestion du focus dans les interactions
+complexes</li>
+<li>Régions ARIA live supplémentaires pour les mises à jour de contenu
+dynamique</li>
+</ol>
+<h2 id="ressources">Ressources</h2>
+<ul>
+<li><a href="https://www.w3.org/WAI/WCAG21/quickref/">Directives WCAG
+2.1</a></li>
+<li><a href="https://angular.io/guide/accessibility">Guide
+d’Accessibilité Angular</a></li>
+<li><a
+href="https://material.angular.io/cdk/a11y/overview">Accessibilité
+Material Design</a></li>
+</ul>
+<h1 id="annexes">Annexes</h1>
+<p>Les documents suivants sont des annexes visuelles.</p>
+</body>
+</html>
