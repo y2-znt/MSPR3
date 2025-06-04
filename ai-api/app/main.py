@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Vérifier si le modèle existe
-model_path = "app/model/random_forest_model.pkl"
+model_path = "/code/app/model/random_forest_model.pkl"
 if not os.path.exists(model_path):
     raise FileNotFoundError(f"Le modèle n'existe pas à l'emplacement {model_path}")
 
