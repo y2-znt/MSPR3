@@ -29,10 +29,8 @@ jobs:
       - name: Convert PNG images to PDF (appendices)
         run: |
           mkdir -p pdf/appendices
-          # Ancien : find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \)
           find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \) > tmp_images.txt
-          find ressources/ -type f -iname '*.png' >> tmp_images.txt
-          # Supprimer doublons si besoin
+          find docs/ressources/ -type f -iname '*.png' >> tmp_images.txt
           sort -u tmp_images.txt | while read img; do
             outname=$(basename "$img")
             convert "$img" "pdf/appendices/${outname%.*}.pdf"
@@ -87,7 +85,7 @@ jobs:
       - name: Generate Master PDF
         run: |
           pandoc combined.md \
-            --resource-path=docs/:ressources/:ressources/diarams/class/:ressources/diarams/merise/:ressources/diarams/sequence/:ressources/diarams/use-case/ \
+            --resource-path=docs/:ressources/:ressources/diagrams/class/:ressources/diagrams/merise/:ressources/diagrams/sequence/:ressources/diagrams/use-case/ \
             -s \
             --pdf-engine=xelatex \
             --toc \
@@ -98,7 +96,7 @@ jobs:
       - name: Generate HTML documentation
         run: |
           pandoc combined.md \
-            --resource-path=docs/:ressources/:ressources/diarams/class/:ressources/diarams/merise/:ressources/diarams/sequence/:ressources/diarams/use-case/ \
+            --resource-path=docs/:ressources/:ressources/diagrams/class/:ressources/diagrams/merise/:ressources/diagrams/sequence/:ressources/diagrams/use-case/ \
             -s \
             --toc \
             --toc-depth=2 \
