@@ -3,77 +3,77 @@ name: Documentation
 on:
   push:
     paths:
-      - 'docs/**/*.md'
+      - 'docs/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Install Pandoc and LaTeX
+      - name: Install Pandoc, LaTeX, Fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex
+          sudo apt-get install -y pandoc texlive-xetex fonts-dejavu
 
-      - name: Convert All Markdown Files to Individual PDFs
+      - name: Prepare directories
         run: |
           mkdir -p pdf
+
+      - name: Convert all Markdown files to individual PDFs
+        run: |
           find docs/ -name '*.md' | while read file; do
             relpath="${file#docs/}"
             filename="${relpath//\//_}"
             filename="${filename%.md}"
-            pandoc "$file" -o "pdf/$filename.pdf" --pdf-engine=xelatex
+            pandoc "$file" \
+              -o "pdf/$filename.pdf" \
+              --pdf-engine=xelatex \
+              --template=docs/latex/azure-mui-template.tex \
+              --toc \
+              --toc-depth=2 \
+              --metadata title="Documentation Section"
           done
 
-      - name: Prepare Combined Markdown File in Custom Order
+      - name: Convert PNG images to PDF (Annex)
         run: |
-          mkdir -p pdf
-          rm -f combined.md
+          mkdir -p pdf/annexes
+          find docs/ -name '*.png' | while read img; do
+            name=$(basename "$img" .png)
+            convert "$img" "pdf/annexes/$name.pdf"
+          done
+
+      - name: Create combined Markdown master file
+        run: |
+          echo "" > combined.md
           
-          # Ajouter dans l'ordre voulu
-          cat docs/brief1.md >> combined.md && echo "\n\n\\newpage\n" >> combined.md
-          cat docs/brief2.md >> combined.md && echo "\n\n\\newpage\n" >> combined.md
+          # Ordre personnalisé
+          cat docs/brief1.md >> combined.md
+          cat docs/brief2.md >> combined.md
+          
+          find docs/benchmark -name '*.md' | sort | while read f; do cat "$f" >> combined.md; done
+          find docs/architecture -name '*.md' | sort | while read f; do cat "$f" >> combined.md; done
+          cat docs/tech-stack.md >> combined.md
 
-          find docs/benchmark -name '*.md' | sort | while read file; do
-            cat "$file" >> combined.md && echo "\n\n\\newpage\n" >> combined.md
+          # Ajouter les autres .md restants
+          find docs/ -name '*.md' | grep -v -E 'brief1|brief2|benchmark|architecture|tech-stack' | sort | while read f; do
+            cat "$f" >> combined.md
           done
 
-          find docs/architecture -name '*.md' | sort | while read file; do
-            cat "$file" >> combined.md && echo "\n\n\\newpage\n" >> combined.md
+          # Ajouter les images converties
+          echo "# Annexes" >> combined.md
+          find pdf/annexes -name '*.pdf' | sort | while read annex; do
+            echo "\\includepdf[pages=-]{$annex}" >> combined.md
           done
 
-          [ -f docs/tech-stack.md ] && cat docs/tech-stack.md >> combined.md && echo "\n\n\\newpage\n" >> combined.md
-
-          # Ajouter les autres fichiers qui ne sont pas déjà pris en compte
-          find docs/ -name '*.md' | grep -v -E 'brief1.md|brief2.md|benchmark|architecture|tech-stack.md' | sort | while read file; do
-            cat "$file" >> combined.md && echo "\n\n\\newpage\n" >> combined.md
-          done
-
-      - name: Generate Master PDF with TOC and Custom Template
+      - name: Fix \tightlist if needed
         run: |
-          mkdir -p pdf
+          echo "\providecommand{\tightlist}{}" | cat - combined.md > tmp && mv tmp combined.md
 
-          # Fichiers à prioriser dans cet ordre
-          echo "docs/brief_part1.md" > ordered_list.txt
-          echo "docs/brief_part2.md" >> ordered_list.txt
-          find docs/benchmark -type f -name '*.md' | sort >> ordered_list.txt
-          find docs/architecture -type f -name '*.md' | sort >> ordered_list.txt
-          echo "docs/tech-stack.md" >> ordered_list.txt
-
-          # Ajouter tous les autres fichiers .md restants (pas déjà inclus)
-          find docs/ -type f -name '*.md' | grep -v -F -f ordered_list.txt | sort >> ordered_list.txt
-
-          # Fusionner tous les fichiers dans un seul temporaire avec saut de page
-          rm -f combined.md
-          while read file; do
-            echo -e "\\newpage\n" >> combined.md
-            cat "$file" >> combined.md
-            echo -e "\n" >> combined.md
-          done < ordered_list.txt
-
-          # Générer le PDF avec sommaire cliquable et template custom
+      - name: Generate Master PDF
+        run: |
           pandoc combined.md \
             -o pdf/documentation.pdf \
             --pdf-engine=xelatex \
@@ -82,10 +82,8 @@ jobs:
             --toc-depth=2 \
             --metadata title="Documentation"
 
-
-      - name: Upload PDFs as Artifact
+      - name: Upload PDFs
         uses: actions/upload-artifact@v4
         with:
           name: PDFs
           path: pdf/
-          retention-days: 7
