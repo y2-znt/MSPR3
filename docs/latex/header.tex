@@ -1,3 +1,6 @@
-% \providecommand{\tightlist}{%
-%   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-% % 
+
+//\renewcommand{\contentsname}{Table of Contents}
+//\usepackage{etoolbox}
+//\makeatletter
+//\patchcmd{\tableofcontents}{\@starttoc{toc}}{\@starttoc{toc}}{}{}
+//\makeatother
