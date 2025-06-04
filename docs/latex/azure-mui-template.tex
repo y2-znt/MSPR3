@@ -6,37 +6,26 @@
 \usepackage{titlesec}
 \usepackage{fancyhdr}
 \usepackage{tocloft}
-\usepackage{framed} 
+\usepackage{fancyvrb} % ← pour les blocs de code
+
+% Définition des blocs de code
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{fontsize=\small, frame=single, rulecolor=\color{azureblue}}
 
 \setmainfont{DejaVu Sans}
-
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
 \definecolor{azureblue}{RGB}{0, 123, 255}
-
 \titleformat{\section}{\Large\bfseries\color{azureblue}}{\thesection}{1em}{}
 \titleformat{\subsection}{\large\bfseries\color{azureblue}}{\thesubsection}{1em}{}
 \renewcommand{\cftsecfont}{\color{azureblue}}
 \renewcommand{\cftsubsecfont}{\color{azureblue}}
-
 \hypersetup{colorlinks=true, linkcolor=azureblue, urlcolor=azureblue}
-
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{\textcolor{azureblue}{\thepage}}
 \lhead{\textcolor{azureblue}{\leftmark}}
 
-\definecolor{shadecolor}{rgb}{0.95, 0.95, 0.95}
-\newenvironment{Shaded}{
-  \begin{snugshade}
-}{
-  \end{snugshade}
-}
-
-
 \begin{document}
-
 $if(title)$
 \begin{center}
     {\Huge \textbf{\color{azureblue}$title$} \par}
