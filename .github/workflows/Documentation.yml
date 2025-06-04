@@ -87,7 +87,7 @@ jobs:
         run: |
           pandoc combined.md \
             -s \
-            --pdf-engine=pdflatex \
+            --pdf-engine=xelatex \
             --toc \
             --toc-depth=2 \
             --metadata title="Documentation" \
