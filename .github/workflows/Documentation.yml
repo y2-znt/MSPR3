@@ -26,13 +26,19 @@ jobs:
         run: |
           mkdir -p pdf html
 
-      - name: Convert PNG images to PDF (appendices)
+            - name: Convert PNG images to PDF (appendices)
         run: |
           mkdir -p pdf/appendices
-          find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \) | while read img; do
+          # Ancien : find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \)
+          find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \) > tmp_images.txt
+          find ressources/ -type f -iname '*.png' >> tmp_images.txt
+          # Supprimer doublons si besoin
+          sort -u tmp_images.txt | while read img; do
             outname=$(basename "$img")
             convert "$img" "pdf/appendices/${outname%.*}.pdf"
           done
+          rm tmp_images.txt
+
 
       - name: Build combined markdown
         run: |
@@ -79,10 +85,10 @@ jobs:
           echo "" >> combined.md
           echo "Les documents suivants sont des annexes visuelles." >> combined.md
 
-      - name: Generate Master PDF
+            - name: Generate Master PDF
         run: |
           pandoc combined.md \
-            --resource-path=docs/ \
+            --resource-path=docs/:ressources/:ressources/diarams/class/:ressources/diarams/merise/:ressources/diarams/sequence/:ressources/diarams/use-case/ \
             -s \
             --pdf-engine=xelatex \
             --toc \
@@ -92,11 +98,12 @@ jobs:
       - name: Generate HTML documentation
         run: |
           pandoc combined.md \
-            --resource-path=docs/ \
+            --resource-path=docs/:ressources/:ressources/diarams/class/:ressources/diarams/merise/:ressources/diarams/sequence/:ressources/diarams/use-case/ \
             -s \
             --toc \
             --toc-depth=2 \
             -o html/index.html
+
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
