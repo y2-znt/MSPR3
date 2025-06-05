@@ -4,7 +4,6 @@ from pydantic import BaseModel
 from datetime import date
 import joblib
 import numpy as np
-import pandas as pd
 import logging
 import os
 
@@ -12,36 +11,16 @@ import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Debug: Print current working directory and list files
-logger.info(f"Current working directory: {os.getcwd()}")
-logger.info(f"Directory contents: {os.listdir('.')}")
-
 # List of possible model paths to try
-model_paths = [
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "model", "random_forest_model.pkl"),
-    os.path.join("/code", "app", "model", "random_forest_model.pkl"),
-    os.path.join("app", "model", "random_forest_model.pkl"),
-    "random_forest_model.pkl"
-]
+model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "model", "random_forest_model.pkl")
 
-# Try to find and load the model
-model = None
-for path in model_paths:
-    logger.info(f"Trying to load model from: {path}")
-    if os.path.exists(path):
-        logger.info(f"Found model at: {path}")
-        try:
-            model = joblib.load(path)
-            logger.info("Model loaded successfully")
-            break
-        except Exception as e:
-            logger.error(f"Error loading model from {path}: {str(e)}")
-            continue
-
-if model is None:
-    error_msg = f"Could not find or load model. Tried paths: {', '.join(model_paths)}"
-    logger.error(error_msg)
-    raise FileNotFoundError(error_msg)
+try:
+    logger.info(f"Trying to load model from: {model_path}")
+    model = joblib.load(model_path)
+    logger.info("Model loaded successfully")
+except Exception as e:
+    logger.error(f"Could not load model from {model_path}: {str(e)}")
+    raise FileNotFoundError(f"Model loading failed: {str(e)}")
 
 app = FastAPI()
 
