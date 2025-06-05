@@ -15,30 +15,36 @@ logger = logging.getLogger(__name__)
 # Debug: Print current working directory and list files
 logger.info(f"Current working directory: {os.getcwd()}")
 logger.info(f"Contents of current directory: {os.listdir('.')}")
-logger.info(f"Contents of /code/app/model: {os.listdir('/code/app/model') if os.path.exists('/code/app/model') else 'Directory not found'}")
 
-# Vérifier si le modèle existe
-model_path = "/code/app/model/random_forest_model.pkl"
-logger.info(f"Attempting to load model from: {model_path}")
-logger.info(f"Model file exists: {os.path.exists(model_path)}")
+# Construct model path relative to the current file
+current_dir = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(current_dir, "model", "random_forest_model.pkl")
+logger.info(f"Looking for model at: {model_path}")
 
 if not os.path.exists(model_path):
-    # Try relative path as fallback
-    relative_path = "app/model/random_forest_model.pkl"
-    logger.info(f"Absolute path failed, trying relative path: {relative_path}")
-    logger.info(f"Relative path exists: {os.path.exists(relative_path)}")
-    if os.path.exists(relative_path):
-        model_path = relative_path
+    # Try alternative paths
+    alt_paths = [
+        os.path.join("app", "model", "random_forest_model.pkl"),
+        os.path.join("/code", "app", "model", "random_forest_model.pkl"),
+        "random_forest_model.pkl"
+    ]
+    
+    for path in alt_paths:
+        logger.info(f"Trying alternative path: {path}")
+        if os.path.exists(path):
+            model_path = path
+            logger.info(f"Found model at: {model_path}")
+            break
     else:
         raise FileNotFoundError(f"Le modèle n'existe pas à l'emplacement {model_path}")
 
 # Chargement du modèle
-logger.info("Chargement du modèle...")
+logger.info(f"Loading model from: {model_path}")
 try:
     model = joblib.load(model_path)
-    logger.info("Modèle chargé avec succès")
+    logger.info("Model loaded successfully")
 except Exception as e:
-    logger.error(f"Erreur lors du chargement du modèle: {str(e)}")
+    logger.error(f"Error loading model: {str(e)}")
     raise
 
 app = FastAPI()
