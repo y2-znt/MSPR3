@@ -35,8 +35,8 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install -g conventional-changelog-cli
-          npm install -g standard-version
+          npm install -g conventional-changelog-cli@4.1.0
+          npm install -g standard-version@9.5.0
 
       - name: Configure Git
         run: |
@@ -54,10 +54,10 @@ jobs:
         run: |
           if [ -z "${{ steps.previous-tag.outputs.previous-tag }}" ]; then
             echo "Génération du changelog initial..."
-            conventional-changelog -p angular -i CHANGELOG.md -s -r 0 --config .github/changelog-config.js
+            conventional-changelog -p angular -i CHANGELOG.md -s -r 0
           else
             echo "Mise à jour du changelog depuis ${{ steps.previous-tag.outputs.previous-tag }}..."
-            conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js
+            conventional-changelog -p angular -i CHANGELOG.md -s
           fi
 
       - name: Check for Changes
@@ -75,27 +75,32 @@ jobs:
         if: steps.changes.outputs.has-changes == 'true'
         run: |
           CURRENT_DATE=$(date +'%Y-%m-%d')
-          if grep -q "Dernière mise à jour" README.md; then
-            sed -i "s/Dernière mise à jour-[0-9]*-[0-9]*-[0-9]*/Dernière mise à jour-${CURRENT_DATE}/g" README.md
-          else
-            sed -i '/^<\/div>$/a\\n![Dernière mise à jour](https://img.shields.io/badge/Dernière%20mise%20à%20jour-'${CURRENT_DATE}'-blue?style=for-the-badge)' README.md
+          if [ -f "README.md" ]; then
+            if grep -q "Dernière mise à jour" README.md; then
+              sed -i "s/Dernière mise à jour-[0-9]*-[0-9]*-[0-9]*/Dernière mise à jour-${CURRENT_DATE}/g" README.md
+            else
+              echo -e "\n![Dernière mise à jour](https://img.shields.io/badge/Dernière%20mise%20à%20jour-${CURRENT_DATE}-blue?style=for-the-badge)" >> README.md
+            fi
           fi
 
       - name: Commit Changes
         if: steps.changes.outputs.has-changes == 'true'
         run: |
-          git add CHANGELOG.md README.md
+          git add CHANGELOG.md
+          if [ -f "README.md" ]; then
+            git add README.md
+          fi
           git commit -m "docs: mise à jour automatique du changelog [skip-changelog]"
           git push origin main
 
       - name: Create Release
         if: steps.changes.outputs.has-changes == 'true' && github.event.inputs.version != ''
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version }}
-          release_name: Release ${{ github.event.inputs.version }}
+          name: Release ${{ github.event.inputs.version }}
           body_path: CHANGELOG.md
           draft: false
           prerelease: false
