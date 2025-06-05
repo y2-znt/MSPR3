@@ -124,7 +124,10 @@ jobs:
             -s \
             --toc \
             --toc-depth=2 \
+            -c docs/latex/style.css \
+            -M title="Documentation Technique" \
             -o html/index.html
+            
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
