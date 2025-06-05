@@ -24,9 +24,12 @@ except Exception as e:
 
 app = FastAPI()
 
+allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:4200").split(",")
+logger.info(f"CORS allowed origins: {allowed_origins}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"], 
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
