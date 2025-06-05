@@ -108,7 +108,7 @@ jobs:
             git add README.md
           fi
           git commit -m "docs: mise à jour automatique du changelog [skip-changelog]"
-          git push origin main
+          git push origin changelog-ci
 
       - name: Create Release
         if: steps.changes.outputs.has-changes == 'true' && github.event.inputs.version != ''
