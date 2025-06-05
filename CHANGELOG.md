@@ -1,10 +1,11 @@
-# Changelog
+# Changelog - Plateforme OMS de Suivi des Pandémies
 
-All notable changes to this project will be documented in this file.
+Toutes les modifications notables de ce projet seront documentées dans ce fichier.
 
-## 2025-07-01
+Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
+et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Features
+## [Non publié]
 
 - feat: implement pagination for countries table ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
 - feat: add health check endpoint to Nginx configuration ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
@@ -15,7 +16,9 @@ All notable changes to this project will be documented in this file.
 - feat: enhance translation service and app component for improved internationalization ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
 - feat: implement health check endpoint and scheduled health checks with logging ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
 
-### Bug Fixes
+- Mise en place de la pipeline CI/CD complète
+- Configuration des tests automatisés
+- Déploiement automatique des images Docker
 
 - fix: update health check URLs to use localhost ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
 - fix: update health check URLs to use SERVER_NAME variable ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
@@ -23,7 +26,9 @@ All notable changes to this project will be documented in this file.
 - fix: update requirements.txt to specify APScheduler version and clean up imports in main.py ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
 - fix: update Nginx configuration to enable HTTP/2 support ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
 
-### Other Changes
+- Configuration initiale du projet
+- Mise en place de l'architecture multi-services
+- Configuration de GitHub Actions
 
 - docs: update changelog ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
 - refactor: remove health check URL and related code ([commit](https://github.com/y2-znt/MSPR3/commit/hash))
