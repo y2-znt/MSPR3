@@ -49,15 +49,33 @@ jobs:
           echo "previous-tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
           echo "Previous tag: $PREVIOUS_TAG"
 
+      - name: Debug Git History
+        run: |
+          echo "=== Derniers commits ==="
+          git log --oneline -10
+          echo "=== Commits avec feat/fix ==="
+          git log --oneline --grep="^feat" --grep="^fix" --all-match -10 || echo "Aucun commit feat/fix trouvé"
+          echo "=== Structure des commits ==="
+          git log --pretty=format:"%h - %s" -5
+
       - name: Generate Changelog
         run: |
+          echo "Génération du changelog..."
+          if [ ! -f "CHANGELOG.md" ]; then
+            echo "Création du fichier CHANGELOG.md initial"
+            touch CHANGELOG.md
+          fi
+          
           if [ -z "${{ steps.previous-tag.outputs.previous-tag }}" ]; then
             echo "Génération du changelog initial..."
-            conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+            conventional-changelog -p angular -i CHANGELOG.md -s -r 0 || echo "Erreur lors de la génération"
           else
             echo "Mise à jour du changelog depuis ${{ steps.previous-tag.outputs.previous-tag }}..."
-            conventional-changelog -p angular -i CHANGELOG.md -s
+            conventional-changelog -p angular -i CHANGELOG.md -s || echo "Erreur lors de la mise à jour"
           fi
+          
+          echo "Contenu généré:"
+          cat CHANGELOG.md | head -20
 
       - name: Check for Changes
         id: changes
