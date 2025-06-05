@@ -34,12 +34,12 @@ jobs:
       - name: Generate Changelog
         run: |
           rm -f CHANGELOG.md
-          
+
           git log origin/main --oneline --pretty=format:"%s" --no-merges | head -50 > raw_commits.txt
-          
+
           echo "=== COMMITS BRUTS DE MAIN ==="
           head -10 raw_commits.txt
-          
+
           cat raw_commits.txt | \
           awk '
           BEGIN { count = 0 }
@@ -47,7 +47,6 @@ jobs:
             msg = $0
             if (index(msg, ":") > 0) {
               clean_msg = substr(msg, index(msg, ":") + 1)
-              gsub(/^[ \t]+/, "", clean_msg)
             } else {
               clean_msg = msg
             }
@@ -57,36 +56,61 @@ jobs:
               count++
             }
           }' > commits.tmp
-          
+
           echo "=== COMMITS FORMATÉS ==="
           wc -l commits.tmp
           head -10 commits.tmp
-          
+
           echo "# Changelog" > CHANGELOG.md
           echo "" >> CHANGELOG.md
           echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           echo "## $(date +%Y-%m-%d)" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
-          
+
           echo "### Features" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           grep "^\* feat\|^\* add\|^\* implement\|^\* create" commits.tmp >> CHANGELOG.md || echo "Aucune feature trouvée"
           echo "" >> CHANGELOG.md
-          
+
           echo "### Bug Fixes" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           grep "^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || echo "Aucun bug fix trouvé"
           echo "" >> CHANGELOG.md
-          
+
           echo "### Other Changes" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           grep -v "^\* feat\|^\* add\|^\* implement\|^\* create\|^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || echo "Aucun autre changement"
-          
-          rm -f commits.tmp raw_commits.txt
 
+          rm -f commits.tmp raw_commits.txt
 
       - name: Commit and Push
         run: |
           git add CHANGELOG.md
           git diff --staged --quiet || (git commit -m "docs: update changelog" && git push)
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: |
+          npm install -g conventional-changelog-cli
+          npm install -g standard-version
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Get Previous Tag
+        id: previous-tag
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          echo "previous-tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+          echo "Previous tag: $PREVIOUS_TAG"
+
+      - name: Generate Changelog
+        run: |
+          if [ -z "${{ steps.previous-tag.outputs.previous-tag }}" ]; then
+            echo "Génération du changelog initial..."
+            conventional-changelog -p angular -i CHANGELOG.md -s -r 0 --config .github/changelog-config.js
+          else
