@@ -1,16 +1,92 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, datetime, timedelta
 import joblib
 import numpy as np
 import pandas as pd
 import logging
 import os
+import time
+import csv
+import json
+import uuid
+import glob
 
 # Configuration des logs
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Fonction pour nettoyer les anciens fichiers de logs (garde seulement 30 jours)
+def cleanup_old_logs():
+    """Supprime les fichiers de logs plus anciens que 30 jours"""
+    logs_dir = '../logs'
+    if not os.path.exists(logs_dir):
+        return
+    
+    cutoff_date = datetime.now() - timedelta(days=30)
+    pattern = os.path.join(logs_dir, 'api_requests_*.csv')
+    
+    for log_file in glob.glob(pattern):
+        try:
+            # Extraire la date du nom de fichier
+            filename = os.path.basename(log_file)
+            date_str = filename.replace('api_requests_', '').replace('.csv', '')
+            file_date = datetime.strptime(date_str, '%Y-%m-%d')
+            
+            if file_date < cutoff_date:
+                os.remove(log_file)
+                logger.info(f"Ancien fichier de log supprimé: {log_file}")
+        except Exception as e:
+            logger.error(f"Erreur lors de la suppression du fichier {log_file}: {e}")
+
+# Fonction pour logger les requêtes dans un CSV quotidien
+def log_request_to_daily_csv(request_id, endpoint, method, input_data, prediction_result, status_code, response_time_ms, error_message=None):
+    """Log les informations de requête dans un fichier CSV quotidien"""
+    # Créer le dossier logs s'il n'existe pas
+    logs_dir = '../logs'
+    os.makedirs(logs_dir, exist_ok=True)
+    
+    # Nom du fichier avec la date du jour
+    today = datetime.now().strftime('%Y-%m-%d')
+    csv_file = os.path.join(logs_dir, f'api_requests_{today}.csv')
+    
+    # Créer le fichier CSV avec headers s'il n'existe pas
+    if not os.path.exists(csv_file):
+        with open(csv_file, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                'timestamp', 'request_id', 'endpoint', 'method', 
+                'input_data', 'prediction', 'probability', 'features_used',
+                'status_code', 'response_time_ms', 'error_message'
+            ])
+    
+    # Extraire les informations de prédiction
+    prediction = ''
+    probability = ''
+    features_used = ''
+    
+    if prediction_result and isinstance(prediction_result, dict):
+        prediction = prediction_result.get('prediction', '')
+        probability = prediction_result.get('probability', '')
+        features_used = prediction_result.get('features_length', '')
+    
+    # Ajouter la nouvelle ligne
+    with open(csv_file, 'a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            datetime.now().isoformat(),
+            request_id,
+            endpoint,
+            method,
+            json.dumps(input_data) if input_data else '',
+            prediction,
+            probability,
+            features_used,
+            status_code,
+            response_time_ms,
+            error_message or ''
+        ])
 
 # Vérifier si le modèle existe
 model_path = "app/model/random_forest_model.pkl"
@@ -27,6 +103,51 @@ except Exception as e:
     raise
 
 app = FastAPI()
+
+# Nettoyer les anciens logs au démarrage
+cleanup_old_logs()
+
+# Middleware pour logger toutes les requêtes
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    request_id = str(uuid.uuid4())
+    start_time = time.time()
+    
+    # Capturer les données d'entrée pour les requêtes POST
+    input_data = None
+    if request.method == "POST" and request.url.path != "/predict":
+        try:
+            body = await request.body()
+            if body:
+                input_data = json.loads(body.decode())
+        except:
+            input_data = {"error": "Unable to parse request body"}
+    
+    # Traiter la requête
+    response = await call_next(request)
+    
+    # Calculer le temps de réponse
+    response_time_ms = round((time.time() - start_time) * 1000, 2)
+    
+    # Logger seulement si ce n'est pas une requête /predict (qui sera loggée séparément)
+    if request.url.path != "/predict":
+        try:
+            log_request_to_daily_csv(
+                request_id=request_id,
+                endpoint=str(request.url.path),
+                method=request.method,
+                input_data=input_data,
+                prediction_result=None,
+                status_code=response.status_code,
+                response_time_ms=response_time_ms,
+                error_message=None if 200 <= response.status_code < 300 else f"HTTP {response.status_code}"
+            )
+            
+            logger.info(f"Request {request_id}: {request.method} {request.url.path} - Status: {response.status_code} - Time: {response_time_ms}ms")
+        except Exception as e:
+            logger.error(f"Erreur lors du logging: {str(e)}")
+    
+    return response
 
 app.add_middleware(
     CORSMiddleware,
@@ -74,8 +195,11 @@ def read_root():
 
 @app.post("/predict")
 async def predict(data: CovidData):
+    request_id = str(uuid.uuid4())
+    start_time = time.time()
+    
     try:
-        logger.info("Réception d'une nouvelle requête de prédiction")
+        logger.info(f"Request {request_id}: Nouvelle requête de prédiction")
         
         # Features numériques (4 features)
         numeric_features = np.array([[
@@ -121,13 +245,47 @@ async def predict(data: CovidData):
         probabilities = model.predict_proba(all_features)[0]
         probability = float(max(probabilities))
         
-        logger.info(f"Prédiction effectuée avec succès: {prediction}")
+        response_time_ms = round((time.time() - start_time) * 1000, 2)
         
-        return {
+        result = {
+            "request_id": request_id,
             "prediction": int(prediction),
             "probability": probability,
-            "features_length": all_features.shape[1]
+            "features_length": all_features.shape[1],
+            "response_time_ms": response_time_ms
         }
+        
+        logger.info(f"Request {request_id}: Prédiction réussie - {prediction} (probabilité: {probability:.3f}) en {response_time_ms}ms")
+        
+        # Logger les détails de la prédiction dans le CSV quotidien
+        log_request_to_daily_csv(
+            request_id=request_id,
+            endpoint="/predict",
+            method="POST",
+            input_data=data.dict(),
+            prediction_result=result,
+            status_code=200,
+            response_time_ms=response_time_ms
+        )
+        
+        return result
+        
     except Exception as e:
-        logger.error(f"Erreur lors de la prédiction: {str(e)}")
-        raise HTTPException(status_code=400, detail=str(e))
+        response_time_ms = round((time.time() - start_time) * 1000, 2)
+        error_msg = str(e)
+        
+        logger.error(f"Request {request_id}: Erreur lors de la prédiction - {error_msg} en {response_time_ms}ms")
+        
+        # Logger l'erreur dans le CSV quotidien
+        log_request_to_daily_csv(
+            request_id=request_id,
+            endpoint="/predict",
+            method="POST",
+            input_data=data.dict() if 'data' in locals() else None,
+            prediction_result={"error": error_msg},
+            status_code=400,
+            response_time_ms=response_time_ms,
+            error_message=error_msg
+        )
+        
+        raise HTTPException(status_code=400, detail=error_msg)
