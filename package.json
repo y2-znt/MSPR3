@@ -1,47 +1,20 @@
 {
-  "name": "mspr3-oms-pandemic-platform",
+  "name": "mspr3",
   "version": "1.0.0",
-  "description": "Plateforme de Veille Pandémique OMS - Solution de surveillance et d'analyse épidémiologique développée pour l'Organisation Mondiale de la Santé",
+  "description": "MSPR3 project",
   "main": "index.js",
   "scripts": {
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js",
-    "changelog:init": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 --config .github/changelog-config.js",
-    "release": "standard-version --config .github/changelog-config.js",
-    "release:major": "standard-version --release-as major --config .github/changelog-config.js",
-    "release:minor": "standard-version --release-as minor --config .github/changelog-config.js",
-    "release:patch": "standard-version --release-as patch --config .github/changelog-config.js"
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build process specified\""
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/y2-znt/MSPR3.git"
+    "url": "git+https://github.com/your-username/MSPR3.git"
   },
-  "keywords": [
-    "pandemic",
-    "surveillance",
-    "oms",
-    "who",
-    "epidemiology",
-    "spring-boot",
-    "angular",
-    "fastapi",
-    "docker",
-    "postgresql",
-    "ai",
-    "etl",
-    "data-analysis"
-  ],
-  "author": "Équipe MSPR-2 d'ANALYZE IT",
+  "keywords": ["mspr", "project"],
+  "author": "Basile",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/y2-znt/MSPR3/issues"
-  },
-  "homepage": "https://github.com/y2-znt/MSPR3#readme",
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  },
-  "devDependencies": {
-    "conventional-changelog-cli": "^4.1.0",
-    "standard-version": "^9.5.0"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
