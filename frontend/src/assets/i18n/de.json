@@ -1,0 +1,156 @@
+{  "app": {
+    "title": "COVID-19 Dashboard",
+    "subtitle": "COVID-19-Statistiken weltweit überwachen und analysieren",
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "noData": "Keine Daten verfügbar",
+    "language": "Sprache",
+    "selectLanguage": "Sprache auswählen"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "prediction": "Vorhersage",
+    "home": "Startseite"
+  },
+  "buttons": {
+    "submit": "Senden",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "add": "Hinzufügen",
+    "export": "Exportieren",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "reset": "Zurücksetzen",
+    "close": "Schließen",
+    "confirm": "Bestätigen"
+  },
+  "table": {
+    "country": "Land",
+    "totalCases": "Bestätigte Fälle",
+    "deaths": "Todesfälle",
+    "recovered": "Genesen",
+    "mortalityRate": "Sterblichkeitsrate",
+    "recoveryRate": "Genesungsrate",
+    "actions": "Aktionen",
+    "date": "Datum",
+    "noData": "Keine Daten verfügbar",
+    "loading": "Daten werden geladen...",
+    "rowsPerPage": "Zeilen pro Seite",
+    "of": "von"
+  },
+  "forms": {
+    "country": {
+      "label": "Land",
+      "placeholder": "Land auswählen",
+      "required": "Land ist erforderlich"
+    },
+    "date": {
+      "label": "Datum",
+      "placeholder": "Datum auswählen",
+      "required": "Datum ist erforderlich",
+      "invalid": "Ungültiges Datumsformat"
+    },
+    "cases": {
+      "label": "Bestätigte Fälle",
+      "placeholder": "Anzahl der Fälle",
+      "required": "Anzahl der Fälle ist erforderlich",
+      "min": "Die Zahl muss positiv sein"
+    },
+    "deaths": {
+      "label": "Todesfälle",
+      "placeholder": "Anzahl der Todesfälle",
+      "required": "Anzahl der Todesfälle ist erforderlich",
+      "min": "Die Zahl muss positiv sein"
+    },
+    "recovered": {
+      "label": "Genesen",
+      "placeholder": "Anzahl der Genesenen",
+      "required": "Anzahl der Genesenen ist erforderlich",
+      "min": "Die Zahl muss positiv sein"
+    }
+  },
+  "messages": {
+    "success": {
+      "saved": "Daten erfolgreich gespeichert",
+      "updated": "Daten erfolgreich aktualisiert",
+      "deleted": "Daten erfolgreich gelöscht",
+      "exported": "Daten erfolgreich exportiert"
+    },
+    "error": {
+      "load": "Fehler beim Laden der Daten",
+      "save": "Fehler beim Speichern der Daten",
+      "update": "Fehler beim Aktualisieren der Daten",
+      "delete": "Fehler beim Löschen der Daten",
+      "network": "Netzwerkverbindungsfehler",
+      "validation": "Datenvalidierungsfehler"
+    },
+    "confirm": {
+      "delete": "Sind Sie sicher, dass Sie dieses Element löschen möchten?",
+      "unsavedChanges": "Sie haben ungespeicherte Änderungen. Möchten Sie fortfahren?"
+    }
+  },  "dashboard": {
+    "title": "Covid-19 Dashboard",
+    "subtitle": "Covid-19-Statistiken weltweit überwachen und analysieren",
+    "period": "Zeitraum",
+    "selectCountries": "Länder auswählen",
+    "newCase": "Neuer Fall",
+    "kpi": {
+      "totalCases": "Gesamte Fälle",
+      "totalDeaths": "Gesamte Todesfälle",
+      "totalRecovered": "Gesamte Genesene",
+      "activeCases": "Aktive Fälle",
+      "newCases": "Neue Fälle"
+    },
+    "chart": {
+      "title": "COVID-19 Fallentwicklung",
+      "subtitle": "Globale Daten für den ausgewählten Zeitraum",
+      "cases": "Fälle",
+      "deaths": "Todesfälle",
+      "recovered": "Genesen"
+    },
+    "countries": {
+      "title": "Statistiken nach Land",
+      "filter": "Nach Land filtern...",
+      "noResults": "Keine Ergebnisse gefunden"
+    }
+  },
+  "prediction": {
+    "title": "COVID-19 Vorhersage",    "form": {
+      "title": "Vorhersageparameter",
+      "location": "Ort",
+      "region": "Region",
+      "continent": "Kontinent", 
+      "population": "Bevölkerung",
+      "whoRegion": "WHO-Region",
+      "density": "Bevölkerungsdichte",
+      "medianAge": "Durchschnittsalter",
+      "gdpPerCapita": "BIP pro Kopf"
+    },
+    "result": {
+      "title": "Vorhersageergebnis",
+      "confidence": "Vorhersagegenauigkeit",
+      "probability": "Wahrscheinlichkeit der vorhergesagten Klasse",
+      "other": "Andere"
+    }
+  },
+  "dialog": {
+    "add": {
+      "title": "Neuen Fall hinzufügen",
+      "subtitle": "Geben Sie die Informationen des neuen Falls ein"
+    },
+    "edit": {
+      "title": "COVID-19 Fall bearbeiten",
+      "subtitle": "Bearbeiten Sie die Fallinformationen"
+    }
+  },
+  "language": {
+    "select": "Sprache auswählen",
+    "current": "Aktuelle Sprache",
+    "fr": "Französisch",
+    "en": "Englisch",
+    "es": "Spanisch",
+    "de": "Deutsch"
+  }
+}

@@ -1,0 +1,153 @@
+{  "app": {
+    "title": "COVID-19 Dashboard",
+    "subtitle": "Monitor and analyze COVID-19 statistics worldwide",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "noData": "No data available",
+    "language": "Language",
+    "selectLanguage": "Select language"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "prediction": "Prediction",
+    "home": "Home"
+  },
+  "buttons": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "export": "Export",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "close": "Close",
+    "confirm": "Confirm"
+  },
+  "table": {
+    "country": "Country",
+    "totalCases": "Confirmed Cases",
+    "deaths": "Deaths",
+    "recovered": "Recovered",
+    "mortalityRate": "Mortality Rate",
+    "recoveryRate": "Recovery Rate",
+    "actions": "Actions",
+    "date": "Date",
+    "noData": "No data available",
+    "loading": "Loading data...",
+    "rowsPerPage": "Rows per page",
+    "of": "of"
+  },
+  "forms": {
+    "country": {
+      "label": "Country",
+      "placeholder": "Select a country",
+      "required": "Country is required"
+    },
+    "date": {
+      "label": "Date",
+      "placeholder": "Select a date",
+      "required": "Date is required",
+      "invalid": "Invalid date format"
+    },
+    "cases": {
+      "label": "Confirmed Cases",
+      "placeholder": "Number of cases",
+      "required": "Number of cases is required",
+      "min": "Number must be positive"
+    },
+    "deaths": {
+      "label": "Deaths",
+      "placeholder": "Number of deaths",
+      "required": "Number of deaths is required",
+      "min": "Number must be positive"
+    },
+    "recovered": {
+      "label": "Recovered",
+      "placeholder": "Number of recovered",
+      "required": "Number of recovered is required",
+      "min": "Number must be positive"
+    }
+  },
+  "messages": {
+    "success": {
+      "saved": "Data saved successfully",
+      "updated": "Data updated successfully",
+      "deleted": "Data deleted successfully",
+      "exported": "Data exported successfully"
+    },
+    "error": {
+      "load": "Error loading data",
+      "save": "Error saving data",
+      "update": "Error updating data",
+      "delete": "Error deleting data",
+      "network": "Network connection error",
+      "validation": "Data validation error"
+    },
+    "confirm": {
+      "delete": "Are you sure you want to delete this item?",
+      "unsavedChanges": "You have unsaved changes. Do you want to continue?"
+    }
+  },  "dashboard": {
+    "title": "Covid-19 Dashboard",
+    "subtitle": "Monitor and analyze Covid-19 statistics worldwide",
+    "period": "Period",
+    "selectCountries": "Select countries",
+    "newCase": "New case",
+    "kpi": {
+      "totalCases": "Total Cases",
+      "totalDeaths": "Total Deaths",
+      "totalRecovered": "Total Recovered",
+      "activeCases": "Active Cases",
+      "newCases": "New Cases"
+    },
+    "chart": {
+      "title": "COVID-19 Case Evolution",
+      "subtitle": "Global data for the selected period",
+      "cases": "Cases",
+      "deaths": "Deaths",
+      "recovered": "Recovered"
+    },
+    "countries": {
+      "title": "Statistics by Country",
+      "filter": "Filter by country...",
+      "noResults": "No results found"
+    }
+  },
+  "prediction": {
+    "title": "COVID-19 Prediction",
+    "form": {
+      "title": "Prediction Parameters",
+      "population": "Population",
+      "density": "Population Density",
+      "medianAge": "Median Age",
+      "gdpPerCapita": "GDP per Capita"
+    },
+    "result": {
+      "title": "Prediction Result",
+      "confidence": "Prediction Confidence",
+      "probability": "Predicted Class Probability",
+      "other": "Other"
+    }
+  },
+  "dialog": {
+    "add": {
+      "title": "Add New Disease Case",
+      "subtitle": "Enter the new case information"
+    },
+    "edit": {
+      "title": "Edit COVID-19 Case",
+      "subtitle": "Edit the case information"
+    }
+  },
+  "language": {
+    "select": "Select Language",
+    "current": "Current Language",
+    "fr": "French",
+    "en": "English",
+    "es": "Spanish",
+    "de": "German"
+  }
+}

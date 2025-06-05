@@ -1,0 +1,46 @@
+<div class="language-selector">
+  <!-- Version avec menu déroulant (Material Select) -->
+  <mat-form-field appearance="outline" class="language-field">
+    <mat-label>{{ 'app.language' | translate }}</mat-label>
+    <mat-select 
+      [value]="currentLanguage" 
+      (selectionChange)="onLanguageChange($event.value)"
+      class="language-select">
+      <mat-option 
+        *ngFor="let language of supportedLanguages" 
+        [value]="language.code"
+        class="language-option">
+        <div class="language-option-content">
+          <span class="language-flag">{{ language.flag }}</span>
+          <span class="language-name">{{ language.name }}</span>
+        </div>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Version compacte avec bouton et menu -->
+  <div class="compact-selector">
+    <button 
+      mat-icon-button 
+      [matMenuTriggerFor]="languageMenu"
+      class="language-button"
+      [attr.aria-label]="'app.selectLanguage' | translate">
+      <span class="current-language-flag">{{ currentLanguageDetails?.flag }}</span>
+    </button>
+    
+    <mat-menu #languageMenu="matMenu" class="language-menu">
+      <button 
+        mat-menu-item 
+        *ngFor="let language of supportedLanguages"
+        (click)="onLanguageChange(language.code)"
+        class="language-menu-item"
+        [class.active]="language.code === currentLanguage">
+        <div class="language-menu-content">
+          <span class="language-flag">{{ language.flag }}</span>
+          <span class="language-name">{{ language.name }}</span>
+          <mat-icon *ngIf="language.code === currentLanguage" class="check-icon">check</mat-icon>
+        </div>
+      </button>
+    </mat-menu>
+  </div>
+</div>

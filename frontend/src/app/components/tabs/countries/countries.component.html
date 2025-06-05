@@ -2,25 +2,24 @@
   class="covid-data-container"
   style="padding: 20px; min-height: 600px; width: 100%; border: 1px solid #eee"
   role="region" aria-labelledby="statistics-heading"
->
-  <h2 id="statistics-heading" style="color: #333; margin-bottom: 20px">
-    {{ diseaseName }} Statistics by Country
+>  <h2 id="statistics-heading" style="color: #333; margin-bottom: 20px">
+    {{ 'dashboard.countries.title' | translate:{ diseaseName: diseaseName } }}
   </h2>
 
   <!-- Country filter -->
   <div style="margin: 20px 0">
     <mat-form-field style="width: 100%">
-      <mat-label for="country-filter">Filter countries</mat-label>
+      <mat-label for="country-filter">{{ 'dashboard.countries.filter' | translate }}</mat-label>
       <input
         matInput
         id="country-filter"
         (keyup)="applyFilter($event)"
-        placeholder="Ex. France"
+        placeholder="{{ 'dashboard.countries.filter' | translate }}"
         #input
         aria-describedby="country-filter-desc"
       />
       <div id="country-filter-desc" style="font-size: 12px; color: gray;">
-        Type a country name to filter the data.
+        {{ 'dashboard.countries.filter' | translate }}
       </div>
     </mat-form-field>
   </div>
@@ -31,15 +30,14 @@
     aria-live="polite" 
     role="table"
     aria-labelledby="statistics-heading"
-  >
-    <!-- Loading indicator -->
+  >    <!-- Loading indicator -->
     <div
       *ngIf="isLoading"
       style="display: flex; justify-content: center; align-items: center; height: 100px"
       role="status"
       aria-live="assertive"
     >
-      Loading data...
+      {{ 'table.loading' | translate }}
     </div>
 
     <!-- Debug info -->
@@ -59,7 +57,7 @@
           role="columnheader"
           aria-sort="none"
         >
-          Country
+          {{ 'table.country' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">{{ row.country }}</td>
       </ng-container>
@@ -67,7 +65,7 @@
       <!-- Total Cases Column -->
       <ng-container matColumnDef="totalCases">
         <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
-          Confirmed Cases
+          {{ 'table.totalCases' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">{{ row.totalCases | number }}</td>
       </ng-container>
@@ -75,7 +73,7 @@
       <!-- Deaths Column -->
       <ng-container matColumnDef="deaths">
         <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
-          Deaths
+          {{ 'table.deaths' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" style="color: #d32f2f">
           {{ row.deaths | number }}
@@ -85,7 +83,7 @@
       <!-- Recovered Column -->
       <ng-container matColumnDef="recovered">
         <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
-          Recovered
+          {{ 'table.recovered' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" style="color: #2e7d32">
           {{ row.recovered | number }}
@@ -95,7 +93,7 @@
       <!-- Mortality Rate Column -->
       <ng-container matColumnDef="mortalityRate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
-          Mortality Rate
+          {{ 'table.mortalityRate' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" style="font-weight: 500; color: #d32f2f">
           {{ row.mortalityRate }}%
@@ -105,7 +103,7 @@
       <!-- Recovery Rate Column -->
       <ng-container matColumnDef="recoveryRate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader" aria-sort="none">
-          Recovery Rate
+          {{ 'table.recoveryRate' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" style="font-weight: 500; color: #2e7d32">
           {{ row.recoveryRate }}%
@@ -114,13 +112,13 @@
 
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'table.actions' | translate }}</th>
         <td mat-cell *matCellDef="let row">
           <button
             mat-icon-button
             color="primary"
             (click)="openEditDialog(row)"
-            matTooltip="Modify"
+            [matTooltip]="'buttons.edit' | translate"
             aria-label="Edit country data"
           >
             <mat-icon>edit</mat-icon>
@@ -129,7 +127,7 @@
             mat-icon-button
             color="warn"
             (click)="confirmDelete(row)"
-            matTooltip="Delete"
+            [matTooltip]="'buttons.delete' | translate"
             aria-label="Delete country data"
           >
             <mat-icon>delete</mat-icon>
@@ -141,9 +139,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
 
       <!-- Data rows -->
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-      <!-- Row shown when there is no matching data -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>      <!-- Row shown when there is no matching data -->
       <tr class="mat-row" *matNoDataRow>
         <td
           class="mat-cell"
@@ -151,17 +147,15 @@
           style="text-align: center; padding: 20px"
           role="row"
         >
-          <div *ngIf="dataSource.data.length === 0">Loading data...</div>
+          <div *ngIf="dataSource.data.length === 0">{{ 'table.loading' | translate }}</div>
           <div *ngIf="dataSource.data.length > 0">
-            No country matches the filter "{{ input.value }}"
+            {{ 'dashboard.countries.noResults' | translate }}
           </div>
         </td>
       </tr>
-    </table>
-
-    <mat-paginator
+    </table>    <mat-paginator
       [pageSizeOptions]="[50, 100, 200, 250]"
-      aria-label="Select a page of countries"
+      [ariaLabel]="'table.rowsPerPage' | translate"
     ></mat-paginator>
   </div>
 </div>

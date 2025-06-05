@@ -22,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DialogComponent } from '../../components/dialog/dialog.component';
+import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
 import { Country } from '../../models/country.model';
 import { TotalKpiDto } from '../../models/diseaseCase.model';
 import { Page } from '../../models/pagination.model';
@@ -34,6 +35,7 @@ import {
 import { DiseaseCaseService } from '../../services/disease-case.service';
 import { CountriesComponent } from '../tabs/countries/countries.component';
 import { OverviewComponent } from '../tabs/overview/overview.component';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-dashboard',
@@ -63,6 +65,8 @@ import { OverviewComponent } from '../tabs/overview/overview.component';
     OverviewComponent,
     CountriesComponent,
     DialogComponent,
+    LanguageSelectorComponent,
+    TranslatePipe,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

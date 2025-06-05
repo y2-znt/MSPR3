@@ -1,0 +1,156 @@
+{  "app": {
+    "title": "Dashboard COVID-19",
+    "subtitle": "Surveillance et analyse des statistiques COVID-19 dans le monde",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "noData": "Aucune donnée disponible",
+    "language": "Langue",
+    "selectLanguage": "Sélectionner la langue"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "prediction": "Prédiction",
+    "home": "Accueil"
+  },
+  "buttons": {
+    "submit": "Valider",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "add": "Ajouter",
+    "export": "Exporter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "reset": "Réinitialiser",
+    "close": "Fermer",
+    "confirm": "Confirmer"
+  },
+  "table": {
+    "country": "Pays",
+    "totalCases": "Cas confirmés",
+    "deaths": "Décès",
+    "recovered": "Guérisons",
+    "mortalityRate": "Taux de mortalité",
+    "recoveryRate": "Taux de guérison",
+    "actions": "Actions",
+    "date": "Date",
+    "noData": "Aucune donnée disponible",
+    "loading": "Chargement des données...",
+    "rowsPerPage": "Lignes par page",
+    "of": "sur"
+  },
+  "forms": {
+    "country": {
+      "label": "Pays",
+      "placeholder": "Sélectionnez un pays",
+      "required": "Le pays est requis"
+    },
+    "date": {
+      "label": "Date",
+      "placeholder": "Sélectionnez une date",
+      "required": "La date est requise",
+      "invalid": "Format de date invalide"
+    },
+    "cases": {
+      "label": "Cas confirmés",
+      "placeholder": "Nombre de cas",
+      "required": "Le nombre de cas est requis",
+      "min": "Le nombre doit être positif"
+    },
+    "deaths": {
+      "label": "Décès",
+      "placeholder": "Nombre de décès",
+      "required": "Le nombre de décès est requis",
+      "min": "Le nombre doit être positif"
+    },
+    "recovered": {
+      "label": "Guérisons",
+      "placeholder": "Nombre de guérisons",
+      "required": "Le nombre de guérisons est requis",
+      "min": "Le nombre doit être positif"
+    }
+  },
+  "messages": {
+    "success": {
+      "saved": "Données sauvegardées avec succès",
+      "updated": "Données mises à jour avec succès",
+      "deleted": "Données supprimées avec succès",
+      "exported": "Données exportées avec succès"
+    },
+    "error": {
+      "load": "Erreur lors du chargement des données",
+      "save": "Erreur lors de la sauvegarde",
+      "update": "Erreur lors de la mise à jour",
+      "delete": "Erreur lors de la suppression",
+      "network": "Erreur de connexion réseau",
+      "validation": "Erreur de validation des données"
+    },
+    "confirm": {
+      "delete": "Êtes-vous sûr de vouloir supprimer cet élément ?",
+      "unsavedChanges": "Vous avez des modifications non sauvegardées. Voulez-vous continuer ?"
+    }
+  },  "dashboard": {
+    "title": "Tableau de bord Covid-19",
+    "subtitle": "Surveillance et analyse des statistiques Covid-19 dans le monde",
+    "period": "Période",
+    "selectCountries": "Sélectionner les pays",
+    "newCase": "Nouveau cas",
+    "kpi": {
+      "totalCases": "Total des cas",
+      "totalDeaths": "Total des décès",
+      "totalRecovered": "Total des guérisons",
+      "activeCases": "Cas actifs",
+      "newCases": "Nouveaux cas"
+    },
+    "chart": {
+      "title": "Évolution des cas COVID-19",
+      "subtitle": "Données globales sur la période sélectionnée",
+      "cases": "Cas",
+      "deaths": "Décès",
+      "recovered": "Guérisons"
+    },
+    "countries": {
+      "title": "Statistiques par pays",
+      "filter": "Filtrer par pays...",
+      "noResults": "Aucun résultat trouvé"
+    }
+  },
+  "prediction": {
+    "title": "Prédiction COVID-19",    "form": {
+      "title": "Paramètres de prédiction",
+      "location": "Lieu",
+      "region": "Région", 
+      "continent": "Continent",
+      "population": "Population",
+      "whoRegion": "Région OMS",
+      "density": "Densité de population",
+      "medianAge": "Âge médian",
+      "gdpPerCapita": "PIB par habitant"
+    },
+    "result": {
+      "title": "Résultat de la prédiction",
+      "confidence": "Confiance dans la prédiction",
+      "probability": "Probabilité de la classe prédite",
+      "other": "Autres"
+    }
+  },
+  "dialog": {
+    "add": {
+      "title": "Ajouter un nouveau cas",
+      "subtitle": "Saisissez les informations du nouveau cas"
+    },
+    "edit": {
+      "title": "Modifier un cas COVID-19",
+      "subtitle": "Modifiez les informations du cas"
+    }
+  },
+  "language": {
+    "select": "Choisir la langue",
+    "current": "Langue actuelle",
+    "fr": "Français",
+    "en": "Anglais",
+    "es": "Espagnol",
+    "de": "Allemand"
+  }
+}
