@@ -15,6 +15,8 @@
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
+![Dernière mise à jour](https://img.shields.io/badge/Dernière%20mise%20à%20jour-2024-01-01-blue?style=for-the-badge)
+
 </div>
 
 Solution de surveillance et d'analyse épidémiologique développée pour l'Organisation Mondiale de la Santé, permettant la collecte, le traitement et la visualisation des données pandémiques à l'échelle mondiale.
@@ -31,6 +33,7 @@ Solution de surveillance et d'analyse épidémiologique développée pour l'Orga
 - Prédictions de l'évolution pandémique via un modèle d'IA
 - Déploiement conteneurisé et pipeline CI/CD
 - Tests automatisés et intégration continue
+- **Changelog automatique** basé sur les commits conventionnels
 
 ## Démarrage Rapide
 
@@ -44,6 +47,14 @@ docker-compose up -d
 ```
 
 Consultez le [guide d'installation](docs/installation.md) pour une configuration détaillée.
+
+## 📋 Changelog
+
+Les changements du projet sont automatiquement documentés dans le [CHANGELOG.md](CHANGELOG.md). 
+
+Pour consulter l'historique des versions et les nouveautés :
+- 📋 [Voir le changelog complet](CHANGELOG.md)
+- 🏷️ [Releases GitHub](https://github.com/y2-znt/MSPR3/releases)
 
 ## Stack Technique
 
@@ -65,6 +76,7 @@ Consultez le [guide d'installation](docs/installation.md) pour une configuration
 - [Installation](docs/installation.md)
 - [Workflow Git](docs/git-workflow.md)
 - [Gestion de projet](docs/project-management.md)
+- [📋 Changelog automatique](docs/changelog-guide.md)
 
 ### Technique
 
