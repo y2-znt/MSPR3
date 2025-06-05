@@ -4,7 +4,6 @@ from pydantic import BaseModel
 from datetime import date
 import joblib
 import numpy as np
-import pandas as pd
 import logging
 import os
 
@@ -12,19 +11,16 @@ import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Vérifier si le modèle existe
-model_path = "app/model/random_forest_model.pkl"
-if not os.path.exists(model_path):
-    raise FileNotFoundError(f"Le modèle n'existe pas à l'emplacement {model_path}")
+# List of possible model paths to try
+model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "model", "random_forest_model.pkl")
 
-# Chargement du modèle
-logger.info("Chargement du modèle...")
 try:
+    logger.info(f"Trying to load model from: {model_path}")
     model = joblib.load(model_path)
-    logger.info("Modèle chargé avec succès")
+    logger.info("Model loaded successfully")
 except Exception as e:
-    logger.error(f"Erreur lors du chargement du modèle: {str(e)}")
-    raise
+    logger.error(f"Could not load model from {model_path}: {str(e)}")
+    raise FileNotFoundError(f"Model loading failed: {str(e)}")
 
 app = FastAPI()
 
