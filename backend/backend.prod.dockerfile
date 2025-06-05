@@ -1,6 +1,9 @@
-FROM maven:3.9.9-amazoncorretto-21-alpine AS builder
+FROM eclipse-temurin:21-jdk-alpine AS builder
 
 WORKDIR /app
+
+# Install maven
+RUN apk add --no-cache maven
 
 # Copy only the POM file first to cache dependencies
 COPY pom.xml .

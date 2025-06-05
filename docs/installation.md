@@ -5,6 +5,7 @@
 - Git
 - Docker
 - Docker Compose
+- Compte Docker Hub (pour le mode production)
 
 ## Installation Pas à Pas
 
@@ -28,6 +29,9 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 DB_PORT=5432
 DB_NAME=database_name
+
+# Docker Hub (uniquement pour la production)
+DOCKERHUB_USERNAME=your_dockerhub_username
 ```
 
 #### Configuration Backend
@@ -45,19 +49,23 @@ DB_PASSWORD=your_password
 
 #### Mode Développement
 
-```bash
-# Construction des images
-docker compose build
+Le mode développement construit les images localement et permet le hot-reload :
 
-# Démarrage des services
-docker compose up -d
+```bash
+# Construction et démarrage des services
+docker compose up --build -d
+
+# Vérification des services
+docker compose ps
 ```
 
 #### Mode Production
 
+Le mode production utilise les images pré-construites depuis Docker Hub :
+
 ```bash
-# Construction des images de production
-docker compose -f docker-compose.prod.yml build
+# Démarrage des services en production
+docker compose -f docker-compose.prod.yml up -d
 
 # Démarrage des services en production
 docker compose -f docker-compose.prod.yml up -d
