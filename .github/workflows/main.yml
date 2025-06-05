@@ -59,6 +59,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Verify model file exists
+        run: |
+          if [ ! -f "ai-api/app/model/random_forest_model.pkl" ]; then
+            echo "Error: Model file not found at ai-api/app/model/random_forest_model.pkl"
+            exit 1
+          fi
       - name: Upload AI API artifact
         uses: actions/upload-artifact@v4
         with:
@@ -186,6 +192,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Download AI API artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ai-api
+          path: ai-api
+      - name: Verify model file exists before build
+        run: |
+          if [ ! -f "ai-api/app/model/random_forest_model.pkl" ]; then
+            echo "Error: Model file not found at ai-api/app/model/random_forest_model.pkl"
+            ls -la ai-api/app/model/
+            exit 1
+          fi
       - name: Build and push AI API image
         uses: docker/build-push-action@v5
         with:

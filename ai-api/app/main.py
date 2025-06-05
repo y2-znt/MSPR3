@@ -14,38 +14,34 @@ logger = logging.getLogger(__name__)
 
 # Debug: Print current working directory and list files
 logger.info(f"Current working directory: {os.getcwd()}")
-logger.info(f"Contents of current directory: {os.listdir('.')}")
+logger.info(f"Directory contents: {os.listdir('.')}")
 
-# Construct model path relative to the current file
-current_dir = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(current_dir, "model", "random_forest_model.pkl")
-logger.info(f"Looking for model at: {model_path}")
+# List of possible model paths to try
+model_paths = [
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "model", "random_forest_model.pkl"),
+    os.path.join("/code", "app", "model", "random_forest_model.pkl"),
+    os.path.join("app", "model", "random_forest_model.pkl"),
+    "random_forest_model.pkl"
+]
 
-if not os.path.exists(model_path):
-    # Try alternative paths
-    alt_paths = [
-        os.path.join("app", "model", "random_forest_model.pkl"),
-        os.path.join("/code", "app", "model", "random_forest_model.pkl"),
-        "random_forest_model.pkl"
-    ]
-    
-    for path in alt_paths:
-        logger.info(f"Trying alternative path: {path}")
-        if os.path.exists(path):
-            model_path = path
-            logger.info(f"Found model at: {model_path}")
+# Try to find and load the model
+model = None
+for path in model_paths:
+    logger.info(f"Trying to load model from: {path}")
+    if os.path.exists(path):
+        logger.info(f"Found model at: {path}")
+        try:
+            model = joblib.load(path)
+            logger.info("Model loaded successfully")
             break
-    else:
-        raise FileNotFoundError(f"Le modèle n'existe pas à l'emplacement {model_path}")
+        except Exception as e:
+            logger.error(f"Error loading model from {path}: {str(e)}")
+            continue
 
-# Chargement du modèle
-logger.info(f"Loading model from: {model_path}")
-try:
-    model = joblib.load(model_path)
-    logger.info("Model loaded successfully")
-except Exception as e:
-    logger.error(f"Error loading model: {str(e)}")
-    raise
+if model is None:
+    error_msg = f"Could not find or load model. Tried paths: {', '.join(model_paths)}"
+    logger.error(error_msg)
+    raise FileNotFoundError(error_msg)
 
 app = FastAPI()
 
