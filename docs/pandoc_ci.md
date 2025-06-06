@@ -37,7 +37,7 @@ Le workflow est déclenché à chaque *push* sur des fichiers du dossier `docs/`
 
 ---
 
-## 🛠 Étapes du workflow
+## Étapes du workflow
 
 ### 1. **Installation des outils**
 
