@@ -1,43 +1,10 @@
-/* body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  max-width: 900px;
-  margin: auto;
-  padding: 2rem;
-  background-color: #f9f9f9;
-  color: #333;
-}
-
-
-nav ul {
-  list-style: none;
-  padding-left: 0;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 5px;
-}
-
-nav ul li {
-  margin-bottom: 0.5rem;
-}
-
-nav ul li a {
-  text-decoration: none;
-  color: #2a5d9f;
-}
-
-nav ul li a:hover {
-  text-decoration: underline;
-} */
-
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   background-color: #f9f9f9;
   color: #333;
   margin: 0;
-  padding: 0;
+  padding: 16px;
   display: flex;
 }
 
