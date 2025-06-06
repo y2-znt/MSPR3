@@ -4,6 +4,7 @@ services:
     image: ${DOCKERHUB_USERNAME}/mspr3-frontend:latest
     ports:
       - "80:80"
+      - "443:443"
     environment:
       - SERVER_NAME=${SERVER_NAME}
     restart: always
@@ -11,6 +12,8 @@ services:
       - backend
     networks:
       - mspr3-network
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
 
   backend:
     container_name: mspr3-backend-prod
