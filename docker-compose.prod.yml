@@ -4,6 +4,8 @@ services:
     image: ${DOCKERHUB_USERNAME}/mspr3-frontend:latest
     ports:
       - "80:80"
+    environment:
+      - SERVER_NAME=${SERVER_NAME}
     restart: always
     depends_on:
       - backend
