@@ -1,0 +1,115 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  color: #333;
+  padding: 0 10px;
+  margin: 50px auto;
+  display: flex;
+  max-width: 650px;
+}
+
+/* Menu latéral */
+#TOC {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  padding: 30px 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+}
+
+#TOC h1 {
+  font-size: 1.4em;
+  margin-bottom: 1em;
+  color: #2c3e50;
+}
+
+#TOC ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#TOC li {
+  margin-bottom: 10px;
+}
+
+#TOC a {
+  text-decoration: none;
+  color: #007acc;
+  font-weight: 500;
+}
+
+#TOC a:hover {
+  text-decoration: underline;
+}
+
+/* Contenu principal à droite du menu */
+body > :not(#TOC) {
+  margin-left: 300px;
+  padding: 40px;
+  max-width: 900px;
+}
+
+/* Titres et texte */
+h1, h2, h3 {
+  color: #2c3e50;
+  margin-top: 1.5em;
+}
+
+h1 {
+  font-size: 2.4em;
+  margin-bottom: 0.6em;
+}
+
+h2 {
+  font-size: 1.8em;
+  margin-bottom: 0.4em;
+}
+
+p {
+  margin-bottom: 1em;
+}
+
+/* Listes */
+ul {
+  padding-left: 20px;
+  margin-bottom: 1.5em;
+}
+
+li {
+  margin-bottom: 0.6em;
+}
+
+/* Code inline */
+code {
+  background-color: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* Bloc de code */
+pre {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  padding: 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.95em;
+}
+
+/* Liens */
+a {
+  color: #007acc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
