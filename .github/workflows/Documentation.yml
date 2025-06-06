@@ -1,0 +1,146 @@
+name: documentation
+
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Pandoc and LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-xetex imagemagick
+
+      - name: Prepare directories
+        run: |
+          mkdir -p pdf html
+      
+      - name: Convert all .md files to individual PDFs
+        run: |
+          mkdir -p docs/pdfs
+          find docs/ -name '*.md' | while read mdfile; do
+            relative_path="${mdfile#docs/}"
+            outdir="docs/pdfs/$(dirname "$relative_path")"
+            mkdir -p "$outdir"
+            outfile="$outdir/$(basename "${mdfile%.md}.pdf")"
+            pandoc "$mdfile" \
+              --pdf-engine=xelatex \
+              --toc \
+              --toc-depth=2 \
+              -s \
+              -o "$outfile"
+          done
+
+
+      - name: Convert PNG images to PDF (appendices)
+        run: |
+          mkdir -p pdf/appendices
+          find docs/ -type f \( -iname "*.png" -o -iname "*.jpg" \) > tmp_images.txt
+          find docs/ressources/ -type f -iname '*.png' >> tmp_images.txt
+          sort -u tmp_images.txt | while read img; do
+            outname=$(basename "$img")
+            convert "$img" "pdf/appendices/${outname%.*}.pdf"
+          done
+          rm tmp_images.txt
+
+      - name: Build combined markdown
+        run: |
+          echo "" > combined.md
+          cat docs/brief_part1.md >> combined.md
+          echo "" >> combined.md
+          echo "\\newpage" >> combined.md
+          echo "" >> combined.md
+
+          find docs/benchmark -name '*.md' | sort | while read file; do
+            cat "$file" >> combined.md
+            echo "" >> combined.md
+            echo "\\newpage" >> combined.md
+            echo "" >> combined.md
+          done
+
+          find docs/architecture -name '*.md' | sort | while read file; do
+            cat "$file" >> combined.md
+            echo "" >> combined.md
+            echo "\\newpage" >> combined.md
+            echo "" >> combined.md
+          done
+
+          if [ -f docs/tech-stack.md ]; then
+            cat docs/tech-stack.md >> combined.md
+            echo "" >> combined.md
+            echo "\\newpage" >> combined.md
+            echo "" >> combined.md
+          fi
+
+          find docs/ -name '*.md' \
+            ! -path 'docs/brief_part1.md' \
+            ! -path 'docs/benchmark/*' \
+            ! -path 'docs/architecture/*' \
+            ! -path 'docs/tech-stack.md' \
+            | sort | while read file; do
+              cat "$file" >> combined.md
+              echo "" >> combined.md
+              echo "\\newpage" >> combined.md
+              echo "" >> combined.md
+            done
+
+          echo "# Annexes" >> combined.md
+          echo "" >> combined.md
+          echo "Les documents suivants sont des annexes visuelles." >> combined.md
+
+      - name: Generate Master PDF
+        run: |
+          pandoc combined.md \
+            --resource-path=docs/:ressources/:ressources/diagrams/class/:ressources/diagrams/merise/:ressources/diagrams/sequence/:ressources/diagrams/use-case/ \
+            -s \
+            --pdf-engine=xelatex \
+            --toc \
+            --toc-depth=2 \
+            --include-in-header=docs/latex/header.tex \
+            -o pdf/documentation.pdf
+      
+      - name: Upload all individual PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: All PDFs
+          path: docs/pdfs
+          retention-days: 7
+      
+      - name: Copy CSS to HTML output
+        run: cp docs/latex/style.css html/style.css
+
+      - name: Generate HTML documentation
+        run: |
+          pandoc combined.md \
+            --resource-path=docs/:ressources/:ressources/diagrams/class/:ressources/diagrams/merise/:ressources/diagrams/sequence/:ressources/diagrams/use-case/ \
+            -s \
+            --toc \
+            --toc-depth=2 \
+            -c style.css \
+            -M title="Documentation Technique" \
+            -o html/index.html
+            
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html
+
+      - name: Upload PDF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Master PDF
+          path: pdf/documentation.pdf
+          retention-days: 7
