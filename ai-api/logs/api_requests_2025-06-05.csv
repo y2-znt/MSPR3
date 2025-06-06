@@ -1,0 +1,2 @@
+timestamp,request_id,endpoint,method,input_data,prediction,probability,features_used,status_code,response_time_ms,error_message
+2025-06-05T14:38:54.065532,7acfb06a-470b-4a05-8f33-be17350f15a4,/predict,POST,"{""confirmed_case"": 5000, ""date"": ""2025-06-05"", ""deaths"": 200, ""recovered"": 200, ""location"": ""France"", ""region"": ""France"", ""country"": ""France"", ""continent"": ""Europe"", ""population"": 2000000.0, ""who_region"": ""Europe""}",0,0.20472373484848944,727,200,39.13,
