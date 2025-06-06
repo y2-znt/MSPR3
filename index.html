@@ -386,6 +386,21 @@ Validation</a></li>
 <li><a href="#gestion-des-services"
 id="toc-gestion-des-services">Gestion des Services</a></li>
 </ul></li>
+<li><a href="#ci-documentation-génération-automatique-avec-pandoc"
+id="toc-ci-documentation-génération-automatique-avec-pandoc">CI
+Documentation – Génération automatique avec Pandoc</a>
+<ul>
+<li><a href="#prérequis" id="toc-prérequis">Prérequis</a></li>
+<li><a href="#fonctionnement-du-workflow-ci"
+id="toc-fonctionnement-du-workflow-ci">Fonctionnement du workflow
+CI</a></li>
+<li><a href="#étapes-du-workflow" id="toc-étapes-du-workflow">🛠 Étapes
+du workflow</a></li>
+<li><a href="#résultat-attendu" id="toc-résultat-attendu">Résultat
+attendu</a></li>
+<li><a href="#bonnes-pratiques-1" id="toc-bonnes-pratiques-1">Bonnes
+pratiques</a></li>
+</ul></li>
 <li><a href="#gestion-de-projet" id="toc-gestion-de-projet">Gestion de
 Projet</a>
 <ul>
@@ -2564,6 +2579,162 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href=
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose build</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div>
+<p>Voici une documentation en <strong>Markdown</strong> que tu peux
+publier dans un fichier <code>docs/pandoc_ci.md</code> ou directement
+dans ton <code>README.md</code> si tu veux l’exposer dès la racine du
+projet.</p>
+<hr />
+<h1 id="ci-documentation-génération-automatique-avec-pandoc">CI
+Documentation – Génération automatique avec Pandoc</h1>
+<p>Cette documentation explique comment mettre en place une
+<strong>Intégration Continue (CI)</strong> avec <strong>Pandoc</strong>
+via <strong>GitHub Actions</strong>, afin de convertir automatiquement
+les fichiers Markdown (<code>.md</code>) de votre dossier
+<code>docs/</code> en <strong>PDF</strong> et <strong>HTML</strong>,
+puis de les publier via <strong>GitHub Pages</strong>.</p>
+<hr />
+<h2 id="prérequis">Prérequis</h2>
+<ul>
+<li><p>Un dépôt GitHub structuré avec :</p>
+<ul>
+<li>Des fichiers Markdown dans <code>docs/</code></li>
+<li>Un en-tête LaTeX (optionnel) dans
+<code>docs/latex/header.tex</code></li>
+<li>Une feuille de style CSS (optionnelle) dans
+<code>docs/latex/style.css</code></li>
+<li>GitHub Pages activé sur la branche <code>gh-pages</code></li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="fonctionnement-du-workflow-ci">Fonctionnement du workflow
+CI</h2>
+<p>Le fichier <code>.github/workflows/docs.yml</code> contient
+l’ensemble des étapes suivantes :</p>
+<h3 id="déclencheurs">🔁 Déclencheurs</h3>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">paths</span><span class="kw">:</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&#39;docs/**&#39;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&#39;.github/workflows/docs.yml&#39;</span></span></code></pre></div>
+<p>Le workflow est déclenché à chaque <em>push</em> sur des fichiers du
+dossier <code>docs/</code> ou sur le fichier de workflow lui-même.</p>
+<hr />
+<h2 id="étapes-du-workflow">🛠 Étapes du workflow</h2>
+<h3 id="installation-des-outils">1. <strong>Installation des
+outils</strong></h3>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install Pandoc and LaTeX</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    sudo apt-get update</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    sudo apt-get install -y pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-xetex imagemagick</span></code></pre></div>
+<blockquote>
+<p>Cette étape installe Pandoc, LaTeX (XeLaTeX) et ImageMagick pour
+générer les documents PDF.</p>
+</blockquote>
+<hr />
+<h3 id="conversion-des-fichiers-.md-en-pdf">2. <strong>Conversion des
+fichiers <code>.md</code> en PDF</strong></h3>
+<p>Tous les fichiers Markdown de <code>docs/</code> sont convertis
+individuellement en PDF et placés dans <code>docs/pdfs/</code>.</p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> docs/ <span class="at">-name</span> <span class="st">&#39;*.md&#39;</span> <span class="kw">|</span> <span class="cf">while</span> <span class="bu">read</span> <span class="va">mdfile</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># conversion PDF avec Pandoc</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<hr />
+<h3 id="conversion-des-images-pngjpg-en-pdf">3. <strong>Conversion des
+images PNG/JPG en PDF</strong></h3>
+<p>Les images présentes dans <code>docs/</code> et
+<code>docs/ressources/</code> sont converties en PDF dans
+<code>pdf/appendices/</code> via ImageMagick.</p>
+<hr />
+<h3 id="fusion-des-fichiers-markdown">4. <strong>Fusion des fichiers
+Markdown</strong></h3>
+<p>Les fichiers Markdown sont concaténés en un seul fichier
+<code>combined.md</code> selon un ordre logique :</p>
+<ol type="1">
+<li><code>brief_part1.md</code></li>
+<li>Fichiers du dossier <code>benchmark/</code></li>
+<li>Fichiers du dossier <code>architecture/</code></li>
+<li><code>tech-stack.md</code></li>
+<li>Tous les autres fichiers <code>.md</code> restants</li>
+<li>Annexe en fin de document</li>
+</ol>
+<hr />
+<h3 id="génération-du-pdf-principal">5. <strong>Génération du PDF
+principal</strong></h3>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Generate Master PDF</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    pandoc combined.md \</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>      --resource-path=... \</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>      -s \</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>      --pdf-engine=xelatex \</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>      --toc \</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>      --toc-depth=2 \</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>      --include-in-header=docs/latex/header.tex \</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>      -o pdf/documentation.pdf</span></code></pre></div>
+<blockquote>
+<p>Ce fichier PDF complet est stocké dans
+<code>pdf/documentation.pdf</code>.</p>
+</blockquote>
+<hr />
+<h3 id="génération-de-la-documentation-html">6. <strong>Génération de la
+documentation HTML</strong></h3>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Generate HTML documentation</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    pandoc combined.md \</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>      -c docs/latex/style.css \</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      -M title=&quot;Documentation Technique&quot; \</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      -o html/index.html</span></code></pre></div>
+<blockquote>
+<p>La page HTML est stylisée avec <code>style.css</code> si présent,
+puis déployée sur GitHub Pages.</p>
+</blockquote>
+<hr />
+<h3 id="déploiement-sur-github-pages">7. <strong>Déploiement sur GitHub
+Pages</strong></h3>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy to GitHub Pages</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> peaceiris/actions-gh-pages@v3</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">github_token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">publish_dir</span><span class="kw">:</span><span class="at"> ./html</span></span></code></pre></div>
+<blockquote>
+<p>Le contenu HTML est publié automatiquement sur la branche
+<code>gh-pages</code>.</p>
+</blockquote>
+<hr />
+<h3 id="artifacts">8. <strong>Artifacts</strong></h3>
+<p>Deux artefacts sont créés pour permettre le téléchargement depuis
+l’interface GitHub :</p>
+<ul>
+<li><code>All PDFs</code> : tous les PDFs individuels générés</li>
+<li><code>Master PDF</code> : le document global</li>
+</ul>
+<hr />
+<h2 id="résultat-attendu">Résultat attendu</h2>
+<ul>
+<li>Des fichiers PDF et HTML sont générés automatiquement à chaque
+push.</li>
+<li>La documentation HTML est disponible via GitHub Pages.</li>
+<li>Les fichiers PDF sont téléchargeables depuis l’interface des Actions
+GitHub (Artifacts).</li>
+</ul>
+<hr />
+<h2 id="bonnes-pratiques-1">Bonnes pratiques</h2>
+<ul>
+<li>Organisez vos fichiers Markdown par dossier logique
+(<code>benchmark/</code>, <code>architecture/</code>, etc.)</li>
+<li>Gardez un style cohérent dans vos titres et niveaux de titres
+(<code>#</code>, <code>##</code>, etc.)</li>
+<li>Vérifiez la compatibilité des images utilisées dans les
+documents.</li>
+</ul>
+<hr />
+<p>Souhaites-tu que je t’ajoute une section “troubleshooting” ou des
+options supplémentaires à Pandoc ?</p>
 <h1 id="gestion-de-projet">Gestion de Projet</h1>
 <h2 id="méthodologie-adoptée">Méthodologie adoptée</h2>
 <p>Pour mener à bien ce projet, nous avons mis en place une organisation
@@ -2723,26 +2894,26 @@ Formulaires</h3>
 <h2 id="implémentation-spécifique-aux-composants">Implémentation
 Spécifique aux Composants</h2>
 <h3 id="composant-tableau-de-bord">Composant Tableau de Bord</h3>
-<div class="sourceCode" id="cb22"><pre
-class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle de région principale</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Sections étiquetées</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Régions ARIA live pour le contenu dynamique</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Hiérarchie appropriée des titres</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle de région principale</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Sections étiquetées</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Régions ARIA live pour le contenu dynamique</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Hiérarchie appropriée des titres</span></code></pre></div>
 <h3 id="composant-tableaux-de-données">Composant Tableaux de
 Données</h3>
-<div class="sourceCode" id="cb23"><pre
-class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> En<span class="op">-</span>têtes de colonnes triables avec attributs ARIA</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Relations lignes<span class="op">/</span>colonnes</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Annonces pour le tri et le filtrage via lecteur d<span class="st">&#39;écran</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> En<span class="op">-</span>têtes de colonnes triables avec attributs ARIA</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Relations lignes<span class="op">/</span>colonnes</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Annonces pour le tri et le filtrage via lecteur d<span class="st">&#39;écran</span></span></code></pre></div>
 <h3 id="composants-de-dialogue">Composants de Dialogue</h3>
-<div class="sourceCode" id="cb24"><pre
-class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle modal</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion du focus</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion de la touche Échap</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Labels ARIA pour les contrôles de formulaire</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle modal</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion du focus</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion de la touche Échap</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Labels ARIA pour les contrôles de formulaire</span></code></pre></div>
 <h2 id="tests-et-validation-1">Tests et Validation</h2>
 <h3 id="tests-automatisés">Tests Automatisés</h3>
 <h4 id="résultats-lighthouse">Résultats Lighthouse</h4>
@@ -2782,23 +2953,23 @@ une expérience utilisateur optimale pour tous.</p>
 les Développeurs</h2>
 <ol type="1">
 <li><p><strong>Toujours Inclure des Labels ARIA</strong></p>
-<div class="sourceCode" id="cb25"><pre
-class="sourceCode html"><code class="sourceCode html"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">button</span> <span class="er">aria-label</span><span class="ot">=</span><span class="st">&quot;Fermer la boîte de dialogue&quot;</span><span class="dt">&gt;</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-icon</span><span class="dt">&gt;</span>close<span class="dt">&lt;/</span><span class="kw">mat-icon</span><span class="dt">&gt;</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">button</span> <span class="er">aria-label</span><span class="ot">=</span><span class="st">&quot;Fermer la boîte de dialogue&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-icon</span><span class="dt">&gt;</span>close<span class="dt">&lt;/</span><span class="kw">mat-icon</span><span class="dt">&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;</span></span></code></pre></div></li>
 <li><p><strong>Structure Appropriée des Titres</strong></p>
-<div class="sourceCode" id="cb26"><pre
-class="sourceCode html"><code class="sourceCode html"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>Titre Principal de la Page<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">section</span><span class="dt">&gt;</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>Titre de Section<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">&lt;!-- Contenu --&gt;</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">section</span><span class="dt">&gt;</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>Titre Principal de la Page<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">section</span><span class="dt">&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>Titre de Section<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">&lt;!-- Contenu --&gt;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">section</span><span class="dt">&gt;</span></span></code></pre></div></li>
 <li><p><strong>Labels des Champs de Formulaire</strong></p>
-<div class="sourceCode" id="cb27"><pre
-class="sourceCode html"><code class="sourceCode html"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-label</span><span class="dt">&gt;</span>Rechercher des pays<span class="dt">&lt;/</span><span class="kw">mat-label</span><span class="dt">&gt;</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">input</span> <span class="er">matInput</span> <span class="er">[attr.aria-label]</span><span class="ot">=</span><span class="st">&quot;&#39;Rechercher des pays&#39;&quot;</span> <span class="dt">/&gt;</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-label</span><span class="dt">&gt;</span>Rechercher des pays<span class="dt">&lt;/</span><span class="kw">mat-label</span><span class="dt">&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">input</span> <span class="er">matInput</span> <span class="er">[attr.aria-label]</span><span class="ot">=</span><span class="st">&quot;&#39;Rechercher des pays&#39;&quot;</span> <span class="dt">/&gt;</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span></code></pre></div></li>
 </ol>
 <h2 id="normes-de-conformité">Normes de Conformité</h2>
 <p>L’application vise à respecter les normes WCAG 2.1 Niveau AA,
