@@ -44,6 +44,7 @@ services:
       - "8000:80"
     volumes:
       - ./ai-api/app:/code/app
+      - ./ai-api/logs:/code/logs
     restart: always
     depends_on:
       - backend
