@@ -33,7 +33,7 @@ on:
       - '.github/workflows/docs.yml'
 ```
 
-Le workflow est déclenché à chaque *push* sur des fichiers du dossier `docs/` ou sur le fichier de workflow lui-même.
+Le workflow est déclenché à chaque *push* sur des fichiers du dossier `docs/` ou sur le fichier de workflow lui-même. 
 
 ---
 
