@@ -155,5 +155,3 @@ Deux artefacts sont créés pour permettre le téléchargement depuis l'interfac
 * Vérifiez la compatibilité des images utilisées dans les documents.
 
 ---
-
-Souhaites-tu que je t’ajoute une section "troubleshooting" ou des options supplémentaires à Pandoc ?

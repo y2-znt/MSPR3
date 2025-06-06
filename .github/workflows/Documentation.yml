@@ -116,6 +116,9 @@ jobs:
           name: All PDFs
           path: docs/pdfs
           retention-days: 7
+      
+      - name: Copy CSS to HTML output
+        run: cp docs/latex/style.css html/style.css
 
       - name: Generate HTML documentation
         run: |
@@ -124,7 +127,7 @@ jobs:
             -s \
             --toc \
             --toc-depth=2 \
-            -c docs/latex/style.css \
+            -c style.css \
             -M title="Documentation Technique" \
             -o html/index.html
             
