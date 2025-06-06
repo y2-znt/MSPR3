@@ -1,4 +1,4 @@
-#  (2025-06-05)
+#  (2025-06-06)
 
 
 ### Bug Fixes
@@ -107,6 +107,7 @@
 * add support for selected countries in overview component and service; enhance data fetching logic ([fdd5994](https://github.com/y2-znt/MSPR3/commit/fdd5994e92799c026ea56e1b961bc13e228304ec))
 * add Swagger UI path configuration to application properties ([eb26317](https://github.com/y2-znt/MSPR3/commit/eb263178a4397028235139e67ab64ded517c49db))
 * add test stage to GitLab CI configuration for backend testing ([b60bee6](https://github.com/y2-znt/MSPR3/commit/b60bee6ac3cf68009435697d8a3134b1061fe291))
+* ajout d'un fichier de test pour le changelog ([264702c](https://github.com/y2-znt/MSPR3/commit/264702ce6169770e0f45982de4b8bc1a64dac83b))
 * ajout du changelog automatique ([1eaeda4](https://github.com/y2-znt/MSPR3/commit/1eaeda485e9968b728144f8c5a96a09d9690b3d3))
 * create DashboardComponent with KPI metrics and chart visualizations ([b313768](https://github.com/y2-znt/MSPR3/commit/b31376890f25a466ae471b3b0b4ec39250b4801a))
 * create DashboardComponent with KPI metrics and chart visualizations ([4d33ba8](https://github.com/y2-znt/MSPR3/commit/4d33ba8dc42f3c6311b4544c00e962da847bb492))
