@@ -181,14 +181,14 @@ id="toc-analyse-comparative-des-frameworks-backend">Analyse comparative
 des frameworks backend</a></li>
 <li><a href="#conclusion-2" id="toc-conclusion-2">Conclusion</a></li>
 </ul></li>
-<li><a href="#documentation-technique-choix-dun-etl-personnalisé"
-id="toc-documentation-technique-choix-dun-etl-personnalisé">Documentation
-Technique : Choix d’un ETL Personnalisé</a>
+<li><a
+href="#documentation-technique-choix-de-google-cloud-platform-gcp"
+id="toc-documentation-technique-choix-de-google-cloud-platform-gcp">Documentation
+Technique : Choix de Google Cloud Platform (GCP)</a>
 <ul>
 <li><a href="#introduction-3"
 id="toc-introduction-3">Introduction</a></li>
-<li><a href="#pourquoi-un-etl-personnalisé"
-id="toc-pourquoi-un-etl-personnalisé">Pourquoi un ETL Personnalisé
+<li><a href="#pourquoi-gcp" id="toc-pourquoi-gcp">Pourquoi GCP
 ?</a></li>
 <li><a href="#cas-dutilisation-3" id="toc-cas-dutilisation-3">Cas
 d’utilisation</a></li>
@@ -197,6 +197,31 @@ d’utilisation</a></li>
 id="toc-inconvénients-3">Inconvénients</a></li>
 <li><a href="#architecture-et-design-patterns-1"
 id="toc-architecture-et-design-patterns-1">Architecture et Design
+Patterns</a></li>
+<li><a href="#intégration-avec-notre-stack"
+id="toc-intégration-avec-notre-stack">Intégration avec notre
+Stack</a></li>
+<li><a href="#analyse-comparative-des-services-cloud"
+id="toc-analyse-comparative-des-services-cloud">Analyse comparative des
+services cloud</a></li>
+<li><a href="#conclusion-3" id="toc-conclusion-3">Conclusion</a></li>
+</ul></li>
+<li><a href="#documentation-technique-choix-dun-etl-personnalisé"
+id="toc-documentation-technique-choix-dun-etl-personnalisé">Documentation
+Technique : Choix d’un ETL Personnalisé</a>
+<ul>
+<li><a href="#introduction-4"
+id="toc-introduction-4">Introduction</a></li>
+<li><a href="#pourquoi-un-etl-personnalisé"
+id="toc-pourquoi-un-etl-personnalisé">Pourquoi un ETL Personnalisé
+?</a></li>
+<li><a href="#cas-dutilisation-4" id="toc-cas-dutilisation-4">Cas
+d’utilisation</a></li>
+<li><a href="#avantages-4" id="toc-avantages-4">Avantages</a></li>
+<li><a href="#inconvénients-4"
+id="toc-inconvénients-4">Inconvénients</a></li>
+<li><a href="#architecture-et-design-patterns-2"
+id="toc-architecture-et-design-patterns-2">Architecture et Design
 Patterns</a></li>
 <li><a href="#performances" id="toc-performances">Performances</a></li>
 <li><a href="#gestion-des-erreurs" id="toc-gestion-des-erreurs">Gestion
@@ -207,25 +232,25 @@ Boot</a></li>
 <li><a href="#analyse-comparative-des-solutions-etl"
 id="toc-analyse-comparative-des-solutions-etl">Analyse comparative des
 solutions ETL</a></li>
-<li><a href="#conclusion-3" id="toc-conclusion-3">Conclusion</a></li>
+<li><a href="#conclusion-4" id="toc-conclusion-4">Conclusion</a></li>
 </ul></li>
 <li><a href="#documentation-technique-choix-dangular"
 id="toc-documentation-technique-choix-dangular">Documentation Technique
 : Choix d’Angular</a>
 <ul>
-<li><a href="#introduction-4"
-id="toc-introduction-4">Introduction</a></li>
+<li><a href="#introduction-5"
+id="toc-introduction-5">Introduction</a></li>
 <li><a href="#pourquoi-angular" id="toc-pourquoi-angular">Pourquoi
 Angular ?</a></li>
-<li><a href="#cas-dutilisation-4" id="toc-cas-dutilisation-4">Cas
+<li><a href="#cas-dutilisation-5" id="toc-cas-dutilisation-5">Cas
 d’utilisation</a></li>
-<li><a href="#avantages-4" id="toc-avantages-4">Avantages</a></li>
-<li><a href="#inconvénients-4"
-id="toc-inconvénients-4">Inconvénients</a></li>
+<li><a href="#avantages-5" id="toc-avantages-5">Avantages</a></li>
+<li><a href="#inconvénients-5"
+id="toc-inconvénients-5">Inconvénients</a></li>
 <li><a href="#pourquoi-typescript" id="toc-pourquoi-typescript">Pourquoi
 TypeScript ?</a></li>
-<li><a href="#architecture-et-design-patterns-2"
-id="toc-architecture-et-design-patterns-2">Architecture et Design
+<li><a href="#architecture-et-design-patterns-3"
+id="toc-architecture-et-design-patterns-3">Architecture et Design
 Patterns</a></li>
 <li><a href="#intégration-avec-spring-boot-1"
 id="toc-intégration-avec-spring-boot-1">Intégration avec Spring
@@ -233,7 +258,7 @@ Boot</a></li>
 <li><a href="#analyse-comparative-des-frameworks-frontend"
 id="toc-analyse-comparative-des-frameworks-frontend">Analyse comparative
 des frameworks frontend</a></li>
-<li><a href="#conclusion-4" id="toc-conclusion-4">Conclusion</a></li>
+<li><a href="#conclusion-5" id="toc-conclusion-5">Conclusion</a></li>
 </ul></li>
 <li><a href="#architecture-du-projet-backend"
 id="toc-architecture-du-projet-backend">Architecture du Projet
@@ -345,6 +370,27 @@ Données</a></li>
 <li><a href="#notes-techniques" id="toc-notes-techniques">Notes
 Techniques</a></li>
 </ul></li>
+<li><a href="#guide-de-déploiement-sur-google-cloud-platform"
+id="toc-guide-de-déploiement-sur-google-cloud-platform">Guide de
+Déploiement sur Google Cloud Platform</a>
+<ul>
+<li><a href="#prérequis" id="toc-prérequis">Prérequis</a></li>
+<li><a href="#configuration-de-la-vm-compute-engine"
+id="toc-configuration-de-la-vm-compute-engine">Configuration de la VM
+Compute Engine</a></li>
+<li><a href="#configuration-du-serveur"
+id="toc-configuration-du-serveur">Configuration du Serveur</a></li>
+<li><a href="#déploiement-de-lapplication"
+id="toc-déploiement-de-lapplication">Déploiement de
+l’Application</a></li>
+<li><a href="#troubleshooting"
+id="toc-troubleshooting">Troubleshooting</a></li>
+<li><a href="#notes-pour-la-production"
+id="toc-notes-pour-la-production">Notes pour la Production</a></li>
+<li><a href="#vérification-finale" id="toc-vérification-finale">✅
+Vérification finale</a></li>
+<li><a href="#support" id="toc-support">Support</a></li>
+</ul></li>
 <li><a href="#documentation-détaillée-de-loutil-etl-covid-19"
 id="toc-documentation-détaillée-de-loutil-etl-covid-19">Documentation
 Détaillée de l’Outil ETL COVID-19</a>
@@ -386,11 +432,27 @@ Validation</a></li>
 <li><a href="#gestion-des-services"
 id="toc-gestion-des-services">Gestion des Services</a></li>
 </ul></li>
+<li><a href="#documentation-de-la-configuration-nginx"
+id="toc-documentation-de-la-configuration-nginx">Documentation de la
+Configuration Nginx</a>
+<ul>
+<li><a href="#vue-densemble" id="toc-vue-densemble">Vue
+d’ensemble</a></li>
+<li><a href="#configuration-détaillée"
+id="toc-configuration-détaillée">Configuration détaillée</a></li>
+<li><a href="#bonnes-pratiques-de-sécurité"
+id="toc-bonnes-pratiques-de-sécurité">Bonnes Pratiques de
+Sécurité</a></li>
+<li><a href="#troubleshooting-1"
+id="toc-troubleshooting-1">Troubleshooting</a></li>
+<li><a href="#pour-la-production" id="toc-pour-la-production">Pour la
+Production</a></li>
+</ul></li>
 <li><a href="#ci-documentation-génération-automatique-avec-pandoc"
 id="toc-ci-documentation-génération-automatique-avec-pandoc">CI
 Documentation – Génération automatique avec Pandoc</a>
 <ul>
-<li><a href="#prérequis" id="toc-prérequis">Prérequis</a></li>
+<li><a href="#prérequis-1" id="toc-prérequis-1">Prérequis</a></li>
 <li><a href="#fonctionnement-du-workflow-ci"
 id="toc-fonctionnement-du-workflow-ci">Fonctionnement du workflow
 CI</a></li>
@@ -933,9 +995,104 @@ avantages.</p>
 robustesse et son écosystème en font une solution idéale pour les
 applications d’entreprise modernes.</p>
 <h1
+id="documentation-technique-choix-de-google-cloud-platform-gcp">Documentation
+Technique : Choix de Google Cloud Platform (GCP)</h1>
+<h2 id="introduction-3">Introduction</h2>
+<p>Google Cloud Platform est une suite de services cloud computing
+offrant des solutions d’hébergement, de calcul, de stockage et d’analyse
+de données. Cette plateforme permet de déployer et de gérer des
+applications dans un environnement cloud sécurisé et scalable.</p>
+<h2 id="pourquoi-gcp">Pourquoi GCP ?</h2>
+<p>GCP offre une infrastructure mondiale performante avec des data
+centers stratégiquement répartis. La console d’administration unifiée
+simplifie la gestion des ressources. Les services managés réduisent la
+charge opérationnelle. L’intégration native avec Kubernetes via GKE
+facilite l’orchestration. Le système de facturation précis permet un
+contrôle des coûts.</p>
+<h2 id="cas-dutilisation-3">Cas d’utilisation</h2>
+<p>GCP excelle dans le déploiement d’applications conteneurisées avec
+Cloud Run et GKE. Le scaling automatique répond aux pics de charge. Les
+services managés comme Cloud SQL simplifient la gestion des bases de
+données. Le CDN global assure une distribution efficace du contenu. Les
+outils de monitoring et logging facilitent la supervision.</p>
+<h2 id="avantages-3">Avantages</h2>
+<p>La période d’essai offre 300$ de crédit. L’interface utilisateur est
+intuitive et moderne. L’automatisation via gcloud CLI et APIs est
+complète. La documentation est exhaustive et à jour. Le support de
+Docker et Kubernetes est natif. La sécurité est gérée au niveau
+infrastructure. Le réseau global de Google assure une excellente
+performance. L’intégration avec les outils de CI/CD est native.</p>
+<h2 id="inconvénients-3">Inconvénients</h2>
+<p>La courbe d’apprentissage initiale peut être raide. La complexité de
+la tarification nécessite une surveillance. Certains services sont moins
+matures que leurs équivalents AWS. La dépendance à l’écosystème Google
+peut être contraignante. Les coûts peuvent augmenter rapidement sans
+optimisation.</p>
+<h2 id="architecture-et-design-patterns-1">Architecture et Design
+Patterns</h2>
+<p>L’architecture multi-régions assure la haute disponibilité. Les zones
+de disponibilité garantissent la résilience. Le modèle de sécurité IAM
+contrôle finement les accès. Les VPC isolent les ressources. Les
+services managés réduisent la complexité opérationnelle.</p>
+<h2 id="intégration-avec-notre-stack">Intégration avec notre Stack</h2>
+<p>Le déploiement des conteneurs Docker est optimisé. Les certificats
+SSL sont gérés automatiquement. Le monitoring est intégré via Cloud
+Monitoring. Les logs sont centralisés dans Cloud Logging. Le scaling est
+automatique selon la charge.</p>
+<h2 id="analyse-comparative-des-services-cloud">Analyse comparative des
+services cloud</h2>
+<h3 id="amazon-web-services-aws">Amazon Web Services (AWS)</h3>
+<p>AWS est le leader du cloud computing avec la plus large gamme de
+services. Son écosystème mature offre des solutions pour pratiquement
+tous les besoins. La présence mondiale et la fiabilité sont excellentes.
+Les outils de gestion sont complets et sophistiqués.</p>
+<p>Cependant, la complexité de l’écosystème AWS peut être overwhelming.
+La tarification est complexe et peut réserver des surprises. La courbe
+d’apprentissage est significative. Le support peut être coûteux pour les
+petites structures.</p>
+<h3 id="microsoft-azure">Microsoft Azure</h3>
+<p>Azure excelle dans l’intégration avec l’écosystème Microsoft. Son
+support des technologies .NET est inégalé. Les services d’entreprise
+sont robustes. L’interface utilisateur est familière pour les
+utilisateurs Windows.</p>
+<p>Les limitations incluent une moins bonne performance globale. La
+documentation peut être inconsistante. Certains services manquent de
+maturité. L’intégration hors écosystème Microsoft peut être
+complexe.</p>
+<h3 id="oracle-cloud-infrastructure-oci">Oracle Cloud Infrastructure
+(OCI)</h3>
+<p>OCI propose une infrastructure performante avec un focus sur les
+workloads enterprise. Les prix sont compétitifs, particulièrement pour
+les ressources compute. Le free tier est généreux avec des ressources
+ARM.</p>
+<p>Les inconvénients incluent un écosystème plus limité. L’interface
+utilisateur est moins intuitive. La présence géographique est plus
+restreinte. L’automatisation et les outils DevOps sont moins
+matures.</p>
+<h3 id="justification-du-choix-de-gcp">Justification du choix de
+GCP</h3>
+<p>Notre sélection de GCP repose sur plusieurs facteurs clés. La
+simplicité d’utilisation et la modernité de l’interface réduisent la
+friction opérationnelle. L’excellent support des conteneurs via Cloud
+Run et GKE s’aligne parfaitement avec notre architecture
+microservices.</p>
+<p>Le crédit initial de 300$ permet un démarrage serein. La présence
+d’un data center à Paris (europe-west9) garantit une faible latence pour
+nos utilisateurs. L’intégration native avec notre pipeline CI/CD GitHub
+Actions simplifie le déploiement.</p>
+<p>La tarification à la seconde et le scaling automatique optimisent les
+coûts en production. Les services managés comme Cloud SQL réduisent la
+charge opérationnelle. Le monitoring intégré via Cloud Monitoring assure
+une supervision efficace.</p>
+<h2 id="conclusion-3">Conclusion</h2>
+<p>GCP offre le meilleur compromis entre facilité d’utilisation,
+performance et coût pour notre projet. Son excellent support des
+conteneurs et son infrastructure moderne en font une plateforme idéale
+pour notre déploiement.</p>
+<h1
 id="documentation-technique-choix-dun-etl-personnalisé">Documentation
 Technique : Choix d’un ETL Personnalisé</h1>
-<h2 id="introduction-3">Introduction</h2>
+<h2 id="introduction-4">Introduction</h2>
 <p>L’ETL (Extract, Transform, Load) personnalisé est une solution
 développée en interne basée sur Java et Spring Boot. Il permet de
 traiter efficacement les données COVID-19 provenant de différentes
@@ -949,14 +1106,14 @@ L’intégration native avec Spring Boot et l’écosystème Java simplifie le
 déploiement et la maintenance. Le contrôle total sur le flux de données
 permet une adaptation rapide aux changements de format ou à l’ajout de
 nouvelles sources.</p>
-<h2 id="cas-dutilisation-3">Cas d’utilisation</h2>
+<h2 id="cas-dutilisation-4">Cas d’utilisation</h2>
 <p>Notre ETL excelle dans le traitement de données COVID-19 avec des
 règles métier spécifiques. La gestion des synonymes et la normalisation
 des noms de pays/régions requièrent une logique personnalisée. Le
 système de cache optimise la création et la liaison des entités.
 L’intégration avec Spring Boot facilite le monitoring et le partage de
 code.</p>
-<h2 id="avantages-3">Avantages</h2>
+<h2 id="avantages-4">Avantages</h2>
 <p>Le développement interne offre une transparence totale sur le
 traitement des données. Le <code>CacheManager</code> optimise la
 déduplication et les relations entre entités. L’utilisation de Spring
@@ -964,13 +1121,13 @@ Boot simplifie le déploiement et la maintenance. L’absence de coûts de
 licence réduit les dépenses. L’expertise existante en Java accélère le
 développement. La flexibilité permet des adaptations rapides aux
 changements.</p>
-<h2 id="inconvénients-3">Inconvénients</h2>
+<h2 id="inconvénients-4">Inconvénients</h2>
 <p>Le développement initial nécessite plus de temps qu’une solution clé
 en main. La maintenance du code est sous notre responsabilité. Les
 performances dépendent de notre optimisation. La documentation doit être
 créée et maintenue en interne. Les fonctionnalités avancées doivent être
 développées manuellement.</p>
-<h2 id="architecture-et-design-patterns-1">Architecture et Design
+<h2 id="architecture-et-design-patterns-2">Architecture et Design
 Patterns</h2>
 <h3 id="composants-principaux">Composants Principaux</h3>
 <ul>
@@ -1090,7 +1247,7 @@ d’infrastructure supplémentaire.</p></li>
 Java et Spring Boot, minimisant la courbe d’apprentissage et les risques
 techniques.</p></li>
 </ol>
-<h2 id="conclusion-3">Conclusion</h2>
+<h2 id="conclusion-4">Conclusion</h2>
 <p>Le développement d’un ETL personnalisé s’est révélé être un choix
 judicieux pour notre projet. La maîtrise complète du processus, la
 flexibilité d’adaptation et l’intégration native avec notre stack
@@ -1098,7 +1255,7 @@ technique justifient pleinement cette approche, malgré l’investissement
 initial plus important.</p>
 <h1 id="documentation-technique-choix-dangular">Documentation Technique
 : Choix d’Angular</h1>
-<h2 id="introduction-4">Introduction</h2>
+<h2 id="introduction-5">Introduction</h2>
 <p>Angular est un framework frontend développé par Google, basé sur
 TypeScript. Il permet de créer des applications web robustes, évolutives
 et performantes avec une architecture modulaire et une approche orientée
@@ -1111,14 +1268,14 @@ Le système d’injection de dépendances natif améliore la testabilité. Les
 outils de développement intégrés (Angular CLI) accélèrent le
 développement. L’utilisation de TypeScript apporte un typage fort et une
 meilleure maintenabilité.</p>
-<h2 id="cas-dutilisation-4">Cas d’utilisation</h2>
+<h2 id="cas-dutilisation-5">Cas d’utilisation</h2>
 <p>Angular excelle dans les applications d’entreprise complexes grâce à
 sa structure robuste. La création d’interfaces utilisateur riches est
 facilitée par Angular Material. Le système de routing puissant permet
 une navigation fluide. Les formulaires réactifs offrent une validation
 avancée. L’architecture MVVM (Model-View-ViewModel) assure une
 séparation claire des responsabilités.</p>
-<h2 id="avantages-4">Avantages</h2>
+<h2 id="avantages-5">Avantages</h2>
 <p>Angular CLI automatise la création de composants et services. Le hot
 reload accélère le cycle de développement. L’écosystème riche inclut des
 bibliothèques comme Chart.js et ng2-charts. La compilation AOT
@@ -1127,7 +1284,7 @@ flux de données asynchrones. Les tests unitaires sont intégrés
 nativement avec Jasmine et Karma. Le système de modules permet une
 gestion efficace des dépendances. Angular Material fournit des
 composants UI prêts à l’emploi.</p>
-<h2 id="inconvénients-4">Inconvénients</h2>
+<h2 id="inconvénients-5">Inconvénients</h2>
 <p>La courbe d’apprentissage peut être raide pour les débutants. La
 verbosité du framework peut ralentir le développement initial. La taille
 du bundle peut être importante sans optimisation. Les mises à jour
@@ -1139,7 +1296,7 @@ L’autocomplétion et la refactorisation sont améliorées. La documentation
 du code est plus claire avec les interfaces. La détection d’erreurs à la
 compilation renforce la fiabilité. L’héritage des fonctionnalités
 ECMAScript futures est assuré.</p>
-<h2 id="architecture-et-design-patterns-2">Architecture et Design
+<h2 id="architecture-et-design-patterns-3">Architecture et Design
 Patterns</h2>
 <p>L’architecture est basée sur des composants réutilisables. Les
 services gèrent la logique métier et les appels API. Les guards
@@ -1196,7 +1353,7 @@ technique à long terme.</p>
 la pérennité de notre investissement technologique. De plus,
 l’excellente compatibilité avec Spring Boot, notre backend choisi,
 optimise l’intégration full-stack de notre application.</p>
-<h2 id="conclusion-4">Conclusion</h2>
+<h2 id="conclusion-5">Conclusion</h2>
 <p>Angular est un choix solide pour notre frontend, offrant une
 architecture robuste et des outils modernes pour le développement
 d’applications web professionnelles.</p>
@@ -2108,6 +2265,217 @@ contraintes d’intégrité référentielle</li>
 <li>Les compteurs (confirmed_cases, deaths, recovered) ne peuvent pas
 être négatifs</li>
 </ul>
+<h1 id="guide-de-déploiement-sur-google-cloud-platform">Guide de
+Déploiement sur Google Cloud Platform</h1>
+<p>Ce guide détaille le processus complet de déploiement de
+l’application sur Google Cloud Platform (GCP), de la configuration
+initiale jusqu’au déploiement en production.</p>
+<h2 id="prérequis">Prérequis</h2>
+<h3 id="compte-google-cloud">Compte Google Cloud</h3>
+<ul>
+<li>Compte Google Cloud (300$ de crédit gratuit)</li>
+<li>APIs activées :
+<ul>
+<li>Compute Engine API</li>
+<li>Container Registry API</li>
+</ul></li>
+</ul>
+<h3 id="configuration-locale">Configuration Locale</h3>
+<ul>
+<li>SSH client installé</li>
+<li>Docker et Docker Compose installés localement</li>
+</ul>
+<h2 id="configuration-de-la-vm-compute-engine">Configuration de la VM
+Compute Engine</h2>
+<ul>
+<li>Dans la console GCP, allez dans “Compute Engine” &gt; “VM
+Instances”</li>
+<li>Cliquez sur “Créer une instance”</li>
+</ul>
+<h3 id="création-de-linstance">1. Création de l’Instance</h3>
+<ol type="1">
+<li><p><strong>Configuration de Base</strong></p>
+<pre><code>Nom : mspr3-prod
+Région : europe-west9-a (Paris)
+Machine type : e2-standard-2
+vCPUs : 2
+Memory : 8 GB</code></pre></li>
+<li><p><strong>Configuration Réseau</strong></p>
+<pre><code>Network tags : http-server, https-server
+Firewall : Allow HTTP/HTTPS traffic</code></pre></li>
+<li><p><strong>Boot Disk</strong></p>
+<pre><code>OS : Ubuntu 22.04 LTS
+Size : 40 GB
+Type : Standard persistent disk</code></pre></li>
+</ol>
+<h3 id="configuration-du-pare-feu">2. Configuration du Pare-feu</h3>
+<p>Dans “VPC Network” &gt; “Firewall”, créer les règles suivantes :</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Règle Backend API</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Name:</span> allow-backend</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Target</span> tags: backend-server</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Source</span> IP ranges: 0.0.0.0/0</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Protocols/ports:</span> tcp:8080</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Règle AI API</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Name:</span> allow-ai-api</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Target</span> tags: ai-server</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ex">Source</span> IP ranges: 0.0.0.0/0</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Protocols/ports:</span> tcp:8000</span></code></pre></div>
+<h2 id="configuration-du-serveur">Configuration du Serveur</h2>
+<h3 id="connexion-à-la-vm">1. Connexion à la VM</h3>
+<p>Vous avez plusieurs options :</p>
+<h4 id="option-recommandée-simple-et-rapide">✅ Option recommandée
+(simple et rapide) :</h4>
+<p>Utilisez le <strong>terminal intégré de GCP</strong> directement
+depuis la console :</p>
+<ul>
+<li>Allez dans “Compute Engine” &gt; “VM instances”</li>
+<li>Cliquez sur “SSH” à droite de votre instance
+<code>mspr3-prod</code></li>
+</ul>
+<p>Cela ouvre une session SSH directement dans le navigateur, aucun
+besoin de configurer des clés ou un client local.</p>
+<h4 id="option-avancée-via-terminal-local">Option avancée (via terminal
+local) :</h4>
+<p>Si vous avez le SDK Google Cloud installé, vous pouvez aussi faire
+:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> compute ssh mspr3-prod <span class="at">--zone</span><span class="op">=</span>europe-west9-a</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># OU via SSH standard</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-i</span> ~/.ssh/google_compute_engine USERNAME@IP_EXTERNE</span></code></pre></div>
+<h3 id="installation-des-dépendances">2. Installation des
+Dépendances</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mise à jour du système</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt upgrade <span class="at">-y</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Installation de Docker</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://get.docker.com <span class="at">-o</span> get-docker.sh</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> sh get-docker.sh</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Installation de Docker Compose</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install docker-compose <span class="at">-y</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajout de l&#39;utilisateur au groupe docker</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> usermod <span class="at">-aG</span> docker <span class="va">$USER</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Déconnexion/reconnexion pour appliquer les changements</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> compute ssh mspr3-prod <span class="at">--zone</span><span class="op">=</span>europe-west9-a</span></code></pre></div>
+<h2 id="déploiement-de-lapplication">Déploiement de l’Application</h2>
+<h3 id="préparation-de-lenvironnement">1. Préparation de
+l’Environnement</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création de la structure</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/mspr3</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/mspr3</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Création du fichier .env</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> .env</span></code></pre></div>
+<h3 id="configuration-des-variables-denvironnement">2. Configuration des
+variables d’environnement</h3>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="va">DOCKERHUB_USERNAME</span><span class="op">=</span>votre_username_dockerhub</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="va">DB_URL</span><span class="op">=</span>jdbc:postgresql://db:5432/mspr3_db</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="va">DB_USERNAME</span><span class="op">=</span>mspr3_user</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PASSWORD</span><span class="op">=</span>votre_mot_de_passe_securise</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="va">DB_NAME</span><span class="op">=</span>mspr3_db</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PORT</span><span class="op">=</span>5432</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="va">CORS_ALLOWED_ORIGINS</span><span class="op">=</span>http://VOTRE_IP_VM</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="va">SERVER_NAME</span><span class="op">=</span>VOTRE_IP_VM</span></code></pre></div>
+<h3 id="configuration-ssl-auto-signé-pour-développement">3.
+Configuration SSL (Auto-signé pour développement)</h3>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des certificats</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/mspr3/certs</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Générer le certificat</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">openssl</span> req <span class="at">-x509</span> <span class="at">-nodes</span> <span class="at">-days</span> 365 <span class="at">-newkey</span> rsa:2048 <span class="dt">\</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-keyout</span> ~/mspr3/certs/nginx-selfsigned.key <span class="dt">\</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-out</span> ~/mspr3/certs/nginx-selfsigned.crt <span class="dt">\</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">-subj</span> <span class="st">&quot;/CN=mspr3-project&quot;</span></span></code></pre></div>
+<h3 id="déploiement-des-conteneurs">4. Déploiement des Conteneurs</h3>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Copie du docker-compose.yml</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Sur votre machine locale</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> compute scp docker-compose.prod.yml mspr3-prod:~/mspr3/docker-compose.yml <span class="at">--zone</span><span class="op">=</span>europe-west9-a</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Sur le serveur</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/mspr3</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> login</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> pull</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span></span></code></pre></div>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="problèmes-courants">Problèmes Courants</h3>
+<ol type="1">
+<li><p><strong>Erreur de connexion SSH</strong></p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Via gcloud</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> compute ssh mspr3-prod <span class="at">--zone</span><span class="op">=</span>europe-west9-a</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérifier les règles de firewall dans la console GCP</span></span></code></pre></div></li>
+<li><p><strong>Conteneurs qui ne démarrent pas</strong></p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérifier les logs</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> logs</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Redémarrer les services</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> restart</span></code></pre></div></li>
+<li><p><strong>Problèmes de mémoire</strong></p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérifier l&#39;utilisation</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">free</span> <span class="at">-h</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> stats</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Nettoyer si nécessaire</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> system prune <span class="at">-af</span></span></code></pre></div></li>
+</ol>
+<h3 id="commandes-utiles">Commandes Utiles</h3>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Voir les logs</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> logs <span class="at">-f</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Status des conteneurs</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> ps</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Utilisation des ressources</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> stats</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Redémarrage complet</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> down</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span></span></code></pre></div>
+<h2 id="notes-pour-la-production">Notes pour la Production</h2>
+<p>Cette configuration est adaptée pour un environnement de
+développement/démonstration. Pour un environnement de production réel,
+considérer :</p>
+<ol type="1">
+<li>Utilisation d’un nom de domaine</li>
+<li>Certificats SSL Let’s Encrypt</li>
+<li>Utilisation de Cloud Load Balancer</li>
+<li>Stackdriver Monitoring</li>
+<li>Cloud Storage pour les backups</li>
+</ol>
+<h2 id="vérification-finale">✅ Vérification finale</h2>
+<ul class="task-list">
+<li><label><input type="checkbox" />L’application est accessible via
+l’IP de la VM</label></li>
+<li><label><input type="checkbox" />Les logs n’affichent pas d’erreurs
+bloquantes (<code>docker-compose logs</code>)</label></li>
+<li><label><input type="checkbox" />Les conteneurs sont actifs
+(<code>docker-compose ps</code>)</label></li>
+<li><label><input type="checkbox" />Le port 8080 ou 8000 est bien
+ouvert</label></li>
+</ul>
+<h2 id="support">Support</h2>
+<p>Pour toute question ou problème :</p>
+<ol type="1">
+<li>Vérifier les logs : <code>docker-compose logs</code></li>
+<li>Consulter le monitoring : <code>http://VOTRE_IP_VM:19999</code></li>
+<li>Vérifier l’état des services : <code>docker-compose ps</code></li>
+<li>Console GCP : https://console.cloud.google.com</li>
+</ol>
 <h1 id="documentation-détaillée-de-loutil-etl-covid-19">Documentation
 Détaillée de l’Outil ETL COVID-19</h1>
 <h2 id="contexte-et-objectifs-de-letl">1. Contexte et Objectifs de
@@ -2376,10 +2744,10 @@ fonctionnel</li>
 <h2 id="workflow-de-développement">Workflow de développement</h2>
 <ol type="1">
 <li><p><strong>Création d’une nouvelle branche</strong></p>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> auth-system</span></code></pre></div></li>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> auth-system</span></code></pre></div></li>
 <li><p><strong>Commits clairs et cohérents</strong></p>
 <p>Respectez le format :</p>
 <pre><code>&lt;type&gt; : &lt;description&gt;</code></pre>
@@ -2388,9 +2756,9 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="
 fix: correction du timeout des requêtes API
 docs : mise à jour du README</code></pre></li>
 <li><p><strong>Mise à jour de la branche avant un merge</strong></p>
-<div class="sourceCode" id="cb11"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout auth-system</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span></code></pre></div></li>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout auth-system</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span></code></pre></div></li>
 </ol>
 <hr />
 <h2 id="bonnes-pratiques">Bonnes pratiques</h2>
@@ -2443,57 +2811,57 @@ modifications proposées.</li>
 </ul>
 <h2 id="installation-pas-à-pas">Installation Pas à Pas</h2>
 <h3 id="récupération-du-projet">1. Récupération du Projet</h3>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/y2-znt/MSPR3.git</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> MSPR3</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/y2-znt/MSPR3.git</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> MSPR3</span></code></pre></div>
 <h3 id="configuration-de-lenvironnement">2. Configuration de
 l’Environnement</h3>
 <h4 id="configuration-globale">Configuration Globale</h4>
 <p>Créez un fichier <code>.env</code> à la racine du projet :</p>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration PostgreSQL</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="va">DB_URL</span><span class="op">=</span>jdbc:postgresql://db:5432/database_name</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="va">DB_USERNAME</span><span class="op">=</span>your_username</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PASSWORD</span><span class="op">=</span>your_password</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PORT</span><span class="op">=</span>5432</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="va">DB_NAME</span><span class="op">=</span>database_name</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Docker Hub (uniquement pour la production)</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="va">DOCKERHUB_USERNAME</span><span class="op">=</span>your_dockerhub_username</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration PostgreSQL</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="va">DB_URL</span><span class="op">=</span>jdbc:postgresql://db:5432/database_name</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="va">DB_USERNAME</span><span class="op">=</span>your_username</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PASSWORD</span><span class="op">=</span>your_password</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PORT</span><span class="op">=</span>5432</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="va">DB_NAME</span><span class="op">=</span>database_name</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Docker Hub (uniquement pour la production)</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="va">DOCKERHUB_USERNAME</span><span class="op">=</span>your_dockerhub_username</span></code></pre></div>
 <h4 id="configuration-backend">Configuration Backend</h4>
 <p>Créez un fichier <code>.env</code> dans le dossier
 <code>backend</code> :</p>
-<div class="sourceCode" id="cb14"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration Base de données</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="va">DB_URL</span><span class="op">=</span>jdbc:postgresql://db:5432/database_name</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="va">DB_USERNAME</span><span class="op">=</span>your_username</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PASSWORD</span><span class="op">=</span>your_password</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration Base de données</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="va">DB_URL</span><span class="op">=</span>jdbc:postgresql://db:5432/database_name</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="va">DB_USERNAME</span><span class="op">=</span>your_username</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="va">DB_PASSWORD</span><span class="op">=</span>your_password</span></code></pre></div>
 <h3 id="démarrage-de-lapplication">3. Démarrage de l’Application</h3>
 <h4 id="mode-développement">Mode Développement</h4>
 <p>Le mode développement construit les images localement et permet le
 hot-reload :</p>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction et démarrage des services</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">--build</span> <span class="at">-d</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification des services</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose ps</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction et démarrage des services</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">--build</span> <span class="at">-d</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification des services</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose ps</span></code></pre></div>
 <h4 id="mode-production">Mode Production</h4>
 <p>Le mode production utilise les images pré-construites depuis Docker
 Hub :</p>
-<div class="sourceCode" id="cb16"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Démarrage des services en production</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml up <span class="at">-d</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Démarrage des services en production</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml up <span class="at">-d</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Démarrage des services en production</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml up <span class="at">-d</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Démarrage des services en production</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml up <span class="at">-d</span></span></code></pre></div>
 <p>Vérifiez que les services sont bien démarrés :</p>
-<div class="sourceCode" id="cb17"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour le développement</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose ps</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour la production</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml ps</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour le développement</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose ps</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour la production</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml ps</span></code></pre></div>
 <h3 id="vérification-de-linstallation">4. Vérification de
 l’Installation</h3>
 <p>Une fois les services démarrés, vous pouvez accéder aux différentes
@@ -2547,85 +2915,85 @@ interfaces :</p>
 <h2 id="gestion-de-la-base-de-données">Gestion de la Base de
 Données</h2>
 <h3 id="connexion-à-postgresql">Connexion à PostgreSQL</h3>
-<div class="sourceCode" id="cb18"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Connexion via Docker (Développement)</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-db psql <span class="at">-U</span> <span class="op">&lt;</span>username<span class="op">&gt;</span> -d <span class="op">&lt;</span>dbname<span class="op">&gt;</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Connexion via Docker (Production)</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-db-prod psql <span class="at">-U</span> <span class="op">&lt;</span>username<span class="op">&gt;</span> -d <span class="op">&lt;</span>dbname<span class="op">&gt;</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Commandes PostgreSQL utiles</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="ex">\dt</span>                 <span class="co"># Liste des tables</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="ex">\d</span> <span class="op">&lt;</span>nom_table<span class="op">&gt;</span>      # Structure d<span class="st">&#39;une table</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="st">\l                  # Liste des bases de données</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="st">\du                 # Liste des utilisateurs</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Connexion via Docker (Développement)</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-db psql <span class="at">-U</span> <span class="op">&lt;</span>username<span class="op">&gt;</span> -d <span class="op">&lt;</span>dbname<span class="op">&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Connexion via Docker (Production)</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-db-prod psql <span class="at">-U</span> <span class="op">&lt;</span>username<span class="op">&gt;</span> -d <span class="op">&lt;</span>dbname<span class="op">&gt;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Commandes PostgreSQL utiles</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="ex">\dt</span>                 <span class="co"># Liste des tables</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="ex">\d</span> <span class="op">&lt;</span>nom_table<span class="op">&gt;</span>      # Structure d<span class="st">&#39;une table</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="st">\l                  # Liste des bases de données</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="st">\du                 # Liste des utilisateurs</span></span></code></pre></div>
 <h2 id="tests-et-validation">Tests et Validation</h2>
 <h3 id="exécution-des-tests">Exécution des Tests</h3>
-<div class="sourceCode" id="cb19"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Backend local</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mvn</span> test <span class="co"># ou ./mvnw test</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Backend via container (Développement)</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-backend mvn test</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Frontend local</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run test:e2e:ci</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Frontend via container (Développement)</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-frontend npm run test:e2e:ci</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Backend local</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mvn</span> test <span class="co"># ou ./mvnw test</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Backend via container (Développement)</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-backend mvn test</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Frontend local</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run test:e2e:ci</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests Frontend via container (Développement)</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> mspr3-frontend npm run test:e2e:ci</span></code></pre></div>
 <h3 id="logs-des-services">Logs des Services</h3>
-<div class="sourceCode" id="cb20"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs en temps réel (Développement)</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs en temps réel (Production)</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml logs <span class="at">-f</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs d&#39;un service spécifique (Développement)</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span> backend</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span> frontend</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span> db</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs d&#39;un service spécifique (Production)</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml logs <span class="at">-f</span> backend</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml logs <span class="at">-f</span> frontend</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml logs <span class="at">-f</span> db</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs en temps réel (Développement)</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs en temps réel (Production)</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml logs <span class="at">-f</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs d&#39;un service spécifique (Développement)</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span> backend</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span> frontend</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose logs <span class="at">-f</span> db</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs d&#39;un service spécifique (Production)</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml logs <span class="at">-f</span> backend</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml logs <span class="at">-f</span> frontend</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml logs <span class="at">-f</span> db</span></code></pre></div>
 <h2 id="gestion-des-services">Gestion des Services</h2>
 <h3 id="commandes-courantes">Commandes Courantes</h3>
-<div class="sourceCode" id="cb21"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Développement</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrêt des services</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Redémarrage d&#39;un service spécifique</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose restart backend</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppression des volumes (reset des données)</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down <span class="at">-v</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Production</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrêt des services</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml down</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Redémarrage d&#39;un service spécifique</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml restart backend</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppression des volumes (reset des données)</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml down <span class="at">-v</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Développement</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrêt des services</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Redémarrage d&#39;un service spécifique</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose restart backend</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppression des volumes (reset des données)</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down <span class="at">-v</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Production</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrêt des services</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml down</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Redémarrage d&#39;un service spécifique</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml restart backend</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppression des volumes (reset des données)</span></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml down <span class="at">-v</span></span></code></pre></div>
 <h3 id="mise-à-jour-de-lapplication">Mise à Jour de l’Application</h3>
-<div class="sourceCode" id="cb22"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mise à jour depuis le repository</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruction et redémarrage (Développement)</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose build</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruction et redémarrage (Production)</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml down</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml build</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml up <span class="at">-d</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mise à jour depuis le repository</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruction et redémarrage (Développement)</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose build</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruction et redémarrage (Production)</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml down</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml build</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> docker-compose.prod.yml up <span class="at">-d</span></span></code></pre></div>
 <h3 id="différences-entre-développement-et-production">Différences entre
 Développement et Production</h3>
 <p>Les principales différences entre les environnements de développement
@@ -2643,6 +3011,196 @@ séparés de ceux de développement</li>
 <li><strong>Nginx</strong> : Le frontend utilise Nginx en production
 pour servir l’application Angular</li>
 </ol>
+<h1 id="documentation-de-la-configuration-nginx">Documentation de la
+Configuration Nginx</h1>
+<p>Ce document explique en détail la configuration Nginx utilisée dans
+notre application. Le fichier <code>nginx.conf</code> est configuré pour
+servir notre application Angular et faire office de reverse proxy pour
+nos APIs.</p>
+<h2 id="vue-densemble">Vue d’ensemble</h2>
+<p>Notre configuration Nginx :</p>
+<ul>
+<li>Redirige tout le trafic HTTP vers HTTPS</li>
+<li>Gère les certificats SSL</li>
+<li>Fait office de reverse proxy pour le backend et l’API AI</li>
+<li>Sert l’application Angular</li>
+<li>Optimise la performance avec la compression gzip</li>
+<li>Gère le cache des assets statiques</li>
+</ul>
+<h2 id="configuration-détaillée">Configuration détaillée</h2>
+<h3 id="redirection-http-vers-https">1. Redirection HTTP vers HTTPS</h3>
+<pre class="nginx"><code>server {
+    listen 80;
+    return 301 https://$host$request_uri;
+}</code></pre>
+<p>Cette section :</p>
+<ul>
+<li>Écoute sur le port 80 (HTTP)</li>
+<li>Redirige automatiquement vers HTTPS avec un code 301 (redirection
+permanente)</li>
+<li><code>$host</code> : nom de domaine de la requête</li>
+<li><code>$request_uri</code> : chemin et paramètres de la requête</li>
+</ul>
+<h3 id="configuration-https">2. Configuration HTTPS</h3>
+<pre class="nginx"><code>server {
+    listen 443 ssl http2;
+    server_name $SERVER_NAME;
+
+    ssl_certificate /etc/nginx/certs/nginx-selfsigned.crt;
+    ssl_certificate_key /etc/nginx/certs/nginx-selfsigned.key;
+}</code></pre>
+<p>Cette section :</p>
+<ul>
+<li>Écoute sur le port 443 (HTTPS)</li>
+<li>Active le support HTTP/2</li>
+<li>Utilise les certificats SSL auto-signés</li>
+<li><code>$SERVER_NAME</code> est remplacé par l’IP de la VM ou le nom
+de domaine</li>
+</ul>
+<h3 id="configuration-du-reverse-proxy-backend">3. Configuration du
+Reverse Proxy Backend</h3>
+<pre class="nginx"><code>location /api/ {
+    proxy_pass http://backend:8080/api/;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection &quot;upgrade&quot;;
+    proxy_cache_bypass $http_upgrade;
+}</code></pre>
+<p>Cette section :</p>
+<ul>
+<li>Route les requêtes <code>/api/*</code> vers le service backend</li>
+<li>Configure les en-têtes pour le proxy :
+<ul>
+<li><code>Host</code> : préserve le nom d’hôte original</li>
+<li><code>X-Real-IP</code> : IP du client</li>
+<li><code>X-Forwarded-For</code> : chaîne d’IPs proxy</li>
+<li><code>X-Forwarded-Proto</code> : protocole utilisé (http/https)</li>
+</ul></li>
+<li>Support des WebSockets avec <code>Upgrade</code> et
+<code>Connection</code></li>
+</ul>
+<h3 id="configuration-du-reverse-proxy-ai-api">4. Configuration du
+Reverse Proxy AI API</h3>
+<pre class="nginx"><code>location = /predict {
+    proxy_pass http://ai-api:80/predict;
+    # ... mêmes headers que pour le backend ...
+}</code></pre>
+<p>Cette section :</p>
+<ul>
+<li>Route exactement <code>/predict</code> vers l’API AI</li>
+<li>Utilise les mêmes configurations de proxy que le backend</li>
+</ul>
+<h3 id="gestion-des-assets-statiques">5. Gestion des Assets
+Statiques</h3>
+<pre class="nginx"><code>location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|eot|ttf|otf|svg)$ {
+    expires 1y;
+    access_log off;
+    add_header Cache-Control &quot;public&quot;;
+}</code></pre>
+<p>Cette section :</p>
+<ul>
+<li>Gère tous les fichiers statiques (images, styles, fonts…)</li>
+<li>Configure le cache navigateur à 1 an</li>
+<li>Désactive les logs pour ces fichiers</li>
+<li>Ajoute l’en-tête pour le cache public</li>
+</ul>
+<h3 id="configuration-angular-html5-mode">6. Configuration Angular
+(HTML5 Mode)</h3>
+<pre class="nginx"><code>location / {
+    try_files $uri $uri/ /index.html;
+}</code></pre>
+<p>Cette section :</p>
+<ul>
+<li>Supporte le routing Angular en HTML5 mode</li>
+<li>Cherche d’abord le fichier exact</li>
+<li>Puis cherche le dossier</li>
+<li>Sinon renvoie index.html (pour le routing côté client)</li>
+</ul>
+<h3 id="compression-gzip">7. Compression Gzip</h3>
+<pre class="nginx"><code>gzip on;
+gzip_vary on;
+gzip_proxied any;
+gzip_comp_level 6;
+gzip_buffers 16 8k;
+gzip_http_version 1.1;
+gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;</code></pre>
+<p>Cette section :</p>
+<ul>
+<li>Active la compression gzip</li>
+<li>Configure le niveau de compression (6)</li>
+<li>Spécifie les types MIME à compresser</li>
+<li>Optimise les buffers pour la compression</li>
+</ul>
+<h2 id="bonnes-pratiques-de-sécurité">Bonnes Pratiques de Sécurité</h2>
+<ol type="1">
+<li><p><strong>Redirection HTTPS</strong></p>
+<ul>
+<li>Tout le trafic HTTP est redirigé vers HTTPS</li>
+<li>Protection contre le sniffing</li>
+</ul></li>
+<li><p><strong>Headers de Sécurité</strong></p>
+<ul>
+<li><code>X-Real-IP</code> et <code>X-Forwarded-For</code> pour le
+tracking</li>
+<li>Support des WebSockets sécurisé</li>
+</ul></li>
+<li><p><strong>Cache Optimisé</strong></p>
+<ul>
+<li>Cache long pour les assets statiques</li>
+<li>Pas de cache pour les API</li>
+<li>Headers de cache appropriés</li>
+</ul></li>
+</ol>
+<h2 id="troubleshooting-1">Troubleshooting</h2>
+<h3 id="problèmes-courants-1">Problèmes Courants</h3>
+<ol type="1">
+<li><p><strong>Erreur 502 Bad Gateway</strong></p>
+<ul>
+<li>Vérifier que les services backend/ai-api sont up</li>
+<li>Vérifier les logs : <code>docker-compose logs nginx</code></li>
+</ul></li>
+<li><p><strong>Certificat SSL non reconnu</strong></p>
+<ul>
+<li>Normal avec un certificat auto-signé</li>
+<li>Ajouter une exception dans le navigateur</li>
+<li>En production, utiliser Let’s Encrypt</li>
+</ul></li>
+<li><p><strong>Problèmes de routing Angular</strong></p>
+<ul>
+<li>Vérifier la configuration <code>try_files</code></li>
+<li>Vérifier les logs Angular dans la console navigateur</li>
+</ul></li>
+</ol>
+<h3 id="commandes-utiles-1">Commandes Utiles</h3>
+<div class="sourceCode" id="cb44"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de la configuration</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> exec frontend nginx <span class="at">-t</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reload de la configuration</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> exec frontend nginx <span class="at">-s</span> reload</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Voir les logs en temps réel</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> logs <span class="at">-f</span> frontend</span></code></pre></div>
+<h2 id="pour-la-production">Pour la Production</h2>
+<p>Pour un environnement de production, considérer :</p>
+<ol type="1">
+<li><p>Remplacer les certificats auto-signés par Let’s Encrypt</p></li>
+<li><p>Ajouter des headers de sécurité supplémentaires :</p>
+<pre class="nginx"><code>add_header Strict-Transport-Security &quot;max-age=31536000&quot; always;
+add_header X-Frame-Options &quot;SAMEORIGIN&quot; always;
+add_header X-XSS-Protection &quot;1; mode=block&quot; always;
+add_header X-Content-Type-Options &quot;nosniff&quot; always;</code></pre></li>
+<li><p>Configurer des limites de rate :</p>
+<pre class="nginx"><code>limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
+location /api/ {
+    limit_req zone=api_limit burst=20 nodelay;
+    # ... reste de la config ...
+}</code></pre></li>
+</ol>
 <p>Voici une documentation en <strong>Markdown</strong> que tu peux
 publier dans un fichier <code>docs/pandoc_ci.md</code> ou directement
 dans ton <code>README.md</code> si tu veux l’exposer dès la racine du
@@ -2657,7 +3215,7 @@ les fichiers Markdown (<code>.md</code>) de votre dossier
 <code>docs/</code> en <strong>PDF</strong> et <strong>HTML</strong>,
 puis de les publier via <strong>GitHub Pages</strong>.</p>
 <hr />
-<h2 id="prérequis">Prérequis</h2>
+<h2 id="prérequis-1">Prérequis</h2>
 <ul>
 <li><p>Un dépôt GitHub structuré avec :</p>
 <ul>
@@ -2675,23 +3233,23 @@ CI</h2>
 <p>Le fichier <code>.github/workflows/docs.yml</code> contient
 l’ensemble des étapes suivantes :</p>
 <h3 id="déclencheurs">🔁 Déclencheurs</h3>
-<div class="sourceCode" id="cb23"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">paths</span><span class="kw">:</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&#39;docs/**&#39;</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&#39;.github/workflows/docs.yml&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">paths</span><span class="kw">:</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&#39;docs/**&#39;</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&#39;.github/workflows/docs.yml&#39;</span></span></code></pre></div>
 <p>Le workflow est déclenché à chaque <em>push</em> sur des fichiers du
 dossier <code>docs/</code> ou sur le fichier de workflow lui-même.</p>
 <hr />
 <h2 id="étapes-du-workflow">Étapes du workflow</h2>
 <h3 id="installation-des-outils">1. <strong>Installation des
 outils</strong></h3>
-<div class="sourceCode" id="cb24"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install Pandoc and LaTeX</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    sudo apt-get update</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    sudo apt-get install -y pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-xetex imagemagick</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install Pandoc and LaTeX</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    sudo apt-get update</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    sudo apt-get install -y pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-xetex imagemagick</span></code></pre></div>
 <blockquote>
 <p>Cette étape installe Pandoc, LaTeX (XeLaTeX) et ImageMagick pour
 générer les documents PDF.</p>
@@ -2701,10 +3259,10 @@ générer les documents PDF.</p>
 fichiers <code>.md</code> en PDF</strong></h3>
 <p>Tous les fichiers Markdown de <code>docs/</code> sont convertis
 individuellement en PDF et placés dans <code>docs/pdfs/</code>.</p>
-<div class="sourceCode" id="cb25"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> docs/ <span class="at">-name</span> <span class="st">&#39;*.md&#39;</span> <span class="kw">|</span> <span class="cf">while</span> <span class="bu">read</span> <span class="va">mdfile</span><span class="kw">;</span> <span class="cf">do</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># conversion PDF avec Pandoc</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> docs/ <span class="at">-name</span> <span class="st">&#39;*.md&#39;</span> <span class="kw">|</span> <span class="cf">while</span> <span class="bu">read</span> <span class="va">mdfile</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># conversion PDF avec Pandoc</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
 <hr />
 <h3 id="conversion-des-images-pngjpg-en-pdf">3. <strong>Conversion des
 images PNG/JPG en PDF</strong></h3>
@@ -2727,17 +3285,17 @@ Markdown</strong></h3>
 <hr />
 <h3 id="génération-du-pdf-principal">5. <strong>Génération du PDF
 principal</strong></h3>
-<div class="sourceCode" id="cb26"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Generate Master PDF</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    pandoc combined.md \</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>      --resource-path=... \</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      -s \</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      --pdf-engine=xelatex \</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>      --toc \</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>      --toc-depth=2 \</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>      --include-in-header=docs/latex/header.tex \</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>      -o pdf/documentation.pdf</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Generate Master PDF</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    pandoc combined.md \</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>      --resource-path=... \</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>      -s \</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>      --pdf-engine=xelatex \</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>      --toc \</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>      --toc-depth=2 \</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>      --include-in-header=docs/latex/header.tex \</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>      -o pdf/documentation.pdf</span></code></pre></div>
 <blockquote>
 <p>Ce fichier PDF complet est stocké dans
 <code>pdf/documentation.pdf</code>.</p>
@@ -2745,13 +3303,13 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb26-1"><a href=
 <hr />
 <h3 id="génération-de-la-documentation-html">6. <strong>Génération de la
 documentation HTML</strong></h3>
-<div class="sourceCode" id="cb27"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Generate HTML documentation</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    pandoc combined.md \</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>      -c docs/latex/style.css \</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>      -M title=&quot;Documentation Technique&quot; \</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>      -o html/index.html</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Generate HTML documentation</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    pandoc combined.md \</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>      -c docs/latex/style.css \</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>      -M title=&quot;Documentation Technique&quot; \</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>      -o html/index.html</span></code></pre></div>
 <blockquote>
 <p>La page HTML est stylisée avec <code>style.css</code> si présent,
 puis déployée sur GitHub Pages.</p>
@@ -2759,12 +3317,12 @@ puis déployée sur GitHub Pages.</p>
 <hr />
 <h3 id="déploiement-sur-github-pages">7. <strong>Déploiement sur GitHub
 Pages</strong></h3>
-<div class="sourceCode" id="cb28"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy to GitHub Pages</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> peaceiris/actions-gh-pages@v3</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">github_token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">publish_dir</span><span class="kw">:</span><span class="at"> ./html</span></span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy to GitHub Pages</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> peaceiris/actions-gh-pages@v3</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">github_token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">publish_dir</span><span class="kw">:</span><span class="at"> ./html</span></span></code></pre></div>
 <blockquote>
 <p>Le contenu HTML est publié automatiquement sur la branche
 <code>gh-pages</code>.</p>
@@ -2956,26 +3514,26 @@ Formulaires</h3>
 <h2 id="implémentation-spécifique-aux-composants">Implémentation
 Spécifique aux Composants</h2>
 <h3 id="composant-tableau-de-bord">Composant Tableau de Bord</h3>
-<div class="sourceCode" id="cb29"><pre
-class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle de région principale</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Sections étiquetées</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Régions ARIA live pour le contenu dynamique</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Hiérarchie appropriée des titres</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle de région principale</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Sections étiquetées</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Régions ARIA live pour le contenu dynamique</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Hiérarchie appropriée des titres</span></code></pre></div>
 <h3 id="composant-tableaux-de-données">Composant Tableaux de
 Données</h3>
-<div class="sourceCode" id="cb30"><pre
-class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> En<span class="op">-</span>têtes de colonnes triables avec attributs ARIA</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Relations lignes<span class="op">/</span>colonnes</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Annonces pour le tri et le filtrage via lecteur d<span class="st">&#39;écran</span></span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> En<span class="op">-</span>têtes de colonnes triables avec attributs ARIA</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Relations lignes<span class="op">/</span>colonnes</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Annonces pour le tri et le filtrage via lecteur d<span class="st">&#39;écran</span></span></code></pre></div>
 <h3 id="composants-de-dialogue">Composants de Dialogue</h3>
-<div class="sourceCode" id="cb31"><pre
-class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle modal</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion du focus</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion de la touche Échap</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Labels ARIA pour les contrôles de formulaire</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fonctionnalités d&#39;accessibilité clés :</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Rôle modal</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion du focus</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Gestion de la touche Échap</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Labels ARIA pour les contrôles de formulaire</span></code></pre></div>
 <h2 id="tests-et-validation-1">Tests et Validation</h2>
 <h3 id="tests-automatisés">Tests Automatisés</h3>
 <h4 id="résultats-lighthouse">Résultats Lighthouse</h4>
@@ -3015,23 +3573,23 @@ une expérience utilisateur optimale pour tous.</p>
 les Développeurs</h2>
 <ol type="1">
 <li><p><strong>Toujours Inclure des Labels ARIA</strong></p>
-<div class="sourceCode" id="cb32"><pre
-class="sourceCode html"><code class="sourceCode html"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">button</span> <span class="er">aria-label</span><span class="ot">=</span><span class="st">&quot;Fermer la boîte de dialogue&quot;</span><span class="dt">&gt;</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-icon</span><span class="dt">&gt;</span>close<span class="dt">&lt;/</span><span class="kw">mat-icon</span><span class="dt">&gt;</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb56"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">button</span> <span class="er">aria-label</span><span class="ot">=</span><span class="st">&quot;Fermer la boîte de dialogue&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-icon</span><span class="dt">&gt;</span>close<span class="dt">&lt;/</span><span class="kw">mat-icon</span><span class="dt">&gt;</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;</span></span></code></pre></div></li>
 <li><p><strong>Structure Appropriée des Titres</strong></p>
-<div class="sourceCode" id="cb33"><pre
-class="sourceCode html"><code class="sourceCode html"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>Titre Principal de la Page<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">section</span><span class="dt">&gt;</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>Titre de Section<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">&lt;!-- Contenu --&gt;</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">section</span><span class="dt">&gt;</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb57"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>Titre Principal de la Page<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">section</span><span class="dt">&gt;</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>Titre de Section<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">&lt;!-- Contenu --&gt;</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">section</span><span class="dt">&gt;</span></span></code></pre></div></li>
 <li><p><strong>Labels des Champs de Formulaire</strong></p>
-<div class="sourceCode" id="cb34"><pre
-class="sourceCode html"><code class="sourceCode html"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-label</span><span class="dt">&gt;</span>Rechercher des pays<span class="dt">&lt;/</span><span class="kw">mat-label</span><span class="dt">&gt;</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">input</span> <span class="er">matInput</span> <span class="er">[attr.aria-label]</span><span class="ot">=</span><span class="st">&quot;&#39;Rechercher des pays&#39;&quot;</span> <span class="dt">/&gt;</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb58"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">mat-label</span><span class="dt">&gt;</span>Rechercher des pays<span class="dt">&lt;/</span><span class="kw">mat-label</span><span class="dt">&gt;</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">input</span> <span class="er">matInput</span> <span class="er">[attr.aria-label]</span><span class="ot">=</span><span class="st">&quot;&#39;Rechercher des pays&#39;&quot;</span> <span class="dt">/&gt;</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">mat-form-field</span><span class="dt">&gt;</span></span></code></pre></div></li>
 </ol>
 <h2 id="normes-de-conformité">Normes de Conformité</h2>
 <p>L’application vise à respecter les normes WCAG 2.1 Niveau AA,
