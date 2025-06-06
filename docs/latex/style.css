@@ -94,10 +94,7 @@ code {
 
 /* Bloc de code */
 pre {
-  background-color: #4d4242; 
   color: #000000;
-  padding: 15px;
-  border-radius: 6px;
   overflow-x: auto;
   font-size: 0.95em;
 }
