@@ -19,8 +19,14 @@ FROM nginx:alpine
 # Copy the build output from the builder stage
 COPY --from=builder /app/dist/frontend/browser /usr/share/nginx/html
 
-# Copy the custom Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy the nginx configuration as a template
+COPY nginx.conf /etc/nginx/conf.d/default.conf.template
+
+# Copy the entrypoint script
+COPY entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+# Use the entrypoint script
+ENTRYPOINT ["/docker-entrypoint.sh"]
