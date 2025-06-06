@@ -2,7 +2,8 @@ name: Generate Changelog
 
 on:
   push:
-    branches: changelog-ci
+    branches: 
+      - main
   workflow_dispatch:
     inputs:
       version:
@@ -108,7 +109,7 @@ jobs:
             git add README.md
           fi
           git commit -m "docs: mise à jour automatique du changelog [skip-changelog]"
-          git push origin changelog-ci
+          git push
 
       - name: Create Release
         if: steps.changes.outputs.has-changes == 'true' && github.event.inputs.version != ''
