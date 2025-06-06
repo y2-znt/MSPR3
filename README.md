@@ -13,7 +13,11 @@
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/docker%20compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Docker Hub](https://img.shields.io/badge/Docker_Hub-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/Github%20Actions-282a2e?style=for-the-badge&logo=githubactions&logoColor=367cfe)
+![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
 
 </div>
 
@@ -39,6 +43,9 @@ Solution de surveillance et d'analyse épidémiologique développée pour l'Orga
 git clone https://github.com/y2-znt/MSPR3.git
 cd MSPR3
 
+# Copier le fichier .env.example en .env
+cp .env.example .env
+
 # Lancer l'application avec Docker
 docker-compose up -d
 ```
@@ -54,14 +61,15 @@ Consultez le [guide d'installation](docs/installation.md) pour une configuration
 | API IA          | FastAPI, Python 3.12, Scikit-learn, Pandas, NumPy          |
 | Traitement IA   | Jupyter Notebook, Python 3.12, Scikit-learn, Pandas, NumPy |
 | Base de données | PostgreSQL                                                 |
-| Infrastructure  | Docker, Docker Compose, GitHub Actions                     |
+| Infrastructure  | Docker, Docker Compose, GitHub Actions, GCP                |
+| Déploiement     | Google Cloud Platform, Docker Hub, Nginx                   |
 
 ## Documentation
 
 ### Projet
 
-- [Présentation Part 1](docs/presentation_part1.md)
-- [Présentation Part 2](docs/presentation_part2.md)
+- [Présentation Part 1](docs/brief_part1.md)
+- [Présentation Part 2](docs/brief_part2.md)
 - [Installation](docs/installation.md)
 - [Workflow Git](docs/git-workflow.md)
 - [Gestion de projet](docs/project-management.md)
@@ -73,6 +81,7 @@ Consultez le [guide d'installation](docs/installation.md) pour une configuration
 - [Modèle IA](docs/ai-model.md)
 - [Processus ETL](docs/etl.md)
 - [Technologies utilisées](docs/tech-stack.md)
+- [Déploiement](docs/deployment.md)
 
 ### Benchmarks
 
@@ -81,6 +90,7 @@ Consultez le [guide d'installation](docs/installation.md) pour une configuration
 - [Benchmark ETL](docs/benchmark/benchmark-etl.md)
 - [Benchmark Entrainement IA](docs/benchmark/benchmark-ai-training.md)
 - [Benchmark API IA](docs/benchmark/benchmark-ai-api.md)
+- [Benchmark Déploiement](docs/benchmark/benchmark-deployment.md)
 
 ### Diagrammes
 
