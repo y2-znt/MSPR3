@@ -101,7 +101,7 @@ Les fichiers Markdown sont concaténés en un seul fichier `combined.md` selon u
 > Ce fichier PDF complet est stocké dans `pdf/documentation.pdf`.
 
 ---
-
+ 
 ### 6. **Génération de la documentation HTML**
 
 ```yaml
