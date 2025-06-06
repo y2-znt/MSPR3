@@ -66,7 +66,7 @@ done
 
 ### 3. **Conversion des images PNG/JPG en PDF**
 
-Les images présentes dans `docs/` et `docs/ressources/` sont converties en PDF dans `pdf/appendices/` via ImageMagick.
+Les images présentes dans `docs/` et `docs/ressources/` sont converties en PDF dans `pdf/appendices/` via ImageMagick. 
 
 ---
 
