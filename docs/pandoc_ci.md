@@ -1,5 +1,3 @@
-Voici une documentation en **Markdown** que tu peux publier dans un fichier `docs/pandoc_ci.md` ou directement dans ton `README.md` si tu veux l’exposer dès la racine du projet.
-
 ---
 
 # CI Documentation – Génération automatique avec Pandoc
