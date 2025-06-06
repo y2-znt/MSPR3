@@ -68,10 +68,10 @@ jobs:
           
           if [ -z "${{ steps.previous-tag.outputs.previous-tag }}" ]; then
             echo "Génération du changelog initial..."
-            conventional-changelog -p angular -i CHANGELOG.md -s -r 0 || echo "Erreur lors de la génération"
+            conventional-changelog -p angular -i CHANGELOG.md -s -r 0 --config .github/changelog-config.js
           else
             echo "Mise à jour du changelog depuis ${{ steps.previous-tag.outputs.previous-tag }}..."
-            conventional-changelog -p angular -i CHANGELOG.md -s || echo "Erreur lors de la mise à jour"
+            conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js
           fi
           
           echo "Contenu généré:"
