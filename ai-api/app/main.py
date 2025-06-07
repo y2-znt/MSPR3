@@ -175,8 +175,7 @@ def scheduled_health_check():
 
 # Configuration et démarrage du scheduler
 scheduler = BackgroundScheduler()
-#scheduler.add_job(scheduled_health_check, "interval", minutes=1)
-scheduler.add_job(scheduled_health_check, "interval", seconds=10)
+scheduler.add_job(scheduled_health_check, "interval", minutes=15)
 scheduler.start()
 
 atexit.register(lambda: scheduler.shutdown())
