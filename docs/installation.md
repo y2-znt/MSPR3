@@ -29,8 +29,13 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 DB_NAME=database_name
 
-# Docker Hub (uniquement pour la production)
+# Health check URL
+HEALTH_CHECK_URL=http://localhost/health
+
+# Production
 DOCKERHUB_USERNAME=your_dockerhub_username
+SERVER_NAME=localhost
+CORS_ALLOWED_ORIGINS=http://localhost:4200
 ```
 
 ### 3. Démarrage de l'Application
