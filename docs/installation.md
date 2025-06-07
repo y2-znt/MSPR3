@@ -61,29 +61,47 @@ docker compose ps
 
 #### Mode Production
 
-Le mode production utilise les images pré-construites depuis Docker Hub :
+1. **Configuration SSL**
+
+Avant de démarrer les services en production, vous devez générer des certificats SSL auto-signés :
 
 ```bash
-# Démarrage des services en production
-docker compose -f docker-compose.prod.yml up -d
+# Création du dossier pour les certificats
+mkdir -p certs
+
+# Génération des certificats auto-signés
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout certs/nginx-selfsigned.key \
+  -out certs/nginx-selfsigned.crt \
+  -subj "/C=FR/ST=State/L=City/O=Organization/CN=localhost"
+```
+
+⚠️ Note : Ces certificats auto-signés sont destinés au développement local uniquement. Pour un environnement de production réel, utilisez des certificats SSL valides d'une autorité de certification.
+
+2. **Démarrage des Services**
+
+```bash
+# Connexion à Docker Hub
+docker login
+
+# Récupération des images depuis Docker Hub
+docker compose -f docker-compose.prod.yml pull
 
 # Démarrage des services en production
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-Vérifiez que les services sont bien démarrés :
+Pour vérifier que les services sont bien démarrés :
 
 ```bash
-# Pour le développement
-docker compose ps
-
-# Pour la production
 docker compose -f docker-compose.prod.yml ps
 ```
 
-### 4. Vérification de l'Installation
+### Vérification de l'Installation
 
 Une fois les services démarrés, vous pouvez accéder aux différentes interfaces :
+
+**Mode Développement :**
 
 | Service     | URL                            | Description                   |
 | ----------- | ------------------------------ | ----------------------------- |
@@ -182,14 +200,16 @@ docker compose -f docker-compose.prod.yml down -v
 # Mise à jour depuis le repository
 git pull
 
-# Reconstruction et redémarrage (Développement)
+# Développement
 docker compose down
 docker compose build
 docker compose up -d
 
-# Reconstruction et redémarrage (Production)
+# Production
 docker compose -f docker-compose.prod.yml down
-docker compose -f docker-compose.prod.yml build
+# Récupération des dernières images
+docker compose -f docker-compose.prod.yml pull
+# Redémarrage des services
 docker compose -f docker-compose.prod.yml up -d
 ```
 
@@ -202,3 +222,4 @@ Les principales différences entre les environnements de développement et de pr
 3. **Volumes de données** : Les volumes de production sont séparés de ceux de développement
 4. **Profils Spring** : Le backend utilise le profil `prod` en production
 5. **Nginx** : Le frontend utilise Nginx en production pour servir l'application Angular
+6. **SSL/HTTPS** : Le mode production utilise HTTPS avec des certificats SSL
