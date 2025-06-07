@@ -5,3 +5,8 @@
 .env.local
 /target/
 exported_data/
+
+# SSL Certificates
+/certs/
+*.crt
+*.key
