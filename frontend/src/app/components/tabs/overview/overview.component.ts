@@ -14,7 +14,9 @@ import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Country } from '../../../models/country.model';
 import { AggregatedDiseaseCase } from '../../../models/diseaseCase.model';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 import { DiseaseCaseService } from '../../../services/disease-case.service';
+import { TranslationService } from '../../../services/translation.service';
 
 interface WeeklyData {
   weekLabel: string;
@@ -32,6 +34,7 @@ interface WeeklyData {
     BaseChartDirective,
     MatButton,
     MatIcon,
+    TranslatePipe,
   ],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
@@ -50,7 +53,10 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   areaChartData!: ChartData<'line'>;
   areaChartOptions!: ChartOptions<'line'>;
 
-  constructor(private diseaseCaseService: DiseaseCaseService) {}
+  constructor(
+    private diseaseCaseService: DiseaseCaseService,
+    private translationService: TranslationService
+  ) {}
 
   ngOnInit() {
     this.loadTimeSeriesData();
@@ -75,7 +81,9 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
 
   public getSelectedCountriesText(): string {
     if (!this.selectedCountries || this.selectedCountries.length === 0) {
-      return 'Worldwide';
+      return this.translationService.getInstantTranslation(
+        'dashboard.chart.worldwide'
+      );
     }
 
     try {
@@ -85,7 +93,9 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         .join(', ');
     } catch (error) {
       console.error('Error formatting country names:', error);
-      return 'Worldwide';
+      return this.translationService.getInstantTranslation(
+        'dashboard.chart.worldwide'
+      );
     }
   }
 
@@ -207,28 +217,36 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   updateChart() {
-    // create chart title based on selected countries
     let chartTitle = 'Global';
     if (this.selectedCountries && this.selectedCountries.length > 0) {
       const countryNames = this.selectedCountries.map((c) => c.name).join(', ');
       chartTitle = countryNames;
     }
 
-    // add date range to the chart title
     let dateRange = '';
     if (this.dateStart && this.dateEnd) {
-      dateRange = ` (${this.dateStart} to ${this.dateEnd})`;
+      dateRange = ` (${
+        this.dateStart
+      } ${this.translationService.getInstantTranslation(
+        'dashboard.chart.to'
+      )} ${this.dateEnd})`;
     } else if (this.dateStart) {
-      dateRange = ` (from ${this.dateStart})`;
+      dateRange = ` (${this.translationService.getInstantTranslation(
+        'dashboard.chart.from'
+      )} ${this.dateStart})`;
     } else if (this.dateEnd) {
-      dateRange = ` (until ${this.dateEnd})`;
+      dateRange = ` (${this.translationService.getInstantTranslation(
+        'dashboard.chart.to'
+      )} ${this.dateEnd})`;
     }
 
     this.areaChartData = {
       labels: this.weeklyData.map((week) => week.weekLabel),
       datasets: [
         {
-          label: `Confirmed Cases (${chartTitle}${dateRange})`,
+          label: `${this.translationService.getInstantTranslation(
+            'dashboard.chart.cases'
+          )} (${chartTitle}${dateRange})`,
           data: this.weeklyData.map((week) => week.confirmedCases),
           fill: true,
           borderColor: 'rgba(75,192,192,1)',
@@ -236,7 +254,9 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
           tension: 0.3,
         },
         {
-          label: `Deaths (${chartTitle}${dateRange})`,
+          label: `${this.translationService.getInstantTranslation(
+            'dashboard.chart.deaths'
+          )} (${chartTitle}${dateRange})`,
           data: this.weeklyData.map((week) => week.deaths),
           fill: true,
           borderColor: 'rgb(192, 93, 75)',
@@ -244,7 +264,9 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
           tension: 0.3,
         },
         {
-          label: `Recovered (${chartTitle}${dateRange})`,
+          label: `${this.translationService.getInstantTranslation(
+            'dashboard.chart.recovered'
+          )} (${chartTitle}${dateRange})`,
           data: this.weeklyData.map((week) => week.recovered),
           fill: true,
           borderColor: 'rgb(75, 122, 192)',

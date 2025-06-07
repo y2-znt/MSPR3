@@ -1,14 +1,24 @@
-<div class="dashboard-container" role="main" aria-labelledby="dashboardTitle">  <!-- Header -->
+<div class="dashboard-container" role="main" aria-labelledby="dashboardTitle">
+  <!-- Header -->
   <div class="dashboard-header" role="region" aria-labelledby="filtersTitle">
     <div class="header-title">
-      <h1 id="dashboardTitle" class="mat-headline-4">{{ 'dashboard.title' | translate:{ diseaseName: diseaseName } }}</h1>
+      <h1 id="dashboardTitle" class="mat-headline-4">
+        {{ "dashboard.title" | translate : { diseaseName: diseaseName } }}
+      </h1>
       <app-language-selector></app-language-selector>
     </div>
     <div id="filtersTitle" class="visually-hidden">Filter options</div>
 
-    <div class="header-actions">      <mat-form-field appearance="outline">
-        <mat-label id="periodLabel">{{ 'dashboard.period' | translate }}</mat-label>
-        <mat-date-range-input [formGroup]="dateRange" [rangePicker]="picker" aria-labelledby="periodLabel">
+    <div class="header-actions">
+      <mat-form-field appearance="outline">
+        <mat-label id="periodLabel">{{
+          "dashboard.period" | translate
+        }}</mat-label>
+        <mat-date-range-input
+          [formGroup]="dateRange"
+          [rangePicker]="picker"
+          aria-labelledby="periodLabel"
+        >
           <input
             matStartDate
             placeholder="Start Date"
@@ -22,10 +32,17 @@
             aria-label="End date of the period"
           />
         </mat-date-range-input>
-        <mat-datepicker-toggle matIconSuffix [for]="picker" aria-label="Open calendar for date range"></mat-datepicker-toggle>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+          aria-label="Open calendar for date range"
+        ></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
-      </mat-form-field>      <mat-form-field appearance="outline">
-        <mat-label id="countryLabel">{{ 'dashboard.selectCountries' | translate }}</mat-label>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label id="countryLabel">{{
+          "dashboard.selectCountries" | translate
+        }}</mat-label>
         <mat-select
           [formControl]="countriesControl"
           multiple
@@ -45,15 +62,16 @@
       <button
         mat-raised-button
         color="primary"
-        (click)="openAddCaseDialog()"        aria-label="Add a new case"
+        (click)="openAddCaseDialog()"
+        aria-label="Add a new case"
       >
         <mat-icon aria-hidden="true">add</mat-icon>
-        {{ 'buttons.add' | translate }} {{ 'dashboard.newCase' | translate }}
+        {{ "buttons.add" | translate }} {{ "dashboard.newCase" | translate }}
       </button>
     </div>
   </div>
   <p class="dashboard-subtitle">
-    {{ 'dashboard.subtitle' | translate:{ diseaseName: diseaseName } }}
+    {{ "dashboard.subtitle" | translate : { diseaseName: diseaseName } }}
   </p>
 
   <!-- KPI Cards -->
@@ -65,7 +83,7 @@
             <h2>{{ card.label }}</h2>
             <mat-icon aria-hidden="true">{{ card.icon }}</mat-icon>
           </div>
-          <div class="kpi-value" [attr.aria-label]="'Some label'">
+          <div class="kpi-value" [attr.aria-label]="card.label">
             {{ card.value | number }}
           </div>
           <div class="kpi-subtitle">{{ card.subtitle }}</div>
@@ -91,7 +109,8 @@
     mat-align-tabs="start"
     class="dashboard-tabs"
     aria-label="Dashboard sections"
-  >    <mat-tab [label]="'nav.dashboard' | translate">
+  >
+    <mat-tab [label]="'nav.dashboard' | translate">
       <app-overview
         [totalCases]="totalCases"
         [totalDeaths]="totalDeaths"
