@@ -1,7 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { catchError, finalize, map, tap } from 'rxjs/operators';
 
 export interface Language {
   code: string;
@@ -10,7 +10,7 @@ export interface Language {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TranslationService {
   private currentLanguageSubject = new BehaviorSubject<string>('fr');
@@ -24,27 +24,46 @@ export class TranslationService {
     { code: 'en', name: 'English', flag: '🇺🇸' },
     { code: 'es', name: 'Español', flag: '🇪🇸' },
     { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'it', name: 'Italiano', flag: '🇮🇹' }
+    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
   ];
 
   // Store loaded translations
   private translations: { [lang: string]: { [key: string]: any } } = {};
   private loadedLanguages: Set<string> = new Set();
+  private isInitialized = false;
+
   constructor(private http: HttpClient) {
     this.initializeLanguage();
   }
+
   /**
    * Initialize the translation service with saved or browser language
    */
-  private initializeLanguage(): void {
+  public initializeLanguage(): void {
+    if (this.isInitialized) {
+      return;
+    }
+
+    // Get the saved language or the browser language
     const savedLanguage = this.getSavedLanguage();
     const browserLanguage = this.getBrowserLanguage();
-    const initialLanguage = savedLanguage || browserLanguage || this.DEFAULT_LANGUAGE;
-    
-    // Load translations for the initial language
-    this.loadTranslations(initialLanguage).subscribe(() => {
-      this.currentLanguageSubject.next(initialLanguage);
-    });
+    const initialLanguage =
+      savedLanguage || browserLanguage || this.DEFAULT_LANGUAGE;
+
+    // Load the translations and initialize the language
+    this.loadTranslations(initialLanguage)
+      .pipe(
+        tap((translations) => {
+          this.translations[initialLanguage] = translations;
+          this.loadedLanguages.add(initialLanguage);
+          this.currentLanguageSubject.next(initialLanguage);
+          this.saveLanguagePreference(initialLanguage);
+        }),
+        finalize(() => {
+          this.isInitialized = true;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -54,7 +73,10 @@ export class TranslationService {
     try {
       return localStorage.getItem(this.STORAGE_KEY);
     } catch (error) {
-      console.warn('Unable to access localStorage for language preference:', error);
+      console.warn(
+        'Unable to access localStorage for language preference:',
+        error
+      );
       return null;
     }
   }
@@ -64,23 +86,32 @@ export class TranslationService {
    */
   private getBrowserLanguage(): string {
     const browserLang = navigator.language.slice(0, 2);
-    return this.supportedLanguages.some(lang => lang.code === browserLang) 
-      ? browserLang 
+    return this.supportedLanguages.some((lang) => lang.code === browserLang)
+      ? browserLang
       : this.DEFAULT_LANGUAGE;
   }
+
   /**
    * Set the current language and load translations
    */
   public setLanguage(languageCode: string): void {
     if (!this.isSupportedLanguage(languageCode)) {
-      console.warn(`Language ${languageCode} is not supported. Falling back to ${this.DEFAULT_LANGUAGE}`);
+      console.warn(
+        `Language ${languageCode} is not supported. Falling back to ${this.DEFAULT_LANGUAGE}`
+      );
       languageCode = this.DEFAULT_LANGUAGE;
     }
 
-    this.loadTranslations(languageCode).subscribe(() => {
-      this.currentLanguageSubject.next(languageCode);
-      this.saveLanguagePreference(languageCode);
-    });
+    this.loadTranslations(languageCode)
+      .pipe(
+        tap((translations) => {
+          this.translations[languageCode] = translations;
+          this.loadedLanguages.add(languageCode);
+          this.currentLanguageSubject.next(languageCode);
+          this.saveLanguagePreference(languageCode);
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -92,15 +123,16 @@ export class TranslationService {
     }
 
     return this.http.get(`/assets/i18n/${languageCode}.json`).pipe(
-      map((translations: any) => {
-        this.translations[languageCode] = translations;
-        this.loadedLanguages.add(languageCode);
-        return translations;
-      }),
       catchError((error) => {
-        console.error(`Failed to load translations for ${languageCode}:`, error);
+        console.error(
+          `Failed to load translations for ${languageCode}:`,
+          error
+        );
         // Fallback to default language if available, otherwise return empty object
-        if (languageCode !== this.DEFAULT_LANGUAGE && this.loadedLanguages.has(this.DEFAULT_LANGUAGE)) {
+        if (
+          languageCode !== this.DEFAULT_LANGUAGE &&
+          this.loadedLanguages.has(this.DEFAULT_LANGUAGE)
+        ) {
           return of(this.translations[this.DEFAULT_LANGUAGE]);
         }
         return of({});
@@ -115,7 +147,10 @@ export class TranslationService {
     try {
       localStorage.setItem(this.STORAGE_KEY, languageCode);
     } catch (error) {
-      console.warn('Unable to save language preference to localStorage:', error);
+      console.warn(
+        'Unable to save language preference to localStorage:',
+        error
+      );
     }
   }
 
@@ -123,7 +158,7 @@ export class TranslationService {
    * Check if language is supported
    */
   private isSupportedLanguage(languageCode: string): boolean {
-    return this.supportedLanguages.some(lang => lang.code === languageCode);
+    return this.supportedLanguages.some((lang) => lang.code === languageCode);
   }
 
   /**
@@ -144,20 +179,21 @@ export class TranslationService {
    * Get language details by code
    */
   public getLanguageByCode(code: string): Language | undefined {
-    return this.supportedLanguages.find(lang => lang.code === code);
+    return this.supportedLanguages.find((lang) => lang.code === code);
   }
+
   /**
    * Get translation for a key
    */
   public getTranslation(key: string, params?: any): Observable<string> {
     const currentLang = this.getCurrentLanguage();
-    
+
     if (!this.loadedLanguages.has(currentLang)) {
       return this.loadTranslations(currentLang).pipe(
         map(() => this.getTranslationValue(key, currentLang))
       );
     }
-    
+
     return of(this.getTranslationValue(key, currentLang));
   }
 
@@ -181,7 +217,7 @@ export class TranslationService {
     // Support nested keys like 'app.title'
     const keys = key.split('.');
     let value: any = langTranslations;
-    
+
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
@@ -189,9 +225,10 @@ export class TranslationService {
         return key; // Return original key if not found
       }
     }
-    
+
     return typeof value === 'string' ? value : key;
   }
+
   /**
    * Check if translations are loaded for current language
    */
