@@ -33,17 +33,6 @@ DB_NAME=database_name
 DOCKERHUB_USERNAME=your_dockerhub_username
 ```
 
-#### Configuration Backend
-
-Créez un fichier `.env` dans le dossier `backend` :
-
-```bash
-# Configuration Base de données
-DB_URL=jdbc:postgresql://db:5432/database_name
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
-```
-
 ### 3. Démarrage de l'Application
 
 #### Mode Développement
