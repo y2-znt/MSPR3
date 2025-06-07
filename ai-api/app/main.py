@@ -1,14 +1,14 @@
-from fastapi import FastAPI, HTTPException #type: ignore
-from fastapi.middleware.cors import CORSMiddleware #type: ignore
-from pydantic import BaseModel #type: ignore
+from fastapi import FastAPI, HTTPException 
+from fastapi.middleware.cors import CORSMiddleware 
+from pydantic import BaseModel 
 from datetime import date
-import joblib #type: ignore
-import numpy as np #type: ignore
+import joblib
+import numpy as np 
 import logging
 import os
-from apscheduler.schedulers.background import BackgroundScheduler #type: ignore
+from apscheduler.schedulers.background import BackgroundScheduler 
 import atexit
-import requests #type: ignore
+import requests 
 
 # Configuration des logs
 logging.basicConfig(level=logging.INFO)
