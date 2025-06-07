@@ -15,6 +15,7 @@ import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { PredictRequest } from '../../models/predict.model';
 import { PredictService } from '../../services/predict.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-predict',
@@ -29,6 +30,7 @@ import { PredictService } from '../../services/predict.service';
     MatSelectModule,
     MatCardModule,
     BaseChartDirective,
+    TranslatePipe,
   ],
   templateUrl: './predict.component.html',
   styleUrls: ['./predict.component.scss'],

@@ -1,142 +1,184 @@
-<h2 mat-dialog-title id="dialog-title">Add New Disease Case</h2>
+<h2 mat-dialog-title id="dialog-title">{{ "dialog.add.title" | translate }}</h2>
 
-<form [formGroup]="caseForm" (ngSubmit)="onSubmit()" aria-labelledby="dialog-title">
-    <div mat-dialog-content>
+<form
+  [formGroup]="caseForm"
+  (ngSubmit)="onSubmit()"
+  aria-labelledby="dialog-title"
+>
+  <div mat-dialog-content>
+    <!-- Country -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label id="country-label">{{
+        "forms.country.label" | translate
+      }}</mat-label>
+      <mat-select
+        formControlName="country"
+        aria-labelledby="country-label"
+        aria-describedby="country-error"
+      >
+        <mat-option
+          *ngFor="let country of data.countries"
+          [value]="country.name"
+        >
+          {{ country.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="caseForm.get('country')?.hasError('required')"
+        id="country-error"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ "forms.country.required" | translate }}
+      </mat-error>
+    </mat-form-field>
 
-        <!-- Country -->
-        <mat-form-field appearance="outline" class="full-width">
-        <mat-label id="country-label">Country</mat-label>
-        <mat-select
-            formControlName="country"
-            aria-labelledby="country-label"
-            aria-describedby="country-error">
-            <mat-option *ngFor="let country of data.countries" [value]="country.name">
-            {{ country.name }}
-            </mat-option>
-        </mat-select>
-        <mat-error
-            *ngIf="caseForm.get('country')?.hasError('required')"
-            id="country-error"
-            role="alert"
-            aria-live="polite">
-            Country is required
-        </mat-error>
-        </mat-form-field>
+    <!-- Date -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label id="date-label">{{
+        "forms.date.label" | translate
+      }}</mat-label>
+      <input
+        matInput
+        [matDatepicker]="datePicker"
+        formControlName="date"
+        aria-labelledby="date-label"
+        aria-describedby="date-error"
+        [placeholder]="'forms.date.placeholder' | translate"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="datePicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+      <mat-error
+        *ngIf="caseForm.get('date')?.hasError('required')"
+        id="date-error"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ "forms.date.required" | translate }}
+      </mat-error>
+    </mat-form-field>
 
-        <!-- Date -->
-        <mat-form-field appearance="outline" class="full-width">
-        <mat-label id="date-label">Date</mat-label>
-        <input
-            matInput
-            [matDatepicker]="datePicker"
-            formControlName="date"
-            aria-labelledby="date-label"
-            aria-describedby="date-error">
-        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-        <mat-datepicker #datePicker></mat-datepicker>
-        <mat-error
-            *ngIf="caseForm.get('date')?.hasError('required')"
-            id="date-error"
-            role="alert"
-            aria-live="polite">
-            Date is required
-        </mat-error>
-        </mat-form-field>
+    <!-- Confirmed Cases -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label id="confirmed-label">{{
+        "forms.cases.label" | translate
+      }}</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="confirmedCases"
+        aria-labelledby="confirmed-label"
+        aria-describedby="confirmed-required-error confirmed-min-error"
+        [placeholder]="'forms.cases.placeholder' | translate"
+      />
+      <mat-error
+        *ngIf="caseForm.get('confirmedCases')?.hasError('required')"
+        id="confirmed-required-error"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ "forms.cases.required" | translate }}
+      </mat-error>
+      <mat-error
+        *ngIf="caseForm.get('confirmedCases')?.hasError('min')"
+        id="confirmed-min-error"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ "forms.cases.min" | translate }}
+      </mat-error>
+    </mat-form-field>
 
-        <!-- Confirmed Cases -->
-        <mat-form-field appearance="outline" class="full-width">
-        <mat-label id="confirmed-label">Confirmed Cases</mat-label>
-        <input
-            matInput
-            type="number"
-            formControlName="confirmedCases"
-            aria-labelledby="confirmed-label"
-            aria-describedby="confirmed-required-error confirmed-min-error">
-        <mat-error
-            *ngIf="caseForm.get('confirmedCases')?.hasError('required')"
-            id="confirmed-required-error"
-            role="alert"
-            aria-live="polite">
-            Confirmed cases is required
-        </mat-error>
-        <mat-error
-            *ngIf="caseForm.get('confirmedCases')?.hasError('min')"
-            id="confirmed-min-error"
-            role="alert"
-            aria-live="polite">
-            Value must be 0 or greater
-        </mat-error>
-        </mat-form-field>
+    <!-- Deaths -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label id="deaths-label">{{
+        "forms.deaths.label" | translate
+      }}</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="deaths"
+        aria-labelledby="deaths-label"
+        aria-describedby="deaths-required-error deaths-min-error"
+        [placeholder]="'forms.deaths.placeholder' | translate"
+      />
+      <mat-error
+        *ngIf="caseForm.get('deaths')?.hasError('required')"
+        id="deaths-required-error"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ "forms.deaths.required" | translate }}
+      </mat-error>
+      <mat-error
+        *ngIf="caseForm.get('deaths')?.hasError('min')"
+        id="deaths-min-error"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ "forms.deaths.min" | translate }}
+      </mat-error>
+    </mat-form-field>
 
-        <!-- Deaths -->
-        <mat-form-field appearance="outline" class="full-width">
-        <mat-label id="deaths-label">Deaths</mat-label>
-        <input
-            matInput
-            type="number"
-            formControlName="deaths"
-            aria-labelledby="deaths-label"
-            aria-describedby="deaths-required-error deaths-min-error">
-        <mat-error
-            *ngIf="caseForm.get('deaths')?.hasError('required')"
-            id="deaths-required-error"
-            role="alert"
-            aria-live="polite">
-            Deaths is required
-        </mat-error>
-        <mat-error
-            *ngIf="caseForm.get('deaths')?.hasError('min')"
-            id="deaths-min-error"
-            role="alert"
-            aria-live="polite">
-            Value must be 0 or greater
-        </mat-error>
-        </mat-form-field>
+    <!-- Recovered -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label id="recovered-label">{{
+        "forms.recovered.label" | translate
+      }}</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="recovered"
+        aria-labelledby="recovered-label"
+        aria-describedby="recovered-required-error recovered-min-error"
+        [placeholder]="'forms.recovered.placeholder' | translate"
+      />
+      <mat-error
+        *ngIf="caseForm.get('recovered')?.hasError('required')"
+        id="recovered-required-error"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ "forms.recovered.required" | translate }}
+      </mat-error>
+      <mat-error
+        *ngIf="caseForm.get('recovered')?.hasError('min')"
+        id="recovered-min-error"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ "forms.recovered.min" | translate }}
+      </mat-error>
+    </mat-form-field>
+  </div>
 
-        <!-- Recovered -->
-        <mat-form-field appearance="outline" class="full-width">
-        <mat-label id="recovered-label">Recovered</mat-label>
-        <input
-            matInput
-            type="number"
-            formControlName="recovered"
-            aria-labelledby="recovered-label"
-            aria-describedby="recovered-required-error recovered-min-error">
-        <mat-error
-            *ngIf="caseForm.get('recovered')?.hasError('required')"
-            id="recovered-required-error"
-            role="alert"
-            aria-live="polite">
-            Recovered is required
-        </mat-error>
-        <mat-error
-            *ngIf="caseForm.get('recovered')?.hasError('min')"
-            id="recovered-min-error"
-            role="alert"
-            aria-live="polite">
-            Value must be 0 or greater
-        </mat-error>
-        </mat-form-field>
-
-    </div>
-
-    <div mat-dialog-actions align="end">
-        <button
-        mat-button
-        type="button"
-        (click)="onCancel()"
-        [disabled]="isSubmitting"
-        aria-label="Cancel form">
-        Cancel
-        </button>
-        <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="caseForm.invalid || isSubmitting"
-        aria-label="Submit form">
-        <mat-spinner diameter="20" *ngIf="isSubmitting" role="progressbar" aria-label="Loading"></mat-spinner>
-        <span *ngIf="!isSubmitting">Submit</span>
-        </button>
-    </div>
+  <div mat-dialog-actions align="end">
+    <button
+      mat-button
+      type="button"
+      (click)="onCancel()"
+      [disabled]="isSubmitting"
+      [attr.aria-label]="'buttons.cancel' | translate"
+    >
+      {{ "buttons.cancel" | translate }}
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="caseForm.invalid || isSubmitting"
+      [attr.aria-label]="'buttons.submit' | translate"
+    >
+      <mat-spinner
+        diameter="20"
+        *ngIf="isSubmitting"
+        role="progressbar"
+        [attr.aria-label]="'app.loading' | translate"
+      ></mat-spinner>
+      <span *ngIf="!isSubmitting">{{ "buttons.submit" | translate }}</span>
+    </button>
+  </div>
 </form>

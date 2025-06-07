@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Country } from '../../../models/country.model';
@@ -28,11 +29,11 @@ import {
 } from '../../../services/covid-data.service';
 import { DiseaseCaseService } from '../../../services/disease-case.service';
 import { EditDialogComponent } from '../../edit-dialog/edit-dialog.component';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-countries',
-  standalone: true,
-  imports: [
+  standalone: true,  imports: [
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
@@ -41,6 +42,8 @@ import { EditDialogComponent } from '../../edit-dialog/edit-dialog.component';
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
+    TranslatePipe,
   ],
   templateUrl: './countries.component.html',
   styleUrl: './countries.component.scss',

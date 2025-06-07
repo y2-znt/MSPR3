@@ -7,8 +7,6 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import { A11yModule } from '@angular/cdk/a11y';
-
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -21,29 +19,27 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { DialogComponent } from '../../components/dialog/dialog.component';
 import { Country } from '../../models/country.model';
 import { TotalKpiDto } from '../../models/diseaseCase.model';
 import { Page } from '../../models/pagination.model';
 import { OrderByAlphaPipe } from '../../pipes/order-by-alpha.pipe';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 import { CountryService } from '../../services/country.service';
 import {
   CountryData,
   CovidDataService,
 } from '../../services/covid-data.service';
 import { DiseaseCaseService } from '../../services/disease-case.service';
+import { TranslationService } from '../../services/translation.service';
+import { DialogComponent } from '../dialog/dialog.component';
+import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
 import { CountriesComponent } from '../tabs/countries/countries.component';
 import { OverviewComponent } from '../tabs/overview/overview.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  providers: [
-    provideNativeDateAdapter(),
-    CountryService,
-    DiseaseCaseService,
-    DialogComponent,
-  ],
+  providers: [provideNativeDateAdapter(), CountryService, DiseaseCaseService],
   imports: [
     CommonModule,
     FormsModule,
@@ -62,7 +58,8 @@ import { OverviewComponent } from '../tabs/overview/overview.component';
     OrderByAlphaPipe,
     OverviewComponent,
     CountriesComponent,
-    DialogComponent,
+    LanguageSelectorComponent,
+    TranslatePipe,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -94,7 +91,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private covidDataService: CovidDataService,
     private cdr: ChangeDetectorRef,
     private diseaseCaseService: DiseaseCaseService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private translationService: TranslationService
   ) {}
 
   ngOnInit(): void {
@@ -111,21 +109,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
   get kpiCards() {
     return [
       {
-        label: 'Total Cases',
+        label: this.translationService.getInstantTranslation(
+          'dashboard.kpi.totalCases.label'
+        ),
         icon: 'people',
-        subtitle: `Cases of ${this.diseaseName} in the world`,
+        subtitle: this.translationService.getInstantTranslation(
+          'dashboard.kpi.totalCases.subtitle',
+          {
+            diseaseName: this.diseaseName,
+          }
+        ),
         value: this.totalCases,
       },
       {
-        label: 'Total Deaths',
+        label: this.translationService.getInstantTranslation(
+          'dashboard.kpi.totalDeaths.label'
+        ),
         icon: 'warning',
-        subtitle: `Mortality rate: ${this.mortalityRate.toFixed(2)}%`,
+        subtitle: this.translationService.getInstantTranslation(
+          'dashboard.kpi.totalDeaths.subtitle',
+          {
+            rate: this.mortalityRate.toFixed(2),
+          }
+        ),
         value: this.totalDeaths,
       },
       {
-        label: 'Recoveries',
+        label: this.translationService.getInstantTranslation(
+          'dashboard.kpi.recoveries.label'
+        ),
         icon: 'health_and_safety',
-        subtitle: `Recovery rate: ${this.recoveryRate.toFixed(2)}%`,
+        subtitle: this.translationService.getInstantTranslation(
+          'dashboard.kpi.recoveries.subtitle',
+          {
+            rate: this.recoveryRate.toFixed(2),
+          }
+        ),
         value: this.totalRecoveries,
       },
     ];
