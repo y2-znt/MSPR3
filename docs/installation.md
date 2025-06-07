@@ -27,7 +27,6 @@ Créez un fichier `.env` à la racine du projet :
 DB_URL=jdbc:postgresql://db:5432/database_name
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
-DB_PORT=5432
 DB_NAME=database_name
 
 # Docker Hub (uniquement pour la production)

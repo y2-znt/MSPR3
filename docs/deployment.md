@@ -133,7 +133,6 @@ DB_URL=jdbc:postgresql://db:5432/mspr3_db
 DB_USERNAME=mspr3_user
 DB_PASSWORD=votre_mot_de_passe_securise
 DB_NAME=mspr3_db
-DB_PORT=5432
 CORS_ALLOWED_ORIGINS=http://VOTRE_IP_VM
 SERVER_NAME=VOTRE_IP_VM
 ```
