@@ -1,77 +1,78 @@
 <div class="predict-container">
-  <h2>COVID-19 Prediction</h2>
-  <form (ngSubmit)="onSubmit()" [formGroup]="predictForm" class="predict-form" aria-label="COVID-19 prediction form">
+  <h2>{{ 'prediction.title' | translate }}</h2>
+  <form (ngSubmit)="onSubmit()" [formGroup]="predictForm" class="predict-form" [attr.aria-label]="'prediction.form.title' | translate">
     <div class="form-grid">
       <mat-form-field appearance="outline">
-        <mat-label>Number of confirmed cases</mat-label>
-        <input matInput type="number" formControlName="confirmed_case" aria-label="Number of confirmed cases">
+        <mat-label>{{ 'forms.cases.label' | translate }}</mat-label>
+        <input matInput type="number" formControlName="confirmed_case" [attr.aria-label]="'forms.cases.label' | translate">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Date</mat-label>
-        <input matInput type="date" formControlName="date" aria-label="Date">
+        <mat-label>{{ 'forms.date.label' | translate }}</mat-label>
+        <input matInput type="date" formControlName="date" [attr.aria-label]="'forms.date.label' | translate">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Number of deaths</mat-label>
-        <input matInput type="number" formControlName="deaths" aria-label="Number of deaths">
+        <mat-label>{{ 'forms.deaths.label' | translate }}</mat-label>
+        <input matInput type="number" formControlName="deaths" [attr.aria-label]="'forms.deaths.label' | translate">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Number of recoveries</mat-label>
-        <input matInput type="number" formControlName="recovered" aria-label="Number of recoveries">
+        <mat-label>{{ 'forms.recovered.label' | translate }}</mat-label>
+        <input matInput type="number" formControlName="recovered" [attr.aria-label]="'forms.recovered.label' | translate">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Location</mat-label>
-        <input matInput formControlName="location" aria-label="Location">
+        <mat-label>{{ 'prediction.form.location' | translate }}</mat-label>
+        <input matInput formControlName="location" [attr.aria-label]="'prediction.form.location' | translate">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Region</mat-label>
-        <input matInput formControlName="region" aria-label="Region">
+        <mat-label>{{ 'prediction.form.region' | translate }}</mat-label>
+        <input matInput formControlName="region" [attr.aria-label]="'prediction.form.region' | translate">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Country</mat-label>
-        <input matInput formControlName="country" aria-label="Country">
+        <mat-label>{{ 'forms.country.label' | translate }}</mat-label>
+        <input matInput formControlName="country" [attr.aria-label]="'forms.country.label' | translate">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Continent</mat-label>
-        <input matInput formControlName="continent" aria-label="Continent">
+        <mat-label>{{ 'prediction.form.continent' | translate }}</mat-label>        <input matInput formControlName="continent" [attr.aria-label]="'prediction.form.continent' | translate">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>Population</mat-label>
-        <input matInput type="number" formControlName="population" aria-label="Population">
+        <mat-label>{{ 'prediction.form.population' | translate }}</mat-label>
+        <input matInput type="number" formControlName="population" [attr.aria-label]="'prediction.form.population' | translate">
       </mat-form-field>
       
       <mat-form-field appearance="outline">
-        <mat-label>WHO region</mat-label>
-        <input matInput formControlName="who_region" aria-label="WHO region">
+        <mat-label>{{ 'prediction.form.whoRegion' | translate }}</mat-label>
+        <input matInput formControlName="who_region" [attr.aria-label]="'prediction.form.whoRegion' | translate">
       </mat-form-field>
     </div>
     
     <div class="submit-button">
-      <button mat-raised-button color="primary" type="submit" aria-label="Submit prediction">Run prediction</button>
+      <button mat-raised-button color="primary" type="submit" [attr.aria-label]="'buttons.submit' | translate">
+        {{ 'buttons.submit' | translate }}
+      </button>
     </div>
   </form>
 </div>
 
 <mat-card *ngIf="chartReady" aria-live="polite">
-  <mat-card-title>Prediction result</mat-card-title>
+  <mat-card-title>{{ 'prediction.result.title' | translate }}</mat-card-title>
   <mat-card-content>
     <canvas 
       baseChart
       [type]="'doughnut'"
       [data]="areaChartData"
       [options]="areaChartOptions"
-      aria-label="COVID-19 prediction chart: cases, recoveries, and deaths"
+      [attr.aria-label]="'prediction.result.title' | translate"
       aria-describedby="chart-description">
     </canvas>
     <p id="chart-description" class="visually-hidden">
-      Doughnut chart showing the distribution of predicted COVID-19 classes: cases, recoveries, and deaths.
+      {{ 'prediction.result.title' | translate }}
     </p>
   </mat-card-content>
 </mat-card>

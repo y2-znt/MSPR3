@@ -9,7 +9,10 @@
     "test": "ng test",
     "install:browsers": "npx playwright install --with-deps",
     "test:e2e": "playwright test",
-    "test:e2e:ci": "playwright test --reporter=html"
+    "test:e2e:ci": "playwright test --reporter=html",
+    "extract-i18n": "ng extract-i18n",
+    "build:fr": "ng build --configuration production,fr",
+    "serve:fr": "ng serve --configuration fr"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +26,8 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "@ngx-translate/core": "^16.0.4",
+    "@ngx-translate/http-loader": "^16.0.1",
     "chart.js": "^4.4.8",
     "frontend": "file:",
     "ng2-charts": "^7.0.0",
