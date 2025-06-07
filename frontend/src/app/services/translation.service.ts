@@ -198,11 +198,19 @@ export class TranslationService {
   }
 
   /**
-   * Get instant translation for a key
+   * Get instant translation for a key with parameter interpolation
    */
   public getInstantTranslation(key: string, params?: any): string {
     const currentLang = this.getCurrentLanguage();
-    return this.getTranslationValue(key, currentLang);
+    let text = this.getTranslationValue(key, currentLang);
+
+    if (params) {
+      Object.keys(params).forEach((param) => {
+        text = text.replace(`{${param}}`, params[param].toString());
+      });
+    }
+
+    return text;
   }
 
   /**
