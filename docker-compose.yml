@@ -7,9 +7,11 @@ services:
     ports:
       - "4200:4200"
     volumes:
-      - ./frontend/src:/app/src
+      - ./frontend:/app
       - /app/node_modules
-    restart: always
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
     depends_on:
       - backend
     networks:
@@ -22,19 +24,19 @@ services:
       dockerfile: backend.dockerfile
     ports:
       - "8080:8080"
+    volumes:
+      - ./backend:/app
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - DB_URL=${DB_URL}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - ./backend/src:/app/src
-      - /app/node_modules
-    restart: always
+    restart: unless-stopped
     depends_on:
       - db
     networks:
       - mspr3-network
+
   ai-api:
     container_name: mspr3-ai
     build:
@@ -43,8 +45,11 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./ai-api/app:/code/app
-    restart: always
+      - ./ai-api:/code
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEBUG=1
+    restart: unless-stopped
     depends_on:
       - backend
       - db
@@ -59,15 +64,15 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "${DB_PORT}:5432"
+      - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mspr3-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
     networks:
       - mspr3-network
 
 volumes:
-  pgdata:
-    name: mspr3-pgdata
+  mspr3-db-data:
 
 networks:
   mspr3-network:
