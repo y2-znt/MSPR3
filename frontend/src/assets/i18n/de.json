@@ -1,4 +1,5 @@
-{  "app": {
+{
+  "app": {
     "title": "COVID-19 Dashboard",
     "subtitle": "COVID-19-Statistiken weltweit überwachen und analysieren",
     "loading": "Laden...",
@@ -90,38 +91,53 @@
       "delete": "Sind Sie sicher, dass Sie dieses Element löschen möchten?",
       "unsavedChanges": "Sie haben ungespeicherte Änderungen. Möchten Sie fortfahren?"
     }
-  },  "dashboard": {
+  },
+  "dashboard": {
     "title": "Covid-19 Dashboard",
     "subtitle": "Covid-19-Statistiken weltweit überwachen und analysieren",
     "period": "Zeitraum",
     "selectCountries": "Länder auswählen",
     "newCase": "Neuer Fall",
     "kpi": {
-      "totalCases": "Gesamte Fälle",
-      "totalDeaths": "Gesamte Todesfälle",
-      "totalRecovered": "Gesamte Genesene",
-      "activeCases": "Aktive Fälle",
-      "newCases": "Neue Fälle"
+      "totalCases": {
+        "label": "Gesamte Fälle",
+        "subtitle": "{diseaseName}-Fälle weltweit"
+      },
+      "totalDeaths": {
+        "label": "Gesamte Todesfälle",
+        "subtitle": "Sterblichkeitsrate: {rate}%"
+      },
+      "recoveries": {
+        "label": "Genesene",
+        "subtitle": "Genesungsrate: {rate}%"
+      }
     },
     "chart": {
-      "title": "COVID-19 Fallentwicklung",
-      "subtitle": "Globale Daten für den ausgewählten Zeitraum",
+      "title": "Fallentwicklung",
+      "subtitle": "Entwicklung der bestätigten Fälle, Genesungen und Todesfälle",
       "cases": "Fälle",
       "deaths": "Todesfälle",
-      "recovered": "Genesen"
+      "recovered": "Genesen",
+      "from": "von",
+      "to": "bis",
+      "ariaLabel": "Liniendiagramm zur Entwicklung der Fälle, Genesungen und Todesfälle im Zeitverlauf",
+      "worldwide": "Weltweit",
+      "period": "Zeitraum"
     },
     "countries": {
       "title": "Statistiken nach Land",
       "filter": "Nach Land filtern...",
-      "noResults": "Keine Ergebnisse gefunden"
+      "noResults": "Keine Ergebnisse gefunden",
+      "count": "Anzahl der Länder: {count}"
     }
   },
   "prediction": {
-    "title": "COVID-19 Vorhersage",    "form": {
+    "title": "COVID-19 Vorhersage",
+    "form": {
       "title": "Vorhersageparameter",
       "location": "Ort",
       "region": "Region",
-      "continent": "Kontinent", 
+      "continent": "Kontinent",
       "population": "Bevölkerung",
       "whoRegion": "WHO-Region",
       "density": "Bevölkerungsdichte",

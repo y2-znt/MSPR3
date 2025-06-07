@@ -1,4 +1,5 @@
-{  "app": {
+{
+  "app": {
     "title": "Dashboard COVID-19",
     "subtitle": "Surveillance et analyse des statistiques COVID-19 dans le monde",
     "loading": "Chargement...",
@@ -19,7 +20,7 @@
     "edit": "Modifier",
     "delete": "Supprimer",
     "add": "Ajouter",
-    "export": "Exporter",
+    "export": "Exporter en CSV",
     "search": "Rechercher",
     "filter": "Filtrer",
     "reset": "Réinitialiser",
@@ -90,37 +91,52 @@
       "delete": "Êtes-vous sûr de vouloir supprimer cet élément ?",
       "unsavedChanges": "Vous avez des modifications non sauvegardées. Voulez-vous continuer ?"
     }
-  },  "dashboard": {
+  },
+  "dashboard": {
     "title": "Tableau de bord Covid-19",
     "subtitle": "Surveillance et analyse des statistiques Covid-19 dans le monde",
     "period": "Période",
     "selectCountries": "Sélectionner les pays",
     "newCase": "Nouveau cas",
     "kpi": {
-      "totalCases": "Total des cas",
-      "totalDeaths": "Total des décès",
-      "totalRecovered": "Total des guérisons",
-      "activeCases": "Cas actifs",
-      "newCases": "Nouveaux cas"
+      "totalCases": {
+        "label": "Total des cas",
+        "subtitle": "Cas de {diseaseName} dans le monde"
+      },
+      "totalDeaths": {
+        "label": "Total des décès",
+        "subtitle": "Taux de mortalité : {rate}%"
+      },
+      "recoveries": {
+        "label": "Guérisons",
+        "subtitle": "Taux de guérison : {rate}%"
+      }
     },
     "chart": {
-      "title": "Évolution des cas COVID-19",
-      "subtitle": "Données globales sur la période sélectionnée",
+      "title": "Évolution des cas",
+      "subtitle": "Évolution des cas confirmés, des guérisons et des décès",
       "cases": "Cas",
       "deaths": "Décès",
-      "recovered": "Guérisons"
+      "recovered": "Guérisons",
+      "from": "du",
+      "to": "au",
+      "ariaLabel": "Graphique linéaire montrant l'évolution des cas, des guérisons et des décès au fil du temps",
+      "worldwide": "Mondial",
+      "period": "Période"
     },
     "countries": {
       "title": "Statistiques par pays",
       "filter": "Filtrer par pays...",
-      "noResults": "Aucun résultat trouvé"
+      "noResults": "Aucun résultat trouvé",
+      "count": "Nombre de pays : {count}"
     }
   },
   "prediction": {
-    "title": "Prédiction COVID-19",    "form": {
+    "title": "Prédiction COVID-19",
+    "form": {
       "title": "Paramètres de prédiction",
       "location": "Lieu",
-      "region": "Région", 
+      "region": "Région",
       "continent": "Continent",
       "population": "Population",
       "whoRegion": "Région OMS",

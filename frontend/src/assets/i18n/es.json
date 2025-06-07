@@ -1,4 +1,5 @@
-{  "app": {
+{
+  "app": {
     "title": "Panel COVID-19",
     "subtitle": "Monitorear y analizar estadísticas de COVID-19 en todo el mundo",
     "loading": "Cargando...",
@@ -90,34 +91,49 @@
       "delete": "¿Está seguro de que desea eliminar este elemento?",
       "unsavedChanges": "Tiene cambios no guardados. ¿Desea continuar?"
     }
-  },  "dashboard": {
+  },
+  "dashboard": {
     "title": "Panel Covid-19",
     "subtitle": "Monitorear y analizar estadísticas de Covid-19 en todo el mundo",
     "period": "Período",
     "selectCountries": "Seleccionar países",
     "newCase": "Nuevo caso",
     "kpi": {
-      "totalCases": "Total de Casos",
-      "totalDeaths": "Total de Muertes",
-      "totalRecovered": "Total de Recuperados",
-      "activeCases": "Casos Activos",
-      "newCases": "Nuevos Casos"
+      "totalCases": {
+        "label": "Total de Casos",
+        "subtitle": "Casos de {diseaseName} en el mundo"
+      },
+      "totalDeaths": {
+        "label": "Total de Muertes",
+        "subtitle": "Tasa de mortalidad: {rate}%"
+      },
+      "recoveries": {
+        "label": "Recuperados",
+        "subtitle": "Tasa de recuperación: {rate}%"
+      }
     },
     "chart": {
-      "title": "Evolución de Casos COVID-19",
-      "subtitle": "Datos globales para el período seleccionado",
+      "title": "Evolución de Casos",
+      "subtitle": "Evolución de casos confirmados, recuperaciones y muertes",
       "cases": "Casos",
       "deaths": "Muertes",
-      "recovered": "Recuperados"
+      "recovered": "Recuperados",
+      "from": "desde",
+      "to": "hasta",
+      "ariaLabel": "Gráfico de líneas que muestra la evolución de casos, recuperaciones y muertes a lo largo del tiempo",
+      "worldwide": "Mundial",
+      "period": "Período"
     },
     "countries": {
       "title": "Estadísticas por País",
       "filter": "Filtrar por país...",
-      "noResults": "No se encontraron resultados"
+      "noResults": "No se encontraron resultados",
+      "count": "Número de países: {count}"
     }
   },
   "prediction": {
-    "title": "Predicción COVID-19",    "form": {
+    "title": "Predicción COVID-19",
+    "form": {
       "title": "Parámetros de Predicción",
       "location": "Ubicación",
       "region": "Región",

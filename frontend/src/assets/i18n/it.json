@@ -99,23 +99,36 @@
     "selectCountries": "Seleziona paesi",
     "newCase": "Nuovo caso",
     "kpi": {
-      "totalCases": "Casi Totali",
-      "totalDeaths": "Decessi Totali",
-      "totalRecovered": "Guariti Totali",
-      "activeCases": "Casi Attivi",
-      "newCases": "Nuovi Casi"
+      "totalCases": {
+        "label": "Casi Totali",
+        "subtitle": "Casi di {diseaseName} nel mondo"
+      },
+      "totalDeaths": {
+        "label": "Decessi Totali",
+        "subtitle": "Tasso di mortalità: {rate}%"
+      },
+      "recoveries": {
+        "label": "Guariti",
+        "subtitle": "Tasso di guarigione: {rate}%"
+      }
     },
     "chart": {
-      "title": "Evoluzione dei Casi COVID-19",
-      "subtitle": "Dati globali per il periodo selezionato",
+      "title": "Evoluzione dei Casi",
+      "subtitle": "Evoluzione dei casi confermati, guarigioni e decessi",
       "cases": "Casi",
       "deaths": "Decessi",
-      "recovered": "Guariti"
+      "recovered": "Guariti",
+      "from": "dal",
+      "to": "al",
+      "ariaLabel": "Grafico a linee che mostra l'evoluzione dei casi, guarigioni e decessi nel tempo",
+      "worldwide": "Mondiale",
+      "period": "Periodo"
     },
     "countries": {
       "title": "Statistiche per Paese",
       "filter": "Filtra per paese...",
-      "noResults": "Nessun risultato trovato"
+      "noResults": "Nessun risultato trovato",
+      "count": "Numero di paesi: {count}"
     }
   },
   "prediction": {

@@ -1,4 +1,5 @@
-{  "app": {
+{
+  "app": {
     "title": "COVID-19 Dashboard",
     "subtitle": "Monitor and analyze COVID-19 statistics worldwide",
     "loading": "Loading...",
@@ -90,30 +91,44 @@
       "delete": "Are you sure you want to delete this item?",
       "unsavedChanges": "You have unsaved changes. Do you want to continue?"
     }
-  },  "dashboard": {
+  },
+  "dashboard": {
     "title": "Covid-19 Dashboard",
     "subtitle": "Monitor and analyze Covid-19 statistics worldwide",
     "period": "Period",
     "selectCountries": "Select countries",
     "newCase": "New case",
     "kpi": {
-      "totalCases": "Total Cases",
-      "totalDeaths": "Total Deaths",
-      "totalRecovered": "Total Recovered",
-      "activeCases": "Active Cases",
-      "newCases": "New Cases"
+      "totalCases": {
+        "label": "Total Cases",
+        "subtitle": "{diseaseName} cases worldwide"
+      },
+      "totalDeaths": {
+        "label": "Total Deaths",
+        "subtitle": "Mortality rate: {rate}%"
+      },
+      "recoveries": {
+        "label": "Recoveries",
+        "subtitle": "Recovery rate: {rate}%"
+      }
     },
     "chart": {
-      "title": "COVID-19 Case Evolution",
-      "subtitle": "Global data for the selected period",
+      "title": "Case Evolution",
+      "subtitle": "Evolution of confirmed cases, recoveries and deaths",
       "cases": "Cases",
       "deaths": "Deaths",
-      "recovered": "Recovered"
+      "recovered": "Recovered",
+      "from": "from",
+      "to": "to",
+      "ariaLabel": "Line chart showing the evolution of cases, recoveries and deaths over time",
+      "worldwide": "Worldwide",
+      "period": "Period"
     },
     "countries": {
       "title": "Statistics by Country",
       "filter": "Filter by country...",
-      "noResults": "No results found"
+      "noResults": "No results found",
+      "count": "Number of countries: {count}"
     }
   },
   "prediction": {
