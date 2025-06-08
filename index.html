@@ -358,6 +358,23 @@ Clés</a></li>
 id="toc-fonctionnalités-principales-1">Fonctionnalités
 Principales</a></li>
 </ul></li>
+<li><a
+href="#brief-du-projet-plateforme-oms-de-suivi-des-pandémies---phase-3"
+id="toc-brief-du-projet-plateforme-oms-de-suivi-des-pandémies---phase-3">Brief
+du Projet : Plateforme OMS de Suivi des Pandémies - Phase 3</a>
+<ul>
+<li><a href="#contexte-détaillé-2" id="toc-contexte-détaillé-2">Contexte
+Détaillé</a></li>
+<li><a href="#périmètre-de-la-mspr-2"
+id="toc-périmètre-de-la-mspr-2">Périmètre de la MSPR</a></li>
+<li><a href="#description-générale-2"
+id="toc-description-générale-2">Description Générale</a></li>
+<li><a href="#objectifs-clés-2" id="toc-objectifs-clés-2">Objectifs
+Clés</a></li>
+<li><a href="#fonctionnalités-principales-2"
+id="toc-fonctionnalités-principales-2">Fonctionnalités
+Principales</a></li>
+</ul></li>
 <li><a href="#modèle-de-données" id="toc-modèle-de-données">Modèle de
 Données</a>
 <ul>
@@ -2067,6 +2084,95 @@ pandémiques</li>
 <li>Guide d’accessibilité</li>
 <li>Métriques de performance</li>
 <li>Suivi d’avancement régulier (Discord, Trello).</li>
+</ul>
+<h1
+id="brief-du-projet-plateforme-oms-de-suivi-des-pandémies---phase-3">Brief
+du Projet : Plateforme OMS de Suivi des Pandémies - Phase 3</h1>
+<h2 id="contexte-détaillé-2">Contexte Détaillé</h2>
+<p>Après le développement réussi de l’API IA et de l’application web
+(MSPR 2), la nouvelle division de l’OMS est prête à mettre en production
+la plateforme complète. Cette phase vise à assurer la disponibilité, la
+scalabilité, la sécurité et la maintenabilité de la solution, tout en
+adoptant les meilleures pratiques DevOps et Agile pour faciliter les
+futures itérations et améliorations.</p>
+<h2 id="périmètre-de-la-mspr-2">Périmètre de la MSPR</h2>
+<p>Pour cette troisième phase de la Mise en Situation Professionnelle
+Reconstituée (MSPR), nous continuons notre collaboration avec ANALYZE
+IT. Notre mission est de déployer et maintenir la plateforme dans un
+contexte international, en commençant par les États-Unis, la France, et
+la Suisse. Chaque déploiement doit prendre en compte les spécificités
+locales tout en maintenant une base fonctionnelle commune.</p>
+<h2 id="description-générale-2">Description Générale</h2>
+<p>L’Organisation Mondiale de la Santé souhaite déployer sa plateforme
+de veille pandémique dans plusieurs pays. Cette internationalisation
+nécessite une architecture robuste, scalable et adaptable aux
+contraintes locales de chaque pays.</p>
+<h2 id="objectifs-clés-2">Objectifs Clés</h2>
+<ul>
+<li>Assurer la scalabilité et la résilience de l’infrastructure</li>
+<li>Conteneuriser les différents composants de l’application</li>
+<li>Mettre en place une sécurité robuste</li>
+<li>Automatiser le déploiement continu</li>
+<li>Adapter la solution aux spécificités de chaque pays</li>
+<li>Maintenir une documentation technique complète</li>
+</ul>
+<h2 id="fonctionnalités-principales-2">Fonctionnalités Principales</h2>
+<h3 id="infrastructure-cloud">1. Infrastructure Cloud</h3>
+<ul>
+<li>Déploiement sur Google Cloud Platform</li>
+<li>Gestion des ressources optimisée</li>
+<li>Monitoring et alerting</li>
+</ul>
+<h3 id="conteneurisation-et-orchestration">2. Conteneurisation et
+Orchestration</h3>
+<ul>
+<li>Images Docker optimisées</li>
+<li>Configuration Docker Compose</li>
+<li>Documentation des conteneurs</li>
+<li>Gestion des volumes et réseaux</li>
+</ul>
+<h3 id="sécurité-et-conformité">3. Sécurité et Conformité</h3>
+<ul>
+<li>Configuration CORS pour la sécurisation des requêtes
+cross-origin</li>
+<li>Gestion des variables sensibles via fichiers .env</li>
+<li>Certificats SSL</li>
+</ul>
+<p>Points d’amélioration :</p>
+<ol type="1">
+<li><p>Authentification :</p>
+<ul>
+<li>Pourrait être implémentée avec JWT</li>
+<li>Gestion des rôles (admin, utilisateur)</li>
+</ul></li>
+<li><p>Sécurisation API :</p>
+<ul>
+<li>Rate limiting</li>
+<li>Validation des entrées</li>
+<li>Headers de sécurité (HSTS, CSP)</li>
+</ul></li>
+</ol>
+<h3 id="déploiement-continu">4. Déploiement Continu</h3>
+<ul>
+<li>Pipeline d’intégration continue (GitHub Actions)</li>
+<li>Tests automatisés (unittest, integration test, e2e test)</li>
+<li>Déploiement automatisé (Docker Hub)</li>
+</ul>
+<h3 id="adaptations-locales">5. Adaptations Locales</h3>
+<ul>
+<li>Système de traduction i18n</li>
+<li>Support multilingue pour :
+<ul>
+<li>États-Unis (Anglais)</li>
+<li>France (Français)</li>
+<li>Suisse (Français, Allemand, Italien)</li>
+</ul></li>
+</ul>
+<h3 id="documentation-suivi-2">6. Documentation &amp; Suivi</h3>
+<ul>
+<li>Documentation du déploiement</li>
+<li>Guide de maintenance</li>
+<li>Rapports d’avancement réguliers</li>
 </ul>
 <h1 id="modèle-de-données">Modèle de Données</h1>
 <h2 id="diagramme-du-modèle-de-données">Diagramme du Modèle de
