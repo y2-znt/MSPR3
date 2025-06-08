@@ -17,7 +17,7 @@ services:
     mem_reservation: 32M
     cpus: 0.2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://${SERVER_NAME}/health"]
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -39,7 +39,7 @@ services:
     mem_reservation: 512M
     cpus: 1.0
     healthcheck:
-      test: ["CMD", "curl", "-f", "${SERVER_NAME}:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -57,7 +57,7 @@ services:
     mem_reservation: 256M
     cpus: 0.5
     healthcheck:
-      test: ["CMD", "curl", "-f", "${SERVER_NAME}/health"]
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
       timeout: 5s
       retries: 3
