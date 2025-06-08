@@ -1,7 +1,7 @@
 services:
   frontend:
     container_name: mspr3-frontend-prod
-    image: ${DOCKERHUB_USERNAME}/mspr3-frontend:latest
+    image: ${DOCKERHUB_USERNAME}/mspr3-frontend:1.0.0
     ports:
       - "80:80"
       - "443:443"
@@ -13,10 +13,19 @@ services:
     restart: always
     networks:
       - mspr3-network
+    mem_limit: 64M
+    mem_reservation: 32M
+    cpus: 0.2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://${SERVER_NAME}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   backend:
     container_name: mspr3-backend-prod
-    image: ${DOCKERHUB_USERNAME}/mspr3-backend:latest
+    image: ${DOCKERHUB_USERNAME}/mspr3-backend:1.0.0
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - DB_URL=${DB_URL}
@@ -26,24 +35,37 @@ services:
     restart: always
     networks:
       - mspr3-network
+    mem_limit: 1G
+    mem_reservation: 512M
+    cpus: 1.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "${SERVER_NAME}:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
   ai-api:
     container_name: mspr3-ai-prod
-    image: ${DOCKERHUB_USERNAME}/mspr3-ai-api:latest
+    image: ${DOCKERHUB_USERNAME}/mspr3-ai-api:1.0.0
     environment:
       - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
-      - HEALTH_CHECK_URL=${HEALTH_CHECK_URL}
     restart: always
     networks:
       - mspr3-network
+    mem_limit: 512M
+    mem_reservation: 256M
+    cpus: 0.5
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD", "curl", "-f", "${SERVER_NAME}/health"]
       interval: 30s
       timeout: 5s
       retries: 3
+      start_period: 30s
 
   db:
     container_name: mspr3-db-prod
-    image: postgres:latest
+    image: postgres:17
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -53,6 +75,21 @@ services:
     networks:
       - mspr3-network
     restart: always
+    mem_limit: 256M
+    mem_reservation: 128M
+    cpus: 0.5
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=100"
+      - "-c"
+      - "shared_buffers=128MB"
 
 volumes:
   mspr3-db-data:

@@ -6,9 +6,7 @@ import joblib
 import numpy as np 
 import logging
 import os
-from apscheduler.schedulers.background import BackgroundScheduler 
-import atexit
-import requests 
+from fastapi import Response
 
 # Configuration des logs
 logging.basicConfig(level=logging.INFO)
@@ -141,41 +139,7 @@ def health_check():
             raise ValueError("Le modèle n'est pas chargé")
         dummy_input = np.zeros((1, 4 + 6 + 6 + 250 + 250 + 211))
         _ = model.predict(dummy_input)
-        return {"status": "ok", "model": "loaded", "prediction": "ok"}
+        return Response(content='{"status": "ok"}', media_type="application/json", status_code=200)
     except Exception as e:
         logger.error(f"Health check failed: {str(e)}")
         return {"status": "error", "detail": str(e)}
-
-# Fonction pour le scheduler qui appelle /health
-def scheduled_health_check():
-    logger.info("Running scheduled health check")
-    try:
-        # En production (dans Docker), l'API écoute sur le port 80
-        # En développement, elle écoute sur le port 8000
-        # Utilisation d'une variable d'environnement avec fallback intelligent
-        health_url = os.getenv("HEALTH_CHECK_URL", "http://localhost")
-        
-        # Si port n'est pas spécifié et qu'on est en développement, utiliser 8000
-        if ":" not in health_url and health_url == "http://localhost":
-            health_url += ":8000"
-            
-        # Ajout du chemin /health
-        if not health_url.endswith("/health"):
-            health_url += "/health"
-            
-        logger.info(f"Checking health at: {health_url}")
-        resp = requests.get(health_url)
-        
-        if resp.status_code == 200:
-            logger.info("Scheduled health check success: %s", resp.json())
-        else:
-            logger.warning(f"Scheduled health check failed with status {resp.status_code}")
-    except Exception as e:
-        logger.error(f"Scheduled health check exception: {e}")
-
-# Configuration et démarrage du scheduler
-scheduler = BackgroundScheduler()
-scheduler.add_job(scheduled_health_check, "interval", minutes=15)
-scheduler.start()
-
-atexit.register(lambda: scheduler.shutdown())

@@ -3,8 +3,3 @@ uvicorn[standard]
 scikit-learn
 joblib
 numpy
-pandas
-fastapi-health
-apscheduler
-requests
-APScheduler==3.10.4
