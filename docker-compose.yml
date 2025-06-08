@@ -58,7 +58,7 @@ services:
 
   db:
     container_name: mspr3-db
-    image: postgres:latest
+    image: postgres:17
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
