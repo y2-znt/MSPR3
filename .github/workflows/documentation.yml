@@ -1,10 +1,10 @@
-name: documentation
+name: Documentation
 
 on:
   push:
     paths:
-      - 'docs/**'
-      - '.github/workflows/docs.yml'
+      - "docs/**"
+      - ".github/workflows/documentation.yml"
 
 permissions:
   contents: write
@@ -25,7 +25,7 @@ jobs:
       - name: Prepare directories
         run: |
           mkdir -p pdf html
-      
+
       - name: Convert all .md files to individual PDFs
         run: |
           mkdir -p docs/pdfs
@@ -42,7 +42,6 @@ jobs:
               -o "$outfile"
           done
 
-
       - name: Convert PNG images to PDF (appendices)
         run: |
           mkdir -p pdf/appendices
@@ -57,7 +56,7 @@ jobs:
       - name: Build combined markdown
         run: |
           echo "" > combined.md
-          cat docs/brief_part1.md >> combined.md
+          cat docs/brief-part1.md >> combined.md
           echo "" >> combined.md
           echo "\\newpage" >> combined.md
           echo "" >> combined.md
@@ -84,7 +83,7 @@ jobs:
           fi
 
           find docs/ -name '*.md' \
-            ! -path 'docs/brief_part1.md' \
+            ! -path 'docs/brief-part1.md' \
             ! -path 'docs/benchmark/*' \
             ! -path 'docs/architecture/*' \
             ! -path 'docs/tech-stack.md' \
@@ -109,14 +108,14 @@ jobs:
             --toc-depth=2 \
             --include-in-header=docs/latex/header.tex \
             -o pdf/documentation.pdf
-      
+
       - name: Upload all individual PDFs
         uses: actions/upload-artifact@v4
         with:
           name: All PDFs
           path: docs/pdfs
           retention-days: 7
-      
+
       - name: Copy CSS to HTML output
         run: cp docs/latex/style.css html/style.css
 
@@ -130,7 +129,6 @@ jobs:
             -c style.css \
             -M title="Documentation Technique" \
             -o html/index.html
-            
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
