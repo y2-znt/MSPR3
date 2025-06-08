@@ -79,8 +79,9 @@ Pour consulter l'historique des versions et les nouveautés :
 
 ### Projet
 
-- [Présentation Part 1](docs/brief_part1.md)
-- [Présentation Part 2](docs/brief_part2.md)
+- [Présentation Part 1](docs/brief-part1.md)
+- [Présentation Part 2](docs/brief-part2.md)
+- [Présentation Part 3](docs/brief-part3.md)
 - [Installation](docs/installation.md)
 - [Workflow Git](docs/git-workflow.md)
 - [Gestion de projet](docs/project-management.md)
