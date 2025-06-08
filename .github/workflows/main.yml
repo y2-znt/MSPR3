@@ -72,7 +72,7 @@ jobs:
     container: maven:3.9.9-amazoncorretto-21-alpine
     services:
       db:
-        image: postgres:latest
+        image: postgres:17
         env:
           POSTGRES_DB: db_name
           POSTGRES_USER: db_username
@@ -124,7 +124,7 @@ jobs:
 
   deploy-backend:
     name: Deploy Backend Docker Image
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: test-backend
     runs-on: ubuntu-latest
     steps:
@@ -145,11 +145,11 @@ jobs:
           file: ./backend/backend.prod.dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-backend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-backend:1.0.0
 
   deploy-frontend:
     name: Deploy Frontend Docker Image
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: test-frontend
     runs-on: ubuntu-latest
     steps:
@@ -170,11 +170,11 @@ jobs:
           file: ./frontend/frontend.prod.dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-frontend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-frontend:1.0.0
 
   deploy-ai-api:
     name: Deploy AI API Docker Image
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: build-ai-api
     runs-on: ubuntu-latest
     steps:
@@ -200,7 +200,7 @@ jobs:
           file: ./ai-api/ai.prod.dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-ai-api:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-ai-api:1.0.0
 
   # performance-test:
   #   name: Performance Tests
@@ -211,7 +211,7 @@ jobs:
   #   needs: [build-backend, test-backend]
   #   services:
   #     db:
-  #       image: postgres:latest
+  #       image: postgres:17
   #       env:
   #         POSTGRES_DB: db_name
   #         POSTGRES_USER: db_username
