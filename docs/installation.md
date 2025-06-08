@@ -29,9 +29,6 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 DB_NAME=database_name
 
-# Health check URL
-HEALTH_CHECK_URL=http://localhost/health
-
 # Production
 DOCKERHUB_USERNAME=your_dockerhub_username
 SERVER_NAME=localhost
