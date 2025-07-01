@@ -62,6 +62,7 @@ jobs:
       - name: Generate Changelog
         run: |
           echo "Génération du changelog (25 derniers commits)..."
+          [ -f CHANGELOG.md ] || touch CHANGELOG.md
           BASE_COMMIT=$(git rev-list --max-count=25 HEAD | tail -1)
           if [ -n "$BASE_COMMIT" ]; then
             git tag temp-changelog-base $BASE_COMMIT
