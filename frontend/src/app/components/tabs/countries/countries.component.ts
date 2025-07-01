@@ -14,13 +14,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent,
+} from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Subject, forkJoin } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Country } from '../../../models/country.model';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 import { CountryService } from '../../../services/country.service';
 import {
   CountryData,
@@ -29,11 +34,11 @@ import {
 } from '../../../services/covid-data.service';
 import { DiseaseCaseService } from '../../../services/disease-case.service';
 import { EditDialogComponent } from '../../edit-dialog/edit-dialog.component';
-import { TranslatePipe } from '../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-countries',
-  standalone: true,  imports: [
+  standalone: true,
+  imports: [
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
@@ -72,6 +77,12 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
 
   diseaseName: string = 'COVID-19';
 
+  // Pagination
+  totalElements = 0;
+  pageSize = 25;
+  pageIndex = 0;
+  pageSizeOptions = [25, 50, 100, 200, 250];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -84,18 +95,21 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.countries && this.countries.length > 0) {
-      this.loadCountriesStats();
-    }
+    this.loadCountries();
   }
 
   ngAfterViewInit(): void {
-    if (this.paginator) {
-      this.dataSource.paginator = this.paginator;
+    if (this.sort) {
+      this.sort.sortChange.subscribe(() => {
+        this.paginator.pageIndex = 0;
+        this.loadCountries();
+      });
     }
 
-    if (this.sort) {
-      this.dataSource.sort = this.sort;
+    if (this.paginator) {
+      this.paginator.page.subscribe(() => {
+        this.loadCountries();
+      });
     }
 
     this.dataSource.sortingDataAccessor = (item, property) => {
@@ -118,7 +132,7 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['countries'] && changes['countries'].currentValue) {
-      this.loadCountriesStats();
+      this.loadCountries();
     }
   }
 
@@ -129,49 +143,68 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
     this.totalRecoveries = stats.totalRecoveries;
   }
 
-  private loadCountriesStats(): void {
-    if (!this.countries || this.countries.length === 0) {
-      console.error('No countries to load');
+  loadCountries(): void {
+    this.isLoading = true;
+    const sortDirection = this.sort?.direction || 'asc';
+    const sortField = this.sort?.active || 'name';
+    const sortParam = `${sortField},${sortDirection}`;
+
+    this.countryService
+      .getAllCountries(this.pageIndex, this.pageSize, sortParam)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (page) => {
+          this.totalElements = page.totalElements;
+          this.loadCountriesStats(page.content);
+        },
+        error: (error) => {
+          console.error('Error loading countries:', error);
+          this.isLoading = false;
+          this.error = 'Error loading countries';
+          this.cdr.detectChanges();
+        },
+      });
+  }
+
+  private loadCountriesStats(countries: Country[]): void {
+    if (!countries || countries.length === 0) {
+      this.isLoading = false;
       return;
     }
 
-    this.isLoading = true;
+    const countryNames = countries.map((country) => country.name);
 
-    const requests = this.countries.map((country) => {
-      return this.countryService.getCountriesStats(country.name);
-    });
-
-    forkJoin(requests)
+    this.countryService
+      .getCountriesStats(countryNames)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (results) => {
-          const countryData: CountryData[] = this.countries.map(
-            (country, index) => {
-              const countryResults = results[index];
-
-              let latestStats = null;
-              if (countryResults && countryResults.length > 0) {
-                latestStats = countryResults[countryResults.length - 1];
-              }
-
-              return {
-                country: country.name,
-                totalCases: latestStats?.confirmedCases || 0,
-                deaths: latestStats?.deaths || 0,
-                recovered: latestStats?.recovered || 0,
-                mortalityRate: this.calculateRate(
-                  latestStats?.deaths,
-                  latestStats?.confirmedCases
-                ),
-                recoveryRate: this.calculateRate(
-                  latestStats?.recovered,
-                  latestStats?.confirmedCases
-                ),
-                id: latestStats?.id || country.id,
-                date: latestStats?.date || this.formatDate(new Date()),
-              };
+          const countryData: CountryData[] = countries.map((country) => {
+            const countryResults = results.filter(
+              (r) => r.country === country.name
+            );
+            let latestStats = null;
+            if (countryResults && countryResults.length > 0) {
+              latestStats = countryResults[countryResults.length - 1];
             }
-          );
+
+            return {
+              country: country.name,
+              totalCases: latestStats?.confirmedCases || 0,
+              deaths: latestStats?.deaths || 0,
+              recovered: latestStats?.recovered || 0,
+              mortalityRate: this.calculateRate(
+                latestStats?.deaths,
+                latestStats?.confirmedCases
+              ),
+              recoveryRate: this.calculateRate(
+                latestStats?.recovered,
+                latestStats?.confirmedCases
+              ),
+              id: latestStats?.id || country.id,
+              date: latestStats?.date || this.formatDate(new Date()),
+            };
+          });
 
           this.dataSource.data = countryData;
           this.countriesData = countryData;
@@ -186,6 +219,12 @@ export class CountriesComponent implements AfterViewInit, OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
       });
+  }
+
+  handlePageEvent(event: PageEvent): void {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    this.loadCountries();
   }
 
   private calculateRate(numerator: number, denominator: number): number {
