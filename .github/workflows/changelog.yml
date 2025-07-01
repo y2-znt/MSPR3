@@ -36,23 +36,37 @@ jobs:
           rm -f CHANGELOG.md
           conventional-changelog -p angular -o CHANGELOG.md -r 0 --commit-path="origin/main"
           
-          # Sauvegarder les headers
-          grep "^#\|^###" CHANGELOG.md > headers.tmp
+          # DEBUG - Voir ce qu'on a généré
+          echo "=== CONTENU BRUT ==="
+          head -20 CHANGELOG.md
           
-          # Extraire les commits et supprimer les doublons
-          grep "^\* " CHANGELOG.md | \
-          awk '{
-            if (match($0, /\* [^:]*:(.+) \([a-f0-9]+\)/, arr)) {
-              msg = arr[1]
-              gsub(/^[ \t]+|[ \t]+$/, "", msg)
-            } else {
-              msg = $0
-            }
-            if (!seen[msg]++ && count < 30) {
-              print $0
-              count++
+          # SCRIPT AWK CORRIGÉ
+          grep "^\* " CHANGELOG.md | head -30 | \
+          awk '
+          BEGIN { count = 0 }
+          {
+            # Extraire le message après les deux points
+            if (match($0, /\* (.+) \([a-f0-9]+\)/, arr)) {
+              full_msg = arr[1]
+              # Si il y a des deux points, prendre après
+              if (index(full_msg, ":") > 0) {
+                clean_msg = substr(full_msg, index(full_msg, ":") + 1)
+                gsub(/^[ \t]+/, "", clean_msg)  # trim début
+              } else {
+                clean_msg = full_msg
+              }
+              
+              if (!seen[clean_msg]++ && count < 30) {
+                print $0
+                count++
+              }
             }
           }' > commits.tmp
+          
+          # DEBUG - Voir les commits extraits
+          echo "=== COMMITS EXTRAITS ==="
+          wc -l commits.tmp
+          head -10 commits.tmp
           
           # Reconstituer le changelog
           echo "# Changelog" > CHANGELOG.md
@@ -62,23 +76,25 @@ jobs:
           echo "## $(date +%Y-%m-%d)" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           
-          # Séparer Features et Bug Fixes
+          # Features
           echo "### Features" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
-          grep "^\* feat\|^\* add\|^\* implement\|^\* create" commits.tmp >> CHANGELOG.md || true
+          grep "^\* feat\|^\* add\|^\* implement\|^\* create" commits.tmp >> CHANGELOG.md || echo "Aucune feature trouvée"
           echo "" >> CHANGELOG.md
           
+          # Bug Fixes  
           echo "### Bug Fixes" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
-          grep "^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || true
+          grep "^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || echo "Aucun bug fix trouvé"
           echo "" >> CHANGELOG.md
           
+          # Other Changes
           echo "### Other Changes" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
-          grep -v "^\* feat\|^\* add\|^\* implement\|^\* create\|^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || true
+          grep -v "^\* feat\|^\* add\|^\* implement\|^\* create\|^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || echo "Aucun autre changement"
           
           # Nettoyer
-          rm -f headers.tmp commits.tmp
+          rm -f commits.tmp
 
       - name: Commit and Push
         run: |
