@@ -34,29 +34,50 @@ jobs:
           rm -f CHANGELOG.md
           conventional-changelog -p angular -o CHANGELOG.md -r 0
           
-          # Version AWK corrigée pour garder les préfixes
-          awk '
-          /^\* / {
-              # Extraire le message après le préfixe pour la déduplication
-              match($0, /\* ([^:]+:)(.+) \([a-f0-9]+\)/, arr)
-              if (arr[2]) {
-                  clean_msg = arr[2]
-                  gsub(/^[ \t]+|[ \t]+$/, "", clean_msg)  # trim
-                  if (!seen[clean_msg]++ && count < 30) {
-                      print $0
-                      count++
-                  }
-              } else if (count < 30) {
-                  print $0
-                  count++
-              }
-          }
-          !/^\* / { print $0 }
-          ' CHANGELOG.md > temp.md && mv temp.md CHANGELOG.md
-
-
-
-
+          # SOLUTION ULTIME - Traiter APRÈS que conventional-changelog ait créé les catégories
+          python3 << 'EOF'
+          import re
+          
+          with open('CHANGELOG.md', 'r') as f:
+              content = f.read()
+          
+          # Séparer par sections (Features, Bug Fixes, etc.)
+          sections = re.split(r'(### .+?\n)', content)
+          
+          result = []
+          seen_messages = set()
+          total_commits = 0
+          max_commits = 30
+          
+          for i, section in enumerate(sections):
+              if section.startswith('### '):
+                  # C'est un header de section
+                  result.append(section)
+              elif section.strip():
+                  # C'est le contenu d'une section
+                  lines = section.split('\n')
+                  section_result = []
+                  
+                  for line in lines:
+                      if line.startswith('* ') and total_commits < max_commits:
+                          # Extraire le message après le préfixe
+                          match = re.search(r'\* (?:[^:]+:\s*)?(.+?)\s*\([a-f0-9]+\)', line)
+                          if match:
+                              message = match.group(1).strip()
+                              if message not in seen_messages:
+                                  seen_messages.add(message)
+                                  section_result.append(line)
+                                  total_commits += 1
+                      elif not line.startswith('* '):
+                          section_result.append(line)
+                  
+                  result.append('\n'.join(section_result))
+              else:
+                  result.append(section)
+          
+          with open('CHANGELOG.md', 'w') as f:
+              f.write(''.join(result))
+          EOF
 
       - name: Commit and Push
         run: |
