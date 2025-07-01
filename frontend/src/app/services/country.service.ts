@@ -16,20 +16,26 @@ export class CountryService {
 
   getAllCountries(
     page: number = 0,
-    size: number = 10
+    size: number = 25,
+    sort: string = 'name,asc'
   ): Observable<Page<Country>> {
-    return this.http.get<Page<Country>>(
-      `${this.apiUrl}countries?page=${page}&size=${size}`
-    );
+    let params = new HttpParams()
+      .append('page', page.toString())
+      .append('size', size.toString())
+      .append('sort', sort);
+
+    return this.http.get<Page<Country>>(`${this.apiUrl}countries`, { params });
   }
 
   getCountryById(id: number): Observable<Country> {
     return this.http.get<Country>(`${this.apiUrl}countries/${id}`);
   }
 
-  getCountriesStats(countryName: string): Observable<any[]> {
-    // Créer les paramètres HTTP
-    let params = new HttpParams().append('countries', countryName);
+  getCountriesStats(countryNames: string[]): Observable<any[]> {
+    let params = new HttpParams();
+    countryNames.forEach((name) => {
+      params = params.append('countries', name);
+    });
 
     return this.http.get<any[]>(
       `${this.apiUrl}disease-cases/aggregated-by-date`,
