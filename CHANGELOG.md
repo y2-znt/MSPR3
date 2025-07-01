@@ -1,10 +1,6 @@
 #  (2025-07-01)
 
 
-
-#  (2025-07-01)
-
-
 ### Bug Fixes
 
 * CLI cmd for running unnecessary, add: Dockerfile ([2972efb](https://github.com/y2-znt/MSPR3/commit/2972efbd4cdfd0ce6beab35d1de0298b8af019c9))
@@ -32,11 +28,13 @@
 * restore and enhance country filtering test in dashboard component ([045bce5](https://github.com/y2-znt/MSPR3/commit/045bce50d6bb405290182b7abdc1af1f670b95cd))
 * restore and enhance country filtering test in dashboard component ([f3b96b7](https://github.com/y2-znt/MSPR3/commit/f3b96b74e9bad54fe1dae4e87251195bd60101c9))
 * simplify changelog configuration and update workflow to generate changelog on main branch ([0500281](https://github.com/y2-znt/MSPR3/commit/0500281d0bf83a36f298e0ba20748a96dc45f555))
+* specify commit path for changelog generation ([925feca](https://github.com/y2-znt/MSPR3/commit/925fecaa3c21dcfb5c2e1a2e6fd1d76d165bbf7e))
 * streamline changelog generation process and ensure proper output file handling ([afdf8b8](https://github.com/y2-znt/MSPR3/commit/afdf8b8c4fb65d70f7277864130463b423351d2e))
 * update branch name for changelog generation ([ac0b697](https://github.com/y2-znt/MSPR3/commit/ac0b69775429bf86ec4477d19c9a4194770e1d11))
 * update branch name for changelog generation and streamline push command ([e49629c](https://github.com/y2-znt/MSPR3/commit/e49629c403b012f502498d15f6be353c37375420))
 * update cache dependency path for frontend in CI workflow ([593778d](https://github.com/y2-znt/MSPR3/commit/593778da2623cb502b3fe2727375ec0dfc56b641))
 * update changelog generation command to ensure proper input handling ([456d365](https://github.com/y2-znt/MSPR3/commit/456d36544a28aa9b4ce1c88f12b70527bca96962))
+* update changelog generation to remove existing file and handle duplicates ([2a5dfca](https://github.com/y2-znt/MSPR3/commit/2a5dfcaf7ba33d1d36799f9d3c5e9e6d383270f2))
 * update changelog workflow to trigger on all branches ([bc888a3](https://github.com/y2-znt/MSPR3/commit/bc888a347fdaf9a40ef02b2c4313b2aaf2472ff9))
 * update chart canvas attributes for improved accessibility and readability; refactor onSubmit method for clarity ([1ec4bbf](https://github.com/y2-znt/MSPR3/commit/1ec4bbfae8b5fa95404c73a30b5e7cfb50e52e9e))
 * update database configuration in .env.example and docker-compose, and adjust Dockerfile for backend environment ([ff7e9b6](https://github.com/y2-znt/MSPR3/commit/ff7e9b6b0827b81d6c9ded395e67cba5268b518a))
