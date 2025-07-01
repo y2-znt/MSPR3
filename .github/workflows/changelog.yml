@@ -31,8 +31,15 @@ jobs:
 
       - name: Generate Changelog
         run: |
-          touch CHANGELOG.md
-          conventional-changelog -p angular -i CHANGELOG.md -s --commit-path="origin/main" --skip-unstable
+          rm -f CHANGELOG.md
+          conventional-changelog -p angular -o CHANGELOG.md -r 0
+          awk '
+          /^\* / { 
+            line = substr($0, 3); # Enlever "* "
+            if (!seen[line]++) print $0
+          }
+          !/^\* / { print $0 }
+          ' CHANGELOG.md > temp.md && mv temp.md CHANGELOG.md
 
       - name: Commit and Push
         run: |
