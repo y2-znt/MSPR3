@@ -61,24 +61,14 @@ jobs:
 
       - name: Generate Changelog
         run: |
-          echo "Génération du changelog..."
-          if [ ! -f "CHANGELOG.md" ]; then
-          echo "Création du fichier CHANGELOG.md initial"
-          touch CHANGELOG.md
-          fi
-          if [ -z "${{ steps.previous-tag.outputs.previous-tag }}" ]; then
-          echo "Génération du changelog initial (derniers commits seulement)..."
+          echo "Génération du changelog (25 derniers commits)..."
           BASE_COMMIT=$(git rev-list --max-count=25 HEAD | tail -1)
           if [ -n "$BASE_COMMIT" ]; then
-          git tag temp-changelog-base $BASE_COMMIT
-          conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js --from temp-changelog-base
-          git tag -d temp-changelog-base
+            git tag temp-changelog-base $BASE_COMMIT
+            conventional-changelog -p angular -o CHANGELOG.md -s --config .github/changelog-config.js --from temp-changelog-base
+            git tag -d temp-changelog-base
           else
-          conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js
-          fi
-          else
-          echo "Mise à jour du changelog depuis ${{ steps.previous-tag.outputs.previous-tag }}..."
-          conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js
+            conventional-changelog -p angular -o CHANGELOG.md -s --config .github/changelog-config.js
           fi
           echo "Contenu généré:"
           cat CHANGELOG.md | head -20
