@@ -33,13 +33,16 @@ jobs:
         run: |
           rm -f CHANGELOG.md
           conventional-changelog -p angular -o CHANGELOG.md -r 0
+          
           awk '
-          /^\* / { 
-            line = substr($0, 3); # Enlever "* "
-            if (!seen[line]++) print $0
+          /^\* / {
+              match($0, /\* (.+) \([a-f0-9]+\)/, arr)
+              msg = arr[1]
+              if (!seen[msg]++) print $0
           }
           !/^\* / { print $0 }
           ' CHANGELOG.md > temp.md && mv temp.md CHANGELOG.md
+
 
       - name: Commit and Push
         run: |
