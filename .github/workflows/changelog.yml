@@ -2,6 +2,7 @@ name: Generate Changelog
 
 on:
   push:
+    branches: [changelog-ci]
   workflow_dispatch:
 
 permissions:
@@ -14,6 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -32,10 +34,12 @@ jobs:
       - name: Generate Changelog
         run: |
           rm -f CHANGELOG.md
-          conventional-changelog -p angular -o CHANGELOG.md -r 0
+          conventional-changelog -p angular -o CHANGELOG.md -r 0 --commit-path="origin/main"
           
+          # Sauvegarder les headers
           grep "^#\|^###" CHANGELOG.md > headers.tmp
           
+          # Extraire les commits et supprimer les doublons
           grep "^\* " CHANGELOG.md | \
           awk '{
             if (match($0, /\* [^:]*:(.+) \([a-f0-9]+\)/, arr)) {
@@ -44,17 +48,21 @@ jobs:
             } else {
               msg = $0
             }
-            if (!seen[msg]++ && count < 50) {
+            if (!seen[msg]++ && count < 30) {
               print $0
               count++
             }
           }' > commits.tmp
           
+          # Reconstituer le changelog
           echo "# Changelog" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           echo "## $(date +%Y-%m-%d)" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           
+          # Séparer Features et Bug Fixes
           echo "### Features" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           grep "^\* feat\|^\* add\|^\* implement\|^\* create" commits.tmp >> CHANGELOG.md || true
@@ -63,9 +71,14 @@ jobs:
           echo "### Bug Fixes" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           grep "^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || true
+          echo "" >> CHANGELOG.md
           
+          echo "### Other Changes" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          grep -v "^\* feat\|^\* add\|^\* implement\|^\* create\|^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || true
+          
+          # Nettoyer
           rm -f headers.tmp commits.tmp
-
 
       - name: Commit and Push
         run: |
