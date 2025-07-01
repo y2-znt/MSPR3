@@ -32,7 +32,7 @@ jobs:
       - name: Generate Changelog
         run: |
           touch CHANGELOG.md
-          conventional-changelog -p angular -i CHANGELOG.md -s
+          conventional-changelog -p angular -i CHANGELOG.md -s --commit-path="origin/main" --skip-unstable
 
       - name: Commit and Push
         run: |
