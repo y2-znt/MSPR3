@@ -1,75 +1,81 @@
 services:
   frontend:
-    container_name: mspr2-frontend
+    container_name: mspr3-frontend
     build:
       context: ./frontend
       dockerfile: frontend.dockerfile
     ports:
       - "4200:4200"
     volumes:
-      - ./frontend/src:/app/src
+      - ./frontend:/app
       - /app/node_modules
-    restart: always
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
     depends_on:
       - backend
     networks:
-      - mspr2-network
+      - mspr3-network
 
   backend:
-    container_name: mspr2-backend
+    container_name: mspr3-backend
     build:
       context: ./backend
       dockerfile: backend.dockerfile
     ports:
       - "8080:8080"
+    volumes:
+      - ./backend:/app
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - DB_URL=${DB_URL}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - ./backend/src:/app/src
-      - /app/node_modules
-    restart: always
+    restart: unless-stopped
     depends_on:
       - db
     networks:
-      - mspr2-network
+      - mspr3-network
+
   ai-api:
-    container_name: mspr2-ai
+    container_name: mspr3-ai
     build:
       context: ./ai-api
       dockerfile: ai.dockerfile
     ports:
       - "8000:80"
     volumes:
-      - ./ai-api/app:/code/app
+      - ./ai-api:/code
       - ./ai-api/logs:/code/logs
     restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEBUG=1
+    restart: unless-stopped
     depends_on:
       - backend
       - db
     networks:
-      - mspr2-network
+      - mspr3-network
 
   db:
-    container_name: mspr2-db
-    image: postgres:latest
+    container_name: mspr3-db
+    image: postgres:17
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "${DB_PORT}:5432"
+      - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mspr3-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
     networks:
-      - mspr2-network
+      - mspr3-network
 
 volumes:
-  pgdata:
-    name: mspr2-pgdata
+  mspr3-db-data:
 
 networks:
-  mspr2-network:
+  mspr3-network:
     driver: bridge

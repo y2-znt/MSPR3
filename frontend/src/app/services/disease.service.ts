@@ -9,15 +9,15 @@ import { Disease } from '../models/disease.model';
 })
 export class DiseaseService {
   private http: HttpClient = inject(HttpClient);
-  private url: string = environment.apiUrl;
+  private apiUrl: string = environment.apiUrl;
 
   constructor() {}
 
   getAllDiseases(): Observable<Disease[]> {
-    return this.http.get<Disease[]>(`${this.url}diseases`);
+    return this.http.get<Disease[]>(`${this.apiUrl}diseases`);
   }
 
   getDiseaseById(id: number): Observable<Disease> {
-    return this.http.get<Disease>(`${this.url}diseases/${id}`);
+    return this.http.get<Disease>(`${this.apiUrl}diseases/${id}`);
   }
 }

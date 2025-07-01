@@ -19,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DiseaseCaseService } from '../../services/disease-case.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-edit-dialog',
@@ -33,6 +34,7 @@ import { DiseaseCaseService } from '../../services/disease-case.service';
     MatButtonModule,
     MatDatepickerModule,
     MatProgressSpinnerModule,
+    TranslatePipe,
   ],
   templateUrl: './edit-dialog.component.html',
   styleUrl: './edit-dialog.component.scss',

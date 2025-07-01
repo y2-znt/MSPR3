@@ -5,7 +5,6 @@ __pycache__/
 *.pyo
 *.pyd
 *.pyc
-*.pkl
 *.egg-info/
 
 # Local venv

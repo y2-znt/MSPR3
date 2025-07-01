@@ -1,10 +1,10 @@
+
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from datetime import date, datetime, timedelta
 import joblib
-import numpy as np
-import pandas as pd
+import numpy as np 
 import logging
 import os
 import time
@@ -130,16 +130,17 @@ model_path = "app/model/random_forest_model.pkl"
 if not os.path.exists(model_path):
     raise FileNotFoundError(f"Le modèle n'existe pas à l'emplacement {model_path}")
 
-# Chargement du modèle
-logger.info("Chargement du modèle...")
+
 try:
+    logger.info(f"Trying to load model from: {model_path}")
     model = joblib.load(model_path)
-    logger.info("Modèle chargé avec succès")
+    logger.info("Model loaded successfully")
 except Exception as e:
-    logger.error(f"Erreur lors du chargement du modèle: {str(e)}")
-    raise
+    logger.error(f"Could not load model from {model_path}: {str(e)}")
+    raise FileNotFoundError(f"Model loading failed: {str(e)}")
 
 app = FastAPI()
+
 
 # Nettoyer les anciens logs au démarrage
 cleanup_old_logs()
@@ -186,9 +187,13 @@ async def log_requests(request: Request, call_next):
     
     return response
 
+allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:4200").split(",")
+logger.info(f"CORS allowed origins: {allowed_origins}")
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"], 
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -312,6 +317,7 @@ async def predict(data: CovidData):
         return result
         
     except Exception as e:
+
         response_time_ms = round((time.time() - start_time) * 1000, 2)
         error_msg = str(e)
         
@@ -333,3 +339,17 @@ async def predict(data: CovidData):
             logger.error(f"Request {request_id}: Erreur lors du logging CSV d'erreur - {str(log_error)}")
         
         raise HTTPException(status_code=400, detail=error_msg)
+
+
+@app.get("/health")
+def health_check():
+    try:
+        if model is None:
+            raise ValueError("Le modèle n'est pas chargé")
+        dummy_input = np.zeros((1, 4 + 6 + 6 + 250 + 250 + 211))
+        _ = model.predict(dummy_input)
+        return Response(content='{"status": "ok"}', media_type="application/json", status_code=200)
+    except Exception as e:
+        logger.error(f"Health check failed: {str(e)}")
+        return {"status": "error", "detail": str(e)}
+

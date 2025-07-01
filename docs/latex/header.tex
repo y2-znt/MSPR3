@@ -1,0 +1,6 @@
+
+\renewcommand{\contentsname}{Table of Contents}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\tableofcontents}{\@starttoc{toc}}{\@starttoc{toc}}{}{}
+\makeatother

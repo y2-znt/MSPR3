@@ -1,4 +1,4 @@
-<h2 mat-dialog-title id="dialog-title">Edit a COVID-19 Case</h2>
+<h2 mat-dialog-title id="dialog-title">{{ 'dialog.edit.title' | translate }}</h2>
 
 <form
     [formGroup]="caseForm"
@@ -9,10 +9,10 @@
     <div mat-dialog-content>
         <!-- Country -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Country</mat-label>
+        <mat-label>{{ 'forms.country.label' | translate }}</mat-label>
         <mat-select
             formControlName="country"
-            aria-label="Country"
+            [attr.aria-label]="'forms.country.label' | translate"
             [attr.aria-describedby]="caseForm.get('country')?.hasError('required') ? 'country-error' : null"
             required
         >
@@ -24,36 +24,35 @@
             </mat-option>
         </mat-select>
         <mat-error id="country-error" *ngIf="caseForm.get('country')?.hasError('required')">
-            Country is required
+            {{ 'forms.country.required' | translate }}
         </mat-error>
         </mat-form-field>
 
         <!-- Date -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Date</mat-label>
+        <mat-label>{{ 'forms.date.label' | translate }}</mat-label>
         <input
             matInput
             [matDatepicker]="datePicker"
             formControlName="date"
-            aria-label="Date"
+            [attr.aria-label]="'forms.date.label' | translate"
             [attr.aria-describedby]="caseForm.get('date')?.hasError('required') ? 'date-error' : null"
             required
-        />
-        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        />        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker></mat-datepicker>
         <mat-error id="date-error" *ngIf="caseForm.get('date')?.hasError('required')">
-            Date is required
+            {{ 'forms.date.required' | translate }}
         </mat-error>
         </mat-form-field>
 
         <!-- Confirmed Cases -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Confirmed Cases</mat-label>
+        <mat-label>{{ 'forms.cases.label' | translate }}</mat-label>
         <input
             matInput
             type="number"
             formControlName="confirmedCases"
-            aria-label="Confirmed Cases"
+            [attr.aria-label]="'forms.cases.label' | translate"
             [attr.aria-describedby]="
             caseForm.get('confirmedCases')?.hasError('required') ? 'confirmed-error' :
             caseForm.get('confirmedCases')?.hasError('min') ? 'confirmed-min-error' : null
@@ -62,44 +61,43 @@
             required
         />
         <mat-error id="confirmed-error" *ngIf="caseForm.get('confirmedCases')?.hasError('required')">
-            Confirmed cases are required
+            {{ 'forms.cases.required' | translate }}
         </mat-error>
         <mat-error id="confirmed-min-error" *ngIf="caseForm.get('confirmedCases')?.hasError('min')">
-            Value must be 0 or higher
+            {{ 'forms.cases.min' | translate }}
         </mat-error>
         </mat-form-field>
 
         <!-- Deaths -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Deaths</mat-label>
+        <mat-label>{{ 'forms.deaths.label' | translate }}</mat-label>
         <input
             matInput
             type="number"
             formControlName="deaths"
-            aria-label="Deaths"
+            [attr.aria-label]="'forms.deaths.label' | translate"
             [attr.aria-describedby]="
-            caseForm.get('deaths')?.hasError('required') ? 'deaths-error' :
-            caseForm.get('deaths')?.hasError('min') ? 'deaths-min-error' : null
+            caseForm.get('deaths')?.hasError('required') ? 'deaths-error' :            caseForm.get('deaths')?.hasError('min') ? 'deaths-min-error' : null
             "
             min="0"
             required
         />
         <mat-error id="deaths-error" *ngIf="caseForm.get('deaths')?.hasError('required')">
-            Number of deaths is required
+            {{ 'forms.deaths.required' | translate }}
         </mat-error>
         <mat-error id="deaths-min-error" *ngIf="caseForm.get('deaths')?.hasError('min')">
-            Value must be 0 or higher
+            {{ 'forms.deaths.min' | translate }}
         </mat-error>
         </mat-form-field>
 
         <!-- Recoveries -->
         <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Recoveries</mat-label>
+        <mat-label>{{ 'forms.recovered.label' | translate }}</mat-label>
         <input
             matInput
             type="number"
             formControlName="recovered"
-            aria-label="Recoveries"
+            [attr.aria-label]="'forms.recovered.label' | translate"
             [attr.aria-describedby]="
             caseForm.get('recovered')?.hasError('required') ? 'recovered-error' :
             caseForm.get('recovered')?.hasError('min') ? 'recovered-min-error' : null
@@ -108,10 +106,10 @@
             required
         />
         <mat-error id="recovered-error" *ngIf="caseForm.get('recovered')?.hasError('required')">
-            Number of recoveries is required
+            {{ 'forms.recovered.required' | translate }}
         </mat-error>
         <mat-error id="recovered-min-error" *ngIf="caseForm.get('recovered')?.hasError('min')">
-            Value must be 0 or higher
+            {{ 'forms.recovered.min' | translate }}
         </mat-error>
         </mat-form-field>
     </div>
@@ -119,22 +117,21 @@
     <div mat-dialog-actions align="end">
         <button
         mat-button
-        type="button"
-        (click)="onCancel()"
+        type="button"        (click)="onCancel()"
         [disabled]="isSubmitting"
-        aria-label="Cancel editing"
+        [attr.aria-label]="'buttons.cancel' | translate"
         >
-        Cancel
+        {{ 'buttons.cancel' | translate }}
         </button>
         <button
         mat-raised-button
         color="primary"
         type="submit"
         [disabled]="caseForm.invalid || isSubmitting"
-        aria-label="Save changes"
+        [attr.aria-label]="'buttons.save' | translate"
         >
-        <mat-spinner diameter="20" *ngIf="isSubmitting" aria-label="Loading"></mat-spinner>
-        <span *ngIf="!isSubmitting">Save</span>
+        <mat-spinner diameter="20" *ngIf="isSubmitting" [attr.aria-label]="'app.loading' | translate"></mat-spinner>
+        <span *ngIf="!isSubmitting">{{ 'buttons.save' | translate }}</span>
         </button>
     </div>
 </form>

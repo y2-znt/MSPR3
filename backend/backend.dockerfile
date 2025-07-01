@@ -6,8 +6,7 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
-COPY src ./src
-COPY .env .
+COPY . .
 
 EXPOSE 8080
 

@@ -11,7 +11,6 @@ env:
   DB_USERNAME: db_username
   DB_PASSWORD: db_password
   DB_NAME: db_name
-  DB_PORT: "5432"
 
 jobs:
   build-backend:
@@ -48,6 +47,24 @@ jobs:
           path: frontend/dist/
           retention-days: 7
 
+  build-ai-api:
+    name: Build AI API
+    runs-on: ubuntu-latest
+    container: python:3.11-slim
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        working-directory: ai-api
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Upload AI API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-api
+          path: ai-api/
+          retention-days: 7
+
   test-backend:
     needs: build-backend
     name: Test Backend
@@ -55,7 +72,7 @@ jobs:
     container: maven:3.9.9-amazoncorretto-21-alpine
     services:
       db:
-        image: postgres:latest
+        image: postgres:17
         env:
           POSTGRES_DB: db_name
           POSTGRES_USER: db_username
@@ -105,6 +122,86 @@ jobs:
           path: frontend/playwright-report/
           retention-days: 30
 
+  deploy-backend:
+    name: Deploy Backend Docker Image
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: test-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/backend.prod.dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-backend:1.0.0
+
+  deploy-frontend:
+    name: Deploy Frontend Docker Image
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: test-frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/frontend.prod.dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-frontend:1.0.0
+
+  deploy-ai-api:
+    name: Deploy AI API Docker Image
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build-ai-api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Download AI API artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ai-api
+          path: ai-api
+      - name: Build and push AI API image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ai-api
+          file: ./ai-api/ai.prod.dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr3-ai-api:1.0.0
+
   # performance-test:
   #   name: Performance Tests
   #   runs-on: ubuntu-latest
@@ -114,7 +211,7 @@ jobs:
   #   needs: [build-backend, test-backend]
   #   services:
   #     db:
-  #       image: postgres:latest
+  #       image: postgres:17
   #       env:
   #         POSTGRES_DB: db_name
   #         POSTGRES_USER: db_username
