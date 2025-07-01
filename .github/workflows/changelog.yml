@@ -34,11 +34,27 @@ jobs:
           rm -f CHANGELOG.md
           conventional-changelog -p angular -o CHANGELOG.md -r 0
           
-          # Version BACKUP - Simple et efficace
-          grep "^\* " CHANGELOG.md | awk '!seen[substr($0, 3, index(substr($0, 3), " (") - 1)]++' | head -30 > commits.tmp
-          grep -v "^\* " CHANGELOG.md > headers.tmp
-          cat headers.tmp commits.tmp > CHANGELOG.md
-          rm commits.tmp headers.tmp
+          # Version AWK corrigée pour garder les préfixes
+          awk '
+          /^\* / {
+              # Extraire le message après le préfixe pour la déduplication
+              match($0, /\* ([^:]+:)(.+) \([a-f0-9]+\)/, arr)
+              if (arr[2]) {
+                  clean_msg = arr[2]
+                  gsub(/^[ \t]+|[ \t]+$/, "", clean_msg)  # trim
+                  if (!seen[clean_msg]++ && count < 30) {
+                      print $0
+                      count++
+                  }
+              } else if (count < 30) {
+                  print $0
+                  count++
+              }
+          }
+          !/^\* / { print $0 }
+          ' CHANGELOG.md > temp.md && mv temp.md CHANGELOG.md
+
+
 
 
 
