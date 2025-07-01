@@ -2,12 +2,12 @@ name: Generate Changelog
 
 on:
   push:
-    branches: 
+    branches:
       - changelog-ci
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number (e.g., v1.0.0)'
+        description: "Version number (e.g., v1.0.0)"
         required: false
         type: string
 
@@ -20,7 +20,7 @@ jobs:
     name: Generate and Update Changelog
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip-changelog]')"
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install Dependencies
         run: |
@@ -63,18 +63,23 @@ jobs:
         run: |
           echo "Génération du changelog..."
           if [ ! -f "CHANGELOG.md" ]; then
-            echo "Création du fichier CHANGELOG.md initial"
-            touch CHANGELOG.md
+          echo "Création du fichier CHANGELOG.md initial"
+          touch CHANGELOG.md
           fi
-          
           if [ -z "${{ steps.previous-tag.outputs.previous-tag }}" ]; then
-            echo "Génération du changelog initial..."
-            conventional-changelog -p angular -i CHANGELOG.md -s -r 20 --config .github/changelog-config.js
+          echo "Génération du changelog initial (derniers commits seulement)..."
+          BASE_COMMIT=$(git rev-list --max-count=25 HEAD | tail -1)
+          if [ -n "$BASE_COMMIT" ]; then
+          git tag temp-changelog-base $BASE_COMMIT
+          conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js --from temp-changelog-base
+          git tag -d temp-changelog-base
           else
-            echo "Mise à jour du changelog depuis ${{ steps.previous-tag.outputs.previous-tag }}..."
-            conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js
+          conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js
           fi
-          
+          else
+          echo "Mise à jour du changelog depuis ${{ steps.previous-tag.outputs.previous-tag }}..."
+          conventional-changelog -p angular -i CHANGELOG.md -s --config .github/changelog-config.js
+          fi
           echo "Contenu généré:"
           cat CHANGELOG.md | head -20
 
