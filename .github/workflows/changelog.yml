@@ -34,37 +34,37 @@ jobs:
       - name: Generate Changelog
         run: |
           rm -f CHANGELOG.md
-          conventional-changelog -p angular -o CHANGELOG.md -r 0 --commit-path="origin/main"
           
-          # DEBUG - Voir ce qu'on a généré
-          echo "=== CONTENU BRUT ==="
-          head -20 CHANGELOG.md
+          # SOLUTION : Générer depuis l'historique de main mais rester sur changelog-ci
+          git log origin/main --oneline --pretty=format:"%s" --no-merges | head -50 > raw_commits.txt
           
-          # SCRIPT AWK CORRIGÉ
-          grep "^\* " CHANGELOG.md | head -30 | \
+          # DEBUG - Voir les commits bruts
+          echo "=== COMMITS BRUTS DE MAIN ==="
+          head -10 raw_commits.txt
+          
+          # Filtrer et formater les commits avec AWK
+          cat raw_commits.txt | \
           awk '
           BEGIN { count = 0 }
           {
-            # Extraire le message après les deux points
-            if (match($0, /\* (.+) \([a-f0-9]+\)/, arr)) {
-              full_msg = arr[1]
-              # Si il y a des deux points, prendre après
-              if (index(full_msg, ":") > 0) {
-                clean_msg = substr(full_msg, index(full_msg, ":") + 1)
-                gsub(/^[ \t]+/, "", clean_msg)  # trim début
-              } else {
-                clean_msg = full_msg
-              }
-              
-              if (!seen[clean_msg]++ && count < 30) {
-                print $0
-                count++
-              }
+            # Nettoyer le message
+            msg = $0
+            if (index(msg, ":") > 0) {
+              clean_msg = substr(msg, index(msg, ":") + 1)
+              gsub(/^[ \t]+/, "", clean_msg)
+            } else {
+              clean_msg = msg
+            }
+            
+            if (!seen[clean_msg]++ && count < 30) {
+              # Formater comme conventional-changelog
+              print "* " msg " ([commit](https://github.com/y2-znt/MSPR3/commit/hash))"
+              count++
             }
           }' > commits.tmp
           
-          # DEBUG - Voir les commits extraits
-          echo "=== COMMITS EXTRAITS ==="
+          # DEBUG - Voir les commits formatés
+          echo "=== COMMITS FORMATÉS ==="
           wc -l commits.tmp
           head -10 commits.tmp
           
@@ -94,7 +94,8 @@ jobs:
           grep -v "^\* feat\|^\* add\|^\* implement\|^\* create\|^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || echo "Aucun autre changement"
           
           # Nettoyer
-          rm -f commits.tmp
+          rm -f commits.tmp raw_commits.txt
+
 
       - name: Commit and Push
         run: |
