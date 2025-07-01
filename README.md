@@ -102,4 +102,4 @@ Consultez le [guide d'installation](docs/installation.md) pour une configuration
 
 ---
 
-Développé par l'équipe MSPR-2 d'ANALYZE IT.
+Développé par l'équipe MSPR-3 d'ANALYZE IT.
