@@ -65,14 +65,13 @@ jobs:
           BASE_COMMIT=$(git rev-list --max-count=25 HEAD | tail -1)
           if [ -n "$BASE_COMMIT" ]; then
             git tag temp-changelog-base $BASE_COMMIT
-            conventional-changelog -p angular -o CHANGELOG.md -s --config .github/changelog-config.js --from temp-changelog-base
+            conventional-changelog -p angular -i CHANGELOG.md -o CHANGELOG.md -s --config .github/changelog-config.js --from temp-changelog-base
             git tag -d temp-changelog-base
           else
-            conventional-changelog -p angular -o CHANGELOG.md -s --config .github/changelog-config.js
+            conventional-changelog -p angular -i CHANGELOG.md -o CHANGELOG.md -s --config .github/changelog-config.js
           fi
           echo "Contenu généré:"
           cat CHANGELOG.md | head -20
-
       - name: Check for Changes
         id: changes
         run: |
