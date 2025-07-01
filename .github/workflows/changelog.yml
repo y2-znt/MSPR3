@@ -35,19 +35,15 @@ jobs:
         run: |
           rm -f CHANGELOG.md
           
-          # SOLUTION : Générer depuis l'historique de main mais rester sur changelog-ci
           git log origin/main --oneline --pretty=format:"%s" --no-merges | head -50 > raw_commits.txt
           
-          # DEBUG - Voir les commits bruts
           echo "=== COMMITS BRUTS DE MAIN ==="
           head -10 raw_commits.txt
           
-          # Filtrer et formater les commits avec AWK
           cat raw_commits.txt | \
           awk '
           BEGIN { count = 0 }
           {
-            # Nettoyer le message
             msg = $0
             if (index(msg, ":") > 0) {
               clean_msg = substr(msg, index(msg, ":") + 1)
@@ -57,18 +53,15 @@ jobs:
             }
             
             if (!seen[clean_msg]++ && count < 30) {
-              # Formater comme conventional-changelog
               print "* " msg " ([commit](https://github.com/y2-znt/MSPR3/commit/hash))"
               count++
             }
           }' > commits.tmp
           
-          # DEBUG - Voir les commits formatés
           echo "=== COMMITS FORMATÉS ==="
           wc -l commits.tmp
           head -10 commits.tmp
           
-          # Reconstituer le changelog
           echo "# Changelog" > CHANGELOG.md
           echo "" >> CHANGELOG.md
           echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
@@ -76,24 +69,20 @@ jobs:
           echo "## $(date +%Y-%m-%d)" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           
-          # Features
           echo "### Features" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           grep "^\* feat\|^\* add\|^\* implement\|^\* create" commits.tmp >> CHANGELOG.md || echo "Aucune feature trouvée"
           echo "" >> CHANGELOG.md
           
-          # Bug Fixes  
           echo "### Bug Fixes" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           grep "^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || echo "Aucun bug fix trouvé"
           echo "" >> CHANGELOG.md
           
-          # Other Changes
           echo "### Other Changes" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
           grep -v "^\* feat\|^\* add\|^\* implement\|^\* create\|^\* fix\|^\* correct\|^\* update\|^\* remove" commits.tmp >> CHANGELOG.md || echo "Aucun autre changement"
           
-          # Nettoyer
           rm -f commits.tmp raw_commits.txt
 
 
