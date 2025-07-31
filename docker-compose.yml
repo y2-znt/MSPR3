@@ -46,6 +46,8 @@ services:
       - "8000:80"
     volumes:
       - ./ai-api:/code
+      - ./ai-api/logs:/code/logs
+    restart: always
     environment:
       - PYTHONUNBUFFERED=1
       - DEBUG=1

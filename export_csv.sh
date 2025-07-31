@@ -7,7 +7,8 @@ mkdir -p exported_data
 # Export CSV from container
 for table in "${tables[@]}"; do
   echo "Exporting $table..."
-  docker exec mspr3-db psql -U mspr3 -d mspr3db -c "\COPY public.$table TO '/tmp/$table.csv' WITH CSV HEADER"
+
+  docker exec mspr2-db psql -U mspr3 -d mspr3db -c "\COPY public.$table TO '/tmp/$table.csv' WITH CSV HEADER"
 
   if [ $? -ne 0 ]; then
     echo "❌ Erreur lors de l'export de $table"
